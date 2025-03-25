@@ -91,62 +91,53 @@ const Frame = ({ customStyle = {} }) => {
   const theme =useTheme()
   return (
     <DashboardCard customStyle={{ padding: '0px', ...customStyle }}>
-      {/* <Paper
-      elevation={0}
-      sx={{
-        width: 416,
-        height: 306,
-        borderRadius: "10px",
-        overflow: "hidden",
-        border: "0.5px solid rgba(17, 17, 17, 0.08)",
-      }}
-    > */}
-      <Box
-        sx={{
-          p: 2.5,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          variant="h5"
+      <Box>
+        <Box
           sx={{
-            fontWeight: 600,
-            color: "rgba(17, 17, 17, 0.92)",
-            fontSize: 24,
-            lineHeight: "24px",
-            letterSpacing: "0.36px",
+            p: 2.5,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          Notifications
-        </Typography>
-
-        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography
-            variant="body2"
+            variant="h5"
             sx={{
-              color: theme.palette.secondary.main,
-              fontSize: 14,
-              lineHeight: "14px",
-              letterSpacing: "0.14px",
-              mr: 0.5,
+              fontWeight: 600,
+              color: "rgba(17, 17, 17, 0.92)",
+              fontSize: 24,
+              lineHeight: "24px",
+              letterSpacing: "0.36px",
             }}
           >
-            See all
+            Notifications
           </Typography>
-          <ArrowForwardOutlined
-            sx={{ color: "#06B776", width: 20, height: 20 }}
-          />
-        </Box>
-      </Box>
 
-      <List disablePadding>
-        {notificationData.map((notification) => (
-          <NotificationItem key={notification.id} text={notification.text} />
-        ))}
-      </List>
-      {/* </Paper> */}
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: theme.palette.secondary.main,
+                fontSize: 14,
+                lineHeight: "14px",
+                letterSpacing: "0.14px",
+                mr: 0.5,
+              }}
+            >
+              See all
+            </Typography>
+            <ArrowForwardOutlined
+              sx={{ color: "#06B776", width: 20, height: 20 }}
+            />
+          </Box>
+        </Box>
+
+        <List disablePadding>
+          {notificationData.map((notification) => (
+            <NotificationItem key={notification.id} text={notification.text} />
+          ))}
+        </List>
+      </Box>
     </DashboardCard>
   );
 };

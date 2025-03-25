@@ -4,6 +4,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Paper,
+  DialogActions,
   TextField,
   RadioGroup,
   FormControlLabel,
@@ -16,7 +18,9 @@ import {
   Grid,
   Box,
   IconButton,
+  InputBase,
   FormControl,
+  InputLabel,
   CircularProgress,
   Skeleton
 } from '@mui/material';
@@ -24,28 +28,11 @@ import DashboardSkeleton from './components/DashboardSkeleton';
 import CloseIcon from "@mui/icons-material/Close";
 import PageContainer from '@/app/dashboard/components/container/PageContainer';
 import JobPostings from '@/app/dashboard/components/dashboard/JobPostings';
+import theme from '@/utils/theme';
 import DashboardCard from './components/shared/DashboardCard';
 import Notifications from './components/dashboard/Notifications';
 import EmailTemplates from './components/dashboard/EmailTemplates';
 import { useRouter } from 'next/navigation';
-
-interface StatCardData {
-  icon: React.ReactNode;
-  value?: number;
-  title: string;
-  id?: string;  // If you're using id in your card data
-}
-
-interface StatCardProps {
-  card: StatCardData;
-  index: number;
-  length: number;
-}
-
-interface LevelRadioGroupProps {
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
 
 const statCards = [
   {
@@ -217,32 +204,41 @@ const StyledRadio = styled(Radio)(({ theme }) => ({
   },
 }));
 
-const StatCard: React.FC<StatCardProps> = ({ card, index, length }) => (
+const StyledButton = styled(Button)(({ theme }) => ({
+  display: 'flex',
+  width: '456px',
+  padding: '16px 24px',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: '6px',
+  borderRadius: '8px',
+  background: '#4444E2',
+  color: '#FFF',
+  '&:hover': {
+    background: '#3333B3',
+  },
+}));
+
+interface StatCardProps {
+  card: {
+    icon: React.ReactNode;
+    id: string;
+    title: string;
+    value: number;
+  };
+  index: number;
+  length: number;
+}
+
+const StatCard = ({ card, index, length }: StatCardProps) => (
   <Grid item xs={2}>
-    <DashboardCard 
-      customStyle={{ 
-        borderRadius: index === 0 ? '10px 0 0 10px' : (index === length - 1 ? '0 10px 10px 0' : '0px'),
-        borderRight: index < length - 1 ? '1px solid rgba(17,17,17,0.12)' : 'none',
-        padding: '30px',
-      }}
-    >
+    <DashboardCard customStyle={{ borderRadius: index === 0 ? '10px 0 0 10px' : (index === length - 1 ? '0 10px 10px 0' : '0px'), borderRight: index < length - 1 ? '1px solid rgba(17,17,17,0.12)' : 'none', padding: '30px', }}>
       <Stack>
         {card.icon}
-        <Typography 
-          variant="h3" 
-          fontSize={'34px'} 
-          color='rgba(17,17,17,0.92)' 
-          marginTop={'20px'} 
-          marginBottom={'10px'} 
-          fontWeight="700"
-        >
+        <Typography variant="h3" fontSize={'34px'} color='rgba(17,17,17,0.92)' marginTop={'20px'} marginBottom={'10px'} fontWeight="700">
           {card.value?.toLocaleString()}
         </Typography>
-        <Typography 
-          variant="subtitle2" 
-          fontSize="16px" 
-          color="rgba(17,17,17,0.62)"
-        >
+        <Typography variant="subtitle2" fontSize="16px" color="rgba(17,17,17,0.62)">
           {card.title}
         </Typography>
       </Stack>
@@ -254,7 +250,7 @@ const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true); // State to track loading
   const [jobPostings, setJobPostings] = useState([]);
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'closed'>('all');
 
   const [formData, setFormData] = useState({
     title: '',
@@ -313,7 +309,7 @@ const Dashboard = () => {
         console.error('Error fetching statistics:', error);
         setLoading(false); // Also set loading to false on error
       });
-  }, [statistics]);
+  }, []);
 
 
 
@@ -436,7 +432,19 @@ const Dashboard = () => {
               <Typography variant="body1" fontWeight={600} color="rgba(17, 17, 17, 0.84)">
                 Level
               </Typography>
-              <LevelRadioGroup value={formData.level} onChange={handleChange} />
+              <FormControl>
+                <RadioGroup row value={formData.level} onChange={handleChange} name="level" sx={{ gap: '10px' }}>
+                  {["Junior", "Mid", "Senior"].map((option) => (
+                    <FormControlLabel
+                      key={option}
+                      value={option.toLowerCase()}
+                      control={<Radio sx={{ color: "rgba(17, 17, 17, 0.68)", "&.Mui-checked": { color: "rgba(17, 17, 17, 0.84)" } }} />}
+                      label={option}
+                      sx={{ m: 0, width: 145, height: 48, bgcolor: "#f2f4f6", borderRadius: 1, border: "0.5px solid #d7dadf", "& .MuiFormControlLabel-label": { color: "rgba(17, 17, 17, 0.84)", fontWeight: 400 } }}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
             </Stack>
             <Stack spacing={1}>
               <Typography variant="body1" fontWeight={600} color="rgba(17, 17, 17, 0.84)">
@@ -515,7 +523,57 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-const LevelRadioGroup = ({ value, onChange }: LevelRadioGroupProps) => {
+interface CustomInputProps {
+  label: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  name: string;
+}
+
+const CustomInput = ({ label, value, onChange, name }: CustomInputProps) => {
+  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    width: '456px',
+    height: '48px',
+    padding: '16px 354px 16px 16px',
+    borderRadius: '6px',
+    border: '0.5px solid #D7DAE0',
+    background: '#F3F4F7',
+    display: 'flex',
+    alignItems: 'center',
+  }));
+
+  const StyledFormControl = styled(FormControl)(({ theme }) => ({
+    width: '456px',
+  }));
+
+  const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
+    color: 'rgba(17, 17, 17, 0.84)',
+    position: 'relative',
+    fontSize: '16px',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    lineHeight: '16px',
+    marginBottom: '8px', // Space between label and input
+    transform: 'translate(0, -50)', // Ensure the label stays in place
+    display: 'block',
+  }));
+
+  return (
+    <StyledFormControl variant="standard">
+      <StyledInputLabel shrink htmlFor={name}>
+        {label}
+      </StyledInputLabel>
+      <StyledInputBase
+        id={name}
+        value={value}
+        onChange={onChange}
+        name={name}
+      />
+    </StyledFormControl>
+  );
+};
+
+const LevelRadioGroup = ({ value, onChange }: { value: string; onChange: (event: React.ChangeEvent<HTMLInputElement>) => void }) => {
   return (
     <FormControl component="fieldset">
       <Typography variant="subtitle1" marginBottom={1}>Level</Typography>

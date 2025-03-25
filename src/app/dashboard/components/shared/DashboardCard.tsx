@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, Typography, Stack, Box } from "@mui/material";
 import { SxProps } from "@mui/system";
 
-interface DashboardCardProps {
+type Props = {
   title?: string;
   subtitle?: string;
   action?: JSX.Element | any;
@@ -10,33 +10,64 @@ interface DashboardCardProps {
   cardheading?: string | JSX.Element;
   headtitle?: string | JSX.Element;
   headsubtitle?: string | JSX.Element;
-  children?: React.ReactNode;
+  children?: JSX.Element;
   middlecontent?: string | JSX.Element;
-  customStyle?: React.CSSProperties;
-}
+  customStyle?: SxProps;
 
-const DashboardCard: React.FC<DashboardCardProps> = ({ 
+};
+
+const DashboardCard = ({
   title,
   subtitle,
+  children,
   action,
   footer,
   cardheading,
   headtitle,
   headsubtitle,
-  children,
   middlecontent,
-  customStyle 
-}) => {
+  customStyle
+}: Props) => {
   return (
-    <div style={customStyle}>
-      {title && (
-        <Typography variant="h6" component="h2" gutterBottom>
-          {title}
-        </Typography>
+    <Card sx={{ padding: 0,borderRadius:'10px', ...customStyle }} elevation={0} variant={undefined}>
+      {cardheading ? (
+        <CardContent>
+          <Typography variant="h5">{headtitle}</Typography>
+          <Typography variant="subtitle2" color="textSecondary">
+            {headsubtitle}
+          </Typography>
+        </CardContent>
+      ) : (
+        <CardContent sx={{ p: "0px" }}>
+          {title ? (
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="space-between"
+              alignItems={"center"}
+            >
+              <Box>
+                {title ? <Typography variant="h5">{title}</Typography> : ""}
+
+                {subtitle ? (
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {subtitle}
+                  </Typography>
+                ) : (
+                  ""
+                )}
+              </Box>
+              {action}
+            </Stack>
+          ) : null}
+
+          {children}
+        </CardContent>
       )}
-      {children}
+
+      {middlecontent}
       {footer}
-    </div>
+    </Card>
   );
 };
 
