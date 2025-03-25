@@ -75,16 +75,27 @@ export default function CandidateListSection({
   // Candidate info data for mapping
   const candidateInfo = [
     {
-      icon: <BriefcaseIcon fontSize="small" />,
-      text: candidate?.professional_info?.experience,
+      icon:<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6.66662 18.3333H13.3333C16.6833 18.3333 17.2833 16.9917 17.4583 15.3583L18.0833 8.69167C18.3083 6.65833 17.725 5 14.1666 5H5.83329C2.27496 5 1.69162 6.65833 1.91662 8.69167L2.54162 15.3583C2.71662 16.9917 3.31662 18.3333 6.66662 18.3333Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6.66667 5.00008V4.33341C6.66667 2.85841 6.66667 1.66675 9.33333 1.66675H10.6667C13.3333 1.66675 13.3333 2.85841 13.3333 4.33341V5.00008" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M11.6667 10.8333V11.6667C11.6667 11.675 11.6667 11.675 11.6667 11.6833C11.6667 12.5917 11.6583 13.3333 10 13.3333C8.35 13.3333 8.33333 12.6 8.33333 11.6917V10.8333C8.33333 10 8.33333 10 9.16667 10H10.8333C11.6667 10 11.6667 10 11.6667 10.8333Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M18.0417 9.16675C16.1167 10.5667 13.9167 11.4001 11.6667 11.6834" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M2.18333 9.3916C4.05833 10.6749 6.175 11.4499 8.33333 11.6916" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      ,
+      text: candidate?.professional_info?.experience + " years",
     },
+    // {
+    //   icon: <MoneyIcon fontSize="small" />,
+    //   text: candidate?.professional_info?.salary_range,
+    // },
     {
-      icon: <MoneyIcon fontSize="small" />,
-      text: candidate?.professional_info?.salary_range,
-    },
-    {
-      icon: <ClockIcon fontSize="small" />,
-      text: candidate?.professional_info?.start_date,
+      icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18.3333 10.0001C18.3333 14.6001 14.6 18.3334 9.99999 18.3334C5.39999 18.3334 1.66666 14.6001 1.66666 10.0001C1.66666 5.40008 5.39999 1.66675 9.99999 1.66675C14.6 1.66675 18.3333 5.40008 18.3333 10.0001Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M13.0917 12.65L10.5083 11.1083C10.0583 10.8416 9.69168 10.2 9.69168 9.67497V6.2583" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      ,
+      text:"Available "+ candidate?.professional_info?.start_date.toLowerCase(),
     },
     // { icon: <UserSearchIcon fontSize="small" />, text: "Open to trial" },
   ];
@@ -246,15 +257,18 @@ export default function CandidateListSection({
 
           {/* Resume link */}
           <Link
-            href="#"
+            href={candidate?.attachments.cv}
+            target="_blank"
             underline="always"
             sx={{
               display: "flex",
               alignItems: "center",
               gap: 0.5,
-              color: theme.palette.grey[200],
+              color: theme.palette.grey[100],
               fontSize: 16,
               lineHeight: "16px",
+              textDecoration: "underline",
+              textDecorationColor: theme.palette.grey[100],
             }}
           >
             Resume <ArrowUpRightIcon sx={{ fontSize: 20 }} />
@@ -292,6 +306,7 @@ export default function CandidateListSection({
             textTransform: "none",
             borderColor: "grey[100]",
             color: "grey[100]",
+            borderRadius: "8px",
             "&:hover": {
               borderColor: "grey[200]",
               backgroundColor: "transparent",

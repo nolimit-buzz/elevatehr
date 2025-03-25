@@ -177,9 +177,14 @@ const StyledTextField = styled(TextField)({
 
 const StyledRadio = styled(Radio)({
   color: 'rgba(17, 17, 17, 0.6)',
+  // borderWidth: '0.5px',
+  // borderRadius: "40px",
+  // border: "1px solid rgba(17, 17, 17, 0.84)",
+  opacity: 0.68,
   '&.Mui-checked': {
     color: '#4444E2',
-  }
+  },
+
 });
 
 // Update TabPanel component
@@ -550,7 +555,7 @@ export default function Home() {
               letterSpacing: "0.12px",
             }}
           >
-            {jobData?.title}
+            {jobData?.title || ''}
           </Typography>
 
           <Stack spacing={2} mb={3}>
@@ -877,7 +882,7 @@ export default function Home() {
       setCandidates(candidatesData);
       setFilteredCandidates(candidatesData);
       setSelectedEntries([]);
-      
+
       // Show success notification
       setNotification({
         open: true,
@@ -963,7 +968,7 @@ export default function Home() {
               color: theme.palette.grey[100],
               fontSize: "24px",
               fontWeight: 600,
-              lineHeight: "100%", 
+              lineHeight: "100%",
               letterSpacing: "0.12px"
             }}  >
               {jobDetails?.title}
@@ -1071,15 +1076,19 @@ export default function Home() {
                   </Typography>
                   <FormControl fullWidth>
                     <Select
+
                       value={filters.yearsOfExperience}
                       displayEmpty
                       renderValue={(selected) => selected || "Select years"}
                       sx={{
+                        boxShadow: 'none',
                         backgroundColor: '#fff',
                         borderRadius: '12px',
-                        border: '1px solid rgba(17, 17, 17, 0.08)',
+                        // border: '1px solid rgba(17, 17, 17, 0.12)',
                         '& .MuiSelect-select': {
                           padding: '16px',
+                          border: 'none',
+                          boxShadow: 'none',
                           color: filters.yearsOfExperience ? 'rgba(17, 17, 17, 0.84)' : 'rgba(17, 17, 17, 0.48)'
                         }
                       }}
@@ -1216,7 +1225,12 @@ export default function Home() {
                   >
                     <FormControlLabel
                       value="immediately"
-                      control={<StyledRadio />}
+                      control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.68">
+                          <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
+                        </g>
+                      </svg>
+                      } />}
                       label="Immediately"
                       sx={{
                         '& .MuiTypography-root': {
@@ -1227,7 +1241,12 @@ export default function Home() {
                     />
                     <FormControlLabel
                       value="in-a-week"
-                      control={<StyledRadio />}
+                      control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.68">
+                          <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
+                        </g>
+                      </svg>
+                      } />}
                       label="In a week"
                       sx={{
                         '& .MuiTypography-root': {
@@ -1238,7 +1257,12 @@ export default function Home() {
                     />
                     <FormControlLabel
                       value="in-a-month"
-                      control={<StyledRadio />}
+                      control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.68">
+                          <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
+                        </g>
+                      </svg>
+                      } />}
                       label="In a month"
                       sx={{
                         '& .MuiTypography-root': {
@@ -1249,7 +1273,12 @@ export default function Home() {
                     />
                     <FormControlLabel
                       value="in-two-months"
-                      control={<StyledRadio />}
+                      control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.68">
+                          <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
+                        </g>
+                      </svg>
+                      } />}
                       label="In two months"
                       sx={{
                         '& .MuiTypography-root': {
@@ -1312,10 +1341,10 @@ export default function Home() {
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <span>Application Review</span>
-                        <Chip 
-                          label={stageTotals.new} 
-                          size="small" 
-                          sx={{ 
+                        <Chip
+                          label={stageTotals.new}
+                          size="small"
+                          sx={{
                             bgcolor: theme.palette.secondary.main,
                             color: 'white',
                             height: '20px',
@@ -1341,10 +1370,10 @@ export default function Home() {
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <span>Skill assessment</span>
-                        <Chip 
-                          label={stageTotals.skill_assessment} 
-                          size="small" 
-                          sx={{ 
+                        <Chip
+                          label={stageTotals.skill_assessment}
+                          size="small"
+                          sx={{
                             bgcolor: theme.palette.secondary.main,
                             color: 'white',
                             height: '20px',
@@ -1370,10 +1399,10 @@ export default function Home() {
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <span>Interviews</span>
-                        <Chip 
-                          label={stageTotals.interviews} 
-                          size="small" 
-                          sx={{ 
+                        <Chip
+                          label={stageTotals.interviews}
+                          size="small"
+                          sx={{
                             bgcolor: theme.palette.secondary.main,
                             color: 'white',
                             height: '20px',
@@ -1399,10 +1428,10 @@ export default function Home() {
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <span>Acceptance</span>
-                        <Chip 
-                          label={stageTotals.acceptance} 
-                          size="small" 
-                          sx={{ 
+                        <Chip
+                          label={stageTotals.acceptance}
+                          size="small"
+                          sx={{
                             bgcolor: theme.palette.secondary.main,
                             color: 'white',
                             height: '20px',
@@ -1428,10 +1457,10 @@ export default function Home() {
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <span>Archived</span>
-                        <Chip 
-                          label={stageTotals.archived} 
-                          size="small" 
-                          sx={{ 
+                        <Chip
+                          label={stageTotals.archived}
+                          size="small"
+                          sx={{
                             bgcolor: theme.palette.secondary.main,
                             color: 'white',
                             height: '20px',
@@ -1533,8 +1562,8 @@ export default function Home() {
                       variant="rectangular"
                       width="100%"
                       height={150}
-                      sx={{ 
-                        mb: 2, 
+                      sx={{
+                        mb: 2,
                         borderRadius: 2,
                         bgcolor: 'rgba(0, 0, 0, 0.04)' // Lighter grey color
                       }}
@@ -1580,11 +1609,11 @@ export default function Home() {
           zIndex: 9999,
         }}
       >
-        <Alert 
-          onClose={handleCloseNotification} 
+        <Alert
+          onClose={handleCloseNotification}
           severity={notificationSeverity}
           icon={notificationSeverity === 'success' ? <CheckIcon /> : undefined}
-          sx={{ 
+          sx={{
             minWidth: '300px',
             backgroundColor: 'primary.main',
             color: 'secondary.light',

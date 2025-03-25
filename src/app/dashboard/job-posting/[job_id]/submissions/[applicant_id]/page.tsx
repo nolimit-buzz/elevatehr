@@ -1,11 +1,4 @@
-// File structure:
-// - pages/index.js (main page)
-// - components/Navbar.js
-// - components/CandidateProfile.js
-// - components/SkillTag.js
-// - styles/globals.css
 
-// pages/index.js
 'use client'
 import { useState, useEffect, Fragment } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -198,16 +191,7 @@ export default function ApplicantDetails() {
 
       const data = await response.json();
       
-      // // Add CV analysis data
-      // const cvAnalysis = {
-      //   match_score: 75,
-      //   skills_match: [],
-      //   missing_skills: ["php", "css"],
-      //   experience_years: 5,
-      //   education_level: "Bachelor of Science in Computer Science",
-      //   recommendations: "The candidate has a strong background in software development, with particular strengths in JavaScript, Python, and Java. These are highly relevant for software engineering roles, but the candidate does not have experience with php and css which are required for this particular role. It's recommended that the candidate learns these languages or the hiring team should consider whether these skills are mandatory or if they can provide training."
-      // };
-
+    
       console.log(data);
       setApplicant({
         ...data,

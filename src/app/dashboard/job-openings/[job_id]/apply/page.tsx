@@ -311,16 +311,16 @@ const ApplicationForm = () => {
     if (formData.cv) {
       formDataObj.append('cv', formData.cv);
     }
-    formDataObj.append("job_type", "fulltime");
-        formDataObj.append("work_model", "remote");
-        formDataObj.append("availability", "week");
-        formDataObj.append("experience", "5 years");
-        formDataObj.append("current_role", "jnr dev");
+    // formDataObj.append("job_type", "fulltime");
+        // formDataObj.append("work_model", "remote");
+        // formDataObj.append("availability", "week");
+        // formDataObj.append("experience", "5 years");
+        formDataObj.append("current_role", jobData?.title || '');
         formDataObj.append("work_preference", "remote");
         formDataObj.append("salary_range", "100-200");
-        formDataObj.append("start_date", "immediately");
-        formDataObj.append("address", "34 Ellasan");
-        formDataObj.append("github_profile", "https://wwww.linked.com");
+        formDataObj.append("start_date", formData.availability);
+        // formDataObj.append("address", "34 Ellasan");
+        // formDataObj.append("github_profile", "https://wwww.linked.com");
 
     try {
       const token = localStorage.getItem('jwt');

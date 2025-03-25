@@ -42,11 +42,11 @@ const Header = () => {
     display: "flex",
     justifyContent: "space-between",
     padding: "0 20px",
-    maxWidth:'1500px',
+    maxWidth:'1536px',
     margin:'auto',
-    [theme.breakpoints.up("lg")]: {
-      padding: "0 80px",
-    },
+    // [theme.breakpoints.up("lg")]: {
+    //   padding: "0 80px",
+    // },
   }));
   
   const ProfileButtonStyled = styled(Button)(({ theme }) => ({
@@ -54,13 +54,13 @@ const Header = () => {
     backgroundColor: "#FFFFFF",
     color: theme.palette.grey[600],
     borderRadius: "50px",
-    border: `1px solid ${theme.palette.grey[300]}`,
-    display: "flex",
+    border: `1px solid rgba(11, 18, 213, 0.40)`,
+        display: "flex",
     gap: '10px',
   }));
 
   const LinkStyled = styled(Link)(({ theme }) => ({
-    color: theme.palette.grey[100],
+    color: theme.palette.grey[200],
     fontWeight: theme.typography.fontWeightMedium,
     textDecoration: "none",
   }));

@@ -20,7 +20,7 @@ const ToolbarStyled = styled(Stack)(({ theme }) => ({
 }));
 
 const Greeting = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.secondary,
+  color: theme.palette.grey[200],
   fontFamily: theme.typography.fontFamily,
   fontWeight: theme.typography.fontWeightBold,
   fontSize: theme.typography.pxToRem(24),
