@@ -28,6 +28,8 @@ import {
   Stack,
   Card,
   Skeleton,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import Link from "next/link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -56,6 +58,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import GroupIcon from "@mui/icons-material/Group";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RestoreIcon from "@mui/icons-material/Restore";
+import CheckIcon from "@mui/icons-material/Check";
 
 // Types
 interface JobDetails {
@@ -231,6 +234,19 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [candidates, setCandidates] = useState<CandidateResponse>({ applications: [] });
   const [selectedEntries, setSelectedEntries] = useState<number[]>([]);
+  const [isMovingStage, setIsMovingStage] = useState(false);
+  const [notification, setNotification] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error';
+  }>({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
+  const [isOpen, setIsOpen] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notificationSeverity, setNotificationSeverity] = useState<'success' | 'error'>('success');
 
   const router = useRouter();
   const params = useParams();
@@ -262,7 +278,9 @@ export default function Home() {
         }
 
         const data = await response.json();
+        console.log('Job details received:', data);
         setJobDetails(data);
+        setLoading(false);
         // Set stage totals from job details
         if (data.stage_counts) {
           setStageTotals(data.stage_counts);
@@ -306,6 +324,7 @@ export default function Home() {
         const data = await response.json();
         setCandidates(data);
         setFilteredCandidates(data);
+        setLoading(false);
       } catch (error: unknown) {
         if (error instanceof Error) {
           setError(error.message);
@@ -787,16 +806,19 @@ export default function Home() {
   };
 
   const handleUpdateStages = async ({ stage, entries = [] }: { stage: StageType; entries?: number[] }) => {
+    setIsMovingStage(true);
     try {
       const jwt = localStorage.getItem("jwt");
       if (!jwt) throw new Error('Authentication token not found');
 
       const entriesToUpdate = entries.length ? entries : selectedEntries;
+      const jobId = getJobId();
 
+      console.log('Updating application stage:', stage, entriesToUpdate, jwt);
       const response = await fetch(
-        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${getJobId()}/applications/stage`,
+        `https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/move-stage`,
         {
-          method: 'PUT',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${jwt}`,
@@ -808,13 +830,34 @@ export default function Home() {
           }),
         }
       );
+      console.log('Response:', response);
 
       if (!response.ok) {
         throw new Error('Failed to update stages');
       }
 
+      // Refetch job details to update stage counts
+      const jobDetailsResponse = await fetch(
+        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+          },
+          cache: 'no-store'
+        }
+      );
+
+      if (!jobDetailsResponse.ok) {
+        throw new Error('Failed to fetch updated job details');
+      }
+
+      const jobDetailsData = await jobDetailsResponse.json();
+      if (jobDetailsData.stage_counts) {
+        setStageTotals(jobDetailsData.stage_counts);
+      }
+
       // Refetch candidates for the current stage
-      const jobId = getJobId();
       const currentStage = getStageValue(subTabValue);
       const candidatesResponse = await fetch(
         `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications?stage=${currentStage}`,
@@ -834,13 +877,45 @@ export default function Home() {
       setCandidates(candidatesData);
       setFilteredCandidates(candidatesData);
       setSelectedEntries([]);
+      
+      // Show success notification
+      setNotification({
+        open: true,
+        message: `Successfully moved ${entriesToUpdate.length} candidate${entriesToUpdate.length > 1 ? 's' : ''} to ${stage.replace('_', ' ')}`,
+        severity: 'success'
+      });
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
+        setNotification({
+          open: true,
+          message: error.message,
+          severity: 'error'
+        });
       } else {
         setError('An unexpected error occurred while updating stages');
+        setNotification({
+          open: true,
+          message: 'An unexpected error occurred while updating stages',
+          severity: 'error'
+        });
       }
+    } finally {
+      setIsMovingStage(false);
     }
+  };
+
+  const handleCloseNotification = (_event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setIsOpen(false);
+  };
+
+  const handleNotification = (message: string, severity: 'success' | 'error') => {
+    setNotificationMessage(message);
+    setNotificationSeverity(severity);
+    setIsOpen(true);
   };
 
   const hasActiveFilters = () => {
@@ -898,11 +973,11 @@ export default function Home() {
             variant="contained"
             sx={{
               backgroundColor: theme.palette.primary.main,
-              color: theme.palette.text.secondary,
+              color: theme.palette.secondary.light,
               borderRadius: 2,
               textTransform: "none",
               "&:hover": {
-                bgcolor: "#303F9F",
+                bgcolor: "primary.main",
               },
             }}
           >
@@ -1427,17 +1502,22 @@ export default function Home() {
                             <Button
                               key={option.action}
                               variant="outlined"
-                              startIcon={<option.icon />}
+                              startIcon={isMovingStage ? <CircularProgress size={20} /> : <option.icon />}
                               onClick={() => handleUpdateStages({ stage: option.action as StageType })}
+                              disabled={isMovingStage}
                               sx={{
                                 color: 'rgba(17, 17, 17, 0.84)',
                                 borderColor: 'rgba(17, 17, 17, 0.12)',
                                 '&:hover': {
                                   borderColor: 'rgba(17, 17, 17, 0.24)',
                                 },
+                                '&.Mui-disabled': {
+                                  backgroundColor: 'rgba(0, 0, 0, 0.12)',
+                                  color: 'rgba(0, 0, 0, 0.26)'
+                                }
                               }}
                             >
-                              {option.label}
+                              {isMovingStage ? 'Moving...' : option.label}
                             </Button>
                           ),
                         )}
@@ -1478,6 +1558,7 @@ export default function Home() {
                         disableSelection={subTabValue === 3}
                         currentStage={getStageValue(subTabValue)}
                         selectedEntries={selectedEntries}
+                        onNotification={handleNotification}
                       />
                     </Box>
                   ))}
@@ -1488,6 +1569,53 @@ export default function Home() {
           renderJobDescription()
         )}
       </Container>
+
+      {/* Add Snackbar for notifications */}
+      <Snackbar
+        open={isOpen}
+        autoHideDuration={4000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{
+          zIndex: 9999,
+        }}
+      >
+        <Alert 
+          onClose={handleCloseNotification} 
+          severity={notificationSeverity}
+          icon={notificationSeverity === 'success' ? <CheckIcon /> : undefined}
+          sx={{ 
+            minWidth: '300px',
+            backgroundColor: 'primary.main',
+            color: 'secondary.light',
+            borderRadius: '100px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            '& .MuiAlert-icon': {
+              color: '#fff',
+              marginRight: '8px',
+              padding: 0,
+            },
+            '& .MuiAlert-message': {
+              padding: '6px 0',
+              fontSize: '15px',
+              textAlign: 'center',
+              flex: 'unset',
+            },
+            '& .MuiAlert-action': {
+              padding: '0 8px 0 0',
+              marginRight: 0,
+              '& .MuiButtonBase-root': {
+                color: '#fff',
+                padding: 1,
+              },
+            },
+          }}
+        >
+          {notificationMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

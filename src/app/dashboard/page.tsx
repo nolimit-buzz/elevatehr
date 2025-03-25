@@ -146,18 +146,18 @@ const Greeting = styled(Typography)(({ theme }) => ({
 }));
 
 const PrimaryButton = styled(Button)(({ theme }) => ({
-  backgroundColor: "#032B44",
+  backgroundColor: theme.palette.primary.main,
   borderRadius: "8px",
   display: 'flex',
   alignItems: 'center',
   gap: '5px',
   padding: '10px 20px',
   fontSize: theme.typography.pxToRem(16),
-  color: "rgba(205, 247, 235, 0.92)",
+  color: theme.palette.secondary.light,
   fontWeight: theme.typography.fontWeightMedium,
   height: '52px',
   '&:hover': {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.main,
   },
 }));
 
@@ -248,7 +248,8 @@ const StatCard = ({ card, index, length }: StatCardProps) => (
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true); // State to track loading
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [jobPostings, setJobPostings] = useState([]);
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'closed'>('all');
 
@@ -280,6 +281,8 @@ const Dashboard = () => {
         setJobPostings(data);
       } catch (error) {
         console.error('Error fetching job postings:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -287,28 +290,31 @@ const Dashboard = () => {
   }, [statusFilter]);
   
   useEffect(() => {
-    setLoading(true)
-    const token = localStorage.getItem('jwt');
-    fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/statistics', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      cache: 'no-store'
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const updatedStats = statistics.map((card, index) => ({
+    const fetchStatistics = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem('jwt');
+        const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/statistics', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          cache: 'no-store'
+        });
+        const data = await response.json();
+        const updatedStats = statistics.map((card) => ({
           ...card,
           value: data.by_stage[card.id]
         }));
         setStatistics(updatedStats);
-        setLoading(false); // Set loading to false when data is fetched
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching statistics:', error);
-        setLoading(false); // Also set loading to false on error
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStatistics();
   }, []);
 
 
@@ -331,7 +337,7 @@ const Dashboard = () => {
 
   const router = useRouter();
   const handleSubmit = () => {
-    setLoading(true);
+    setIsSubmitting(true);
     const token = localStorage.getItem('jwt');
     fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs', {
       method: 'POST',
@@ -344,15 +350,16 @@ const Dashboard = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.id) { // Assuming the response contains a job_id field
+        if (data.id) {
           router.push(`/dashboard/create-job-posting/${data.id}`);
-          setLoading(false);
+          setIsSubmitting(false);
         } else {
           console.error('Job ID not found in response:', data);
+          setIsSubmitting(false);
         }
       })
       .catch((error) => {
-        setLoading(false);
+        setIsSubmitting(false);
         console.error('Error creating job posting:', error);
       });
   };
@@ -499,20 +506,20 @@ const Dashboard = () => {
               variant="contained"
               fullWidth
               sx={{
-                color: "rgba(205, 247, 235, 0.92)",
+                color: "secondary.light",
                 mt: 2,
                 py: 2,
-                bgcolor: "#032B44",
+                bgcolor: "primary.main",
                 borderRadius: 2,
                 textTransform: "none",
                 "&:hover": {
-                  bgcolor: "#032B44",
+                  bgcolor: "primary.main",
                 },
               }}
               onClick={handleSubmit}
-              disabled={loading} // Disable button while loading
+              disabled={isSubmitting}
             >
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'Create Job'}
+              {isSubmitting ? <CircularProgress size={24} color="inherit" /> : 'Create Job'}
             </Button>
           </Stack>
         </DialogContent>

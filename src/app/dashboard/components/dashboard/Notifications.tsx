@@ -127,7 +127,7 @@ const Frame = ({ customStyle = {} }) => {
               See all
             </Typography>
             <ArrowForwardOutlined
-              sx={{ color: "#06B776", width: 20, height: 20 }}
+              sx={{ color: "secondary.main", width: 20, height: 20 }}
             />
           </Box>
         </Box>

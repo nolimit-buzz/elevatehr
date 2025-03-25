@@ -104,7 +104,7 @@ const EmailTemplates: React.FC<EmailTemplatesProps> = ({ customStyle }) => {
                     sx={{
                       width: 32,
                       height: 32,
-                      bgcolor: "#D6EBE4",
+                      bgcolor: "secondary.dark",
                       borderRadius: "40px",
                       display: "flex",
                       alignItems: "center",

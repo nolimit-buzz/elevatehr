@@ -18,6 +18,9 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
+  CircularProgress,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import React, { useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -48,6 +51,7 @@ interface CandidateListSectionProps {
   onUpdateStages: (stage: string, entries: number[]) => void;
   disableSelection?: boolean;
   currentStage: StageType;
+  onNotification?: (message: string, severity: 'success' | 'error') => void;
 }
 
 // At the top of your file or in a types file
@@ -61,6 +65,7 @@ export default function CandidateListSection({
   onUpdateStages,
   disableSelection,
   currentStage,
+  onNotification,
 }: CandidateListSectionProps) {
   const router = useRouter();
   const theme = useTheme();
@@ -84,8 +89,8 @@ export default function CandidateListSection({
     // { icon: <UserSearchIcon fontSize="small" />, text: "Open to trial" },
   ];
 
-  // Add these new states and handlers for the dropdown
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [loadingStage, setLoadingStage] = useState<string | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -96,10 +101,24 @@ export default function CandidateListSection({
     setAnchorEl(null);
   };
 
-  const handleAction = (e: React.MouseEvent<HTMLElement>, action: string) => {
+  const handleAction = async (e: React.MouseEvent<HTMLElement>, action: string) => {
     e.stopPropagation();
-    onUpdateStages(action, [candidate.id]);
-    handleClose();
+    setLoadingStage(action);
+    try {
+      await onUpdateStages(action, [candidate.id]);
+      onNotification?.(
+        `Applicant moved to '${action.replace('_', ' ')}'`,
+        'success'
+      );
+    } catch (error) {
+      onNotification?.(
+        error instanceof Error ? error.message : 'Failed to update stage',
+        'error'
+      );
+    } finally {
+      setLoadingStage(null);
+      handleClose();
+    }
   };
 
   const handleCardClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -263,8 +282,9 @@ export default function CandidateListSection({
         <Button
           variant="outlined"
           onClick={handleClick}
-          endIcon={<ChevronDownIcon />}
+          endIcon={loadingStage ? <CircularProgress size={20} /> : <ChevronDownIcon />}
           className="quick-actions-button"
+          disabled={loadingStage !== null}
           sx={{
             position: "absolute",
             right: 16,
@@ -278,7 +298,7 @@ export default function CandidateListSection({
             },
           }}
         >
-          Quick actions
+          {loadingStage ? 'Updating...' : 'Quick actions'}
         </Button>
 
         {/* Quick Actions Menu */}
@@ -302,6 +322,7 @@ export default function CandidateListSection({
               handleCardClick(e as any);
               handleClose();
             }}
+            disabled={loadingStage !== null}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -325,7 +346,8 @@ export default function CandidateListSection({
             return (
               <MenuItem
                 key={option.action}
-                onClick={(e) => handleAction(e,option.action)}
+                onClick={(e) => handleAction(e, option.action)}
+                disabled={loadingStage !== null}
                 sx={{
                   display: "flex",
                   alignItems: "center",

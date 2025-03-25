@@ -13,6 +13,15 @@ import {
   InputLabel,
   InputAdornment,
   Skeleton,
+  Autocomplete,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+  IconButton,
 } from '@mui/material';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -28,10 +37,11 @@ import { BorderStyle } from '@mui/icons-material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
-import { generateInput } from '../../../../utils/openai';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, TextField, IconButton } from "@mui/material";
+import { generateInput, generateSkillsForRole } from '../../../../utils/openai';
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useTheme } from '@mui/material/styles';
+import CreatableSelect from 'react-select/creatable';
+import { ActionMeta, MultiValue, GroupBase } from 'react-select';
 
 const Banner = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -110,6 +120,90 @@ const StyledOutlineButton = styled(Button)(({ theme }) => ({
   letterSpacing: '0.16px',
 }));
 
+const StyledAutocomplete = styled(Autocomplete<string, true, false, true>)({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '8px',
+    border: '0.8px solid rgba(17, 17, 17, 0.14)',
+    '& fieldset': {
+      border: 'none'
+    }
+  },
+  '& .MuiChip-root': {
+    backgroundColor: '#4444E2',
+    color: '#fff',
+    borderRadius: '16px',
+    margin: '2px',
+    '& .MuiChip-deleteIcon': {
+      color: '#fff',
+      '&:hover': {
+        color: '#fff'
+      }
+    }
+  },
+  '& .MuiAutocomplete-listbox': {
+    maxHeight: '200px',
+  }
+});
+
+const StyledSelect = styled(CreatableSelect<SkillOption, true, GroupBase<SkillOption>>)({
+  '.select__control': {
+    borderRadius: '8px',
+    border: '0.8px solid rgba(17, 17, 17, 0.14)',
+    minHeight: '56px',
+    boxShadow: 'none',
+    '&:hover': {
+      borderColor: 'rgba(17, 17, 17, 0.24)',
+    },
+    '&--is-focused': {
+      borderColor: '#4444E2',
+      boxShadow: 'none',
+    }
+  },
+  '.select__multi-value': {
+    backgroundColor: '#4444E2',
+    borderRadius: '16px',
+    margin: '2px',
+    padding: '2px 8px',
+    color: '#fff',
+    '.select__multi-value__label': {
+      color: '#fff',
+    },
+    '.select__multi-value__remove': {
+      color: '#fff',
+      '&:hover': {
+        backgroundColor: 'transparent',
+        color: '#fff',
+      }
+    }
+  },
+  '.select__menu': {
+    zIndex: 2,
+    '.select__group-heading': {
+      color: 'rgba(17, 17, 17, 0.7)',
+      fontSize: '14px',
+      fontWeight: 500,
+      padding: '8px 12px',
+    },
+    '.select__option': {
+      '&--is-selected': {
+        backgroundColor: 'rgba(68, 68, 226, 0.08)',
+        color: '#111',
+      },
+      '&--is-focused': {
+        backgroundColor: 'rgba(68, 68, 226, 0.04)',
+      }
+    }
+  },
+  '.select__placeholder': {
+    color: 'rgba(17, 17, 17, 0.5)',
+  }
+});
+
+interface SkillOption {
+  value: string;
+  label: string;
+}
+
 interface TextEditorProps {
   label: string;
   description: string;
@@ -169,6 +263,11 @@ interface FormData {
   salary_max: string;
   salary_error: string;
   level?: string;
+  skills: {
+    technical: string[];
+    soft: string[];
+  };
+  about_role?: string;
   [key: string]: any; // Allow for dynamic fields
 }
 
@@ -198,7 +297,7 @@ interface ApiError {
   message?: string;
 }
 
-const TextEditor: React.FC<TextEditorProps> = ({ label, description, value, onChange, onRegenerate }) => {
+const TextEditor: React.FC<TextEditorProps> = ({ label, description, value = '', onChange, onRegenerate }) => {
   const theme = useTheme();
   return (
     <>
@@ -545,6 +644,10 @@ const AboutTheJob = () => {
     salary_min: '',
     salary_max: '',
     salary_error: '',
+    skills: {
+      technical: [],
+      soft: [],
+    },
   });
 
   const [formFields, setFormFields] = useState<FormField[]>([]);
@@ -553,6 +656,9 @@ const AboutTheJob = () => {
   const [selectedAssessment, setSelectedAssessment] = useState<Assessment | null>(null);
   const [showDialog, setShowDialog] = useState(false);
   const [jobUrl, setJobUrl] = useState("");
+  const [technicalSkills, setTechnicalSkills] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [customSkills, setCustomSkills] = useState<string[]>([]);
   const assessments: Assessment[] = [
     { id: 'Assessment 1', title: 'Assessment 1', description: 'Description for Assessment 1' },
     { id: 'Assessment 2', title: 'Assessment 2', description: 'Description for Assessment 2' },
@@ -580,30 +686,45 @@ const AboutTheJob = () => {
         });
         const jobData = response.data;
         if (!jobData.description.length) {
-          const aiSuggestions = await generateInput({ jobTitle: jobData.title, jobLevel: jobData.level, field: '' })
+          const aiSuggestions = await generateInput({ jobTitle: jobData.title, jobLevel: jobData.level, field: '' });
           const expectations = aiSuggestions.expectations;
           if (expectations[0] === '') expectations.shift();
+
+          // Generate skills based on the job title and description
+          const generatedSkills = await generateSkillsForRole(jobData.title, aiSuggestions.aboutTheRole);
+          
+          // Take only the first 6 technical skills
+          const initialSelectedSkills = generatedSkills.technical.slice(0, 6);
+          setSkills([...generatedSkills.technical,...generatedSkills.soft]);
+          setCustomSkills([]);
+
           setFormData({
             ...jobData,
-            expectations: jobData.expectations.split('|||') || [],
+            expectations: expectations || [],
             about_role: aiSuggestions.aboutTheRole || '',
             responsibilities: aiSuggestions.jobResponsibilities || '',
             description: aiSuggestions.aboutTheRole || '',
             salary_min: jobData.salary_min || '',
-            salary_max: jobData.salary_max || ''
-          })
+            salary_max: jobData.salary_max || '',
+            skills: initialSelectedSkills
+          });
           setCustomFields(jobData.application_form.custom_fields || []);
           setFormFields(jobData.application_form.required_fields || []);
           setLoading(false);
-          return
+          return;
         }
+
+        // For existing job data
+        const skills = await generateSkillsForRole(jobData.title, jobData.description);
+        const existingExpectations = jobData.expectations.split('|||') || [];
 
         setCustomFields(jobData.application_form.custom_fields || []);
         setFormData({
           ...jobData,
-          expectations: jobData.expectations.split('|||') || [],
+          expectations: existingExpectations,
           salary_min: jobData.salary_min || '',
-          salary_max: jobData.salary_max || ''
+          salary_max: jobData.salary_max || '',
+          skills: skills
         });
         setFormFields(jobData.application_form.required_fields || []);
 
@@ -634,10 +755,18 @@ const AboutTheJob = () => {
         jobLevel: formData.level || '', 
         field: field 
       });
-      setFormData(prevData => ({
-        ...prevData,
-        [field === 'aboutTheRole' ? 'about_role' : field === 'jobResponsibilities' ? 'responsibilities' : 'expectations']: aiSuggestions[field] || prevData[field]
-      }));
+
+      if (field === 'expectations') {
+        setFormData(prevData => ({
+          ...prevData,
+          expectations: aiSuggestions.expectations
+        }));
+      } else {
+        setFormData(prevData => ({
+          ...prevData,
+          [field === 'aboutTheRole' ? 'about_role' : 'responsibilities']: aiSuggestions[field] || prevData[field]
+        }));
+      }
     } catch (err) {
       console.error(`Error regenerating ${field}:`, err);
     }
@@ -770,6 +899,29 @@ const AboutTheJob = () => {
     }
   };
 
+  const handleSkillsChange = (type: 'technical' | 'soft' | 'custom', newValue: string[]) => {
+    switch (type) {
+      case 'technical':
+        setTechnicalSkills(newValue);
+        break;
+      case 'soft':
+        setSkills(newValue);
+        break;
+      case 'custom':
+        setCustomSkills(newValue);
+        break;
+    }
+
+    // Update formData skills
+    setFormData(prev => ({
+      ...prev,
+      skills: {
+        ...prev.skills,
+        [type]: newValue
+      }
+    }));
+  };
+
   const handleDone = async () => {
     // Collate all the data
     const collatedData = {
@@ -803,7 +955,6 @@ const AboutTheJob = () => {
           ...collatedData,
           job_type: "fulltime",
           availability: "week",
-          skills: "php,css",
           experience_years: "5 years",
           qualifications: 'Senior',
           current_role: "jnr dev",
@@ -821,7 +972,7 @@ const AboutTheJob = () => {
       );
 
       // Construct the job URL
-      const jobUrl = `http://localhost:3000/dashboard/applicant/${jobId}`;
+      const jobUrl = `http://localhost:3000/dashboard/job-openings/${jobId}`;
       setJobUrl(jobUrl);
       setShowDialog(true);
 
@@ -990,6 +1141,57 @@ const AboutTheJob = () => {
                 },
               }}
             />
+            <Divider />
+            <Stack direction="row" spacing={3} alignItems="flex-start" padding="28px 24px">
+              <Stack spacing={1} minWidth={'280px'}>
+                <Typography variant="subtitle1" sx={{
+                  color: 'rgba(17, 17, 17, 0.92)',
+                  fontSize: '20px',
+                  fontStyle: 'normal',
+                  fontWeight: 600,
+                  lineHeight: '100%',
+                  letterSpacing: '0.1px',
+                }}>Skills Required</Typography>
+                <Typography sx={{
+                  color: 'rgba(17, 17, 17, 0.68)',
+                  fontSize: '16px',
+                  fontStyle: 'normal',
+                  fontWeight: 400,
+                  lineHeight: '100%',
+                  letterSpacing: '0.16px',
+                }} variant="body2" color="textSecondary">
+                  Select or add required skills for this role
+                </Typography>
+              </Stack>
+              <Box sx={{ width: '100%' }}>
+                <StyledSelect
+                  isMulti
+                  value={formData.skills.map(skill => ({ value: skill, label: skill }))}
+                  onChange={(newValue: MultiValue<SkillOption>) => {
+                    const selectedSkills = newValue ? newValue.map((option: SkillOption) => option.value) : [];
+                    handleSkillsChange('technical', selectedSkills);
+                  }}
+                  options={skills.map(skill => ({
+                        value: skill,
+                        label: skill
+                      }))}
+                  placeholder="Select or type to add new skills"
+                  noOptionsMessage={({ inputValue }: { inputValue: string }) => inputValue ? "Press enter to add this skill" : "No skills available"}
+                  formatCreateLabel={(inputValue: string) => `Add "${inputValue}" as a new skill`}
+                  onCreateOption={(inputValue: string) => {
+                    const newSkill = inputValue.trim();
+                    if (newSkill) {
+                      const updatedSkills = [...formData.skills.technical, newSkill];
+                      handleSkillsChange('technical', updatedSkills);
+                      setTechnicalSkills(prev => [...prev, newSkill]);
+                    }
+                  }}
+                  classNamePrefix="select"
+                  maxMenuHeight={300}
+                />
+              </Box>
+            </Stack>
+            <Divider />
           </>
         );
       case 2:
@@ -1057,7 +1259,6 @@ const AboutTheJob = () => {
         {loading ? (
           <Stack spacing={2} alignItems="center">
             <Skeleton variant="text" width="120%"  height={40}  />
-            {/* <Skeleton variant="text" width="40%" /> */}
             <Stack direction="row" spacing={2} justifyContent="center">
               <Skeleton variant="rounded" width={100} height={30} />
               <Skeleton variant="rounded" width={100} height={30} />
@@ -1117,7 +1318,6 @@ const AboutTheJob = () => {
               {currentStep > 1 && (
                 <StyledOutlineButton
                   variant="outlined"
-                  // color="primary"
                   onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 1))}
                   style={{ alignSelf: 'flex-end', marginTop: '20px', marginRight: '10px' }}
                 >
@@ -1126,10 +1326,8 @@ const AboutTheJob = () => {
               )}
               <StyledButton
                 variant="contained"
-                // color="primary"
                 onClick={() => setCurrentStep((prev) => Math.min(prev + 1, 3))}
                 style={{ alignSelf: 'flex-end', marginTop: '20px' }}
-                
               >
                 Next
               </StyledButton>
