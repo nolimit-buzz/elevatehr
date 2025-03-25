@@ -20,12 +20,12 @@ const AuthLogin: React.FC<AuthLoginProps> = ({ title, subtitle, subtext }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   // Check if user is already logged in
-  useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    if (token) {
-      router.push("/dashboard"); // Redirect to dashboard if JWT exists
-    }
-  }, [router]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("jwt");
+  //   if (token) {
+  //     router.push("/dashboard"); // Redirect to dashboard if JWT exists
+  //   }
+  // }, [router]);
 
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,18 +105,18 @@ const AuthLogin: React.FC<AuthLoginProps> = ({ title, subtitle, subtext }) => {
 
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
-        <Button  variant="contained" size="large" fullWidth type="submit" sx={{ borderRadius: "8px", background: "#4444E2", padding: "18px 24px",color:"rgba(205, 247, 235, 0.92)",bgcolor:"#032B44" }} disabled={loading}>
+        <Button  variant="contained" size="large" fullWidth type="submit" sx={{ borderRadius: "8px", background: "#4444E2", padding: "18px 24px",color:"secondary.light",bgcolor:"primary.main" }} disabled={loading}>
           {loading ? "Signing In..." : "Sign In"}
         </Button>
 
         <Typography sx={{ color: "rgba(17, 17, 17, 0.68)", textAlign: "center", fontSize: "18px", fontWeight: 400, lineHeight: "120%", mt: 2 }}>
           Don&apos;t have an account?{" "}
-          <Typography component={Link} href="/authentication/register" sx={{ color: "#06C680", fontSize: "18px", fontWeight: 600, textDecoration: "underline" }}>
+          <Typography component={Link} href="/authentication/register" sx={{ color: "primary.main", fontSize: "18px", fontWeight: 600, textDecoration: "underline" }}>
             Create an account
           </Typography>
         </Typography>
 
-        <Typography component={Link} href="/" sx={{ color: "#06C680", mt: 2, textAlign: "center", fontSize: "18px", fontWeight: 600, textDecoration: "underline" }}>
+        <Typography component={Link} href="/" sx={{ color: "primary.main", mt: 2, textAlign: "center", fontSize: "18px", fontWeight: 600, textDecoration: "underline" }}>
           Forgot Password?
         </Typography>
       </Stack>

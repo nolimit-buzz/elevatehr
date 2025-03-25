@@ -53,7 +53,7 @@ const Login = () => {
             
               width: "100%",
               height: "100%",
-              backgroundColor: "#E8EEF8",
+              backgroundColor: "secondary.light",
               borderRadius: '20px',
               backgroundImage: "url(/images/backgrounds/login-bg.svg)",
               backgroundSize: "cover",
@@ -121,11 +121,11 @@ const Login = () => {
         <Stack justifyContent="center" sx={{ flex: 1, height: "100vh", backgroundColor: "white" }}>
           <Box sx={{ p: 4, width: "100%", maxWidth: 600, margin: "0 auto" }}>
             <Stack>
-              <Typography variant="h1" align="center">Login to your Account</Typography>
+              <Typography variant="h1" align="center" color="grey.100">Login to your Account</Typography>
             </Stack>
             <AuthLogin
               subtext={
-                <Typography variant="subtitle1" textAlign="center" color="textSecondary" mb={'48px'}>
+                <Typography variant="subtitle1" textAlign="center" color="grey.100" mb={'48px'}>
                   Enter your login details
                 </Typography>
               }
