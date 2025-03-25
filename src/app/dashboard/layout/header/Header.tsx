@@ -51,7 +51,7 @@ const Header = () => {
   
   const ProfileButtonStyled = styled(Button)(({ theme }) => ({
     width: "100%",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: 'rgba(11, 18, 213, 0.12)',
     color: theme.palette.grey[600],
     borderRadius: "50px",
     border: `1px solid rgba(11, 18, 213, 0.40)`,
@@ -88,8 +88,7 @@ const Header = () => {
             }}
           >
             <ProfileButtonStyled>
-              <Typography>Alimosho J.</Typography>
-              <Avatar
+            <Avatar
                 src="/images/profile/user-1.jpg"
                 alt="image"
                 sx={{
@@ -97,6 +96,8 @@ const Header = () => {
                   height: 28,
                 }}
               />
+              <Typography>Alimosho J.</Typography>
+
             </ProfileButtonStyled>
           </Box>
 
