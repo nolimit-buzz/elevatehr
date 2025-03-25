@@ -1059,7 +1059,7 @@ const AboutTheJob = () => {
       );
 
       // Construct the job URL
-      const jobUrl = `http://localhost:3000/dashboard/job-openings/${jobId}`;
+      const jobUrl = `${process.env.NEXT_PUBLIC_HOST}/dashboard/job-openings/${jobId}`;
       setJobUrl(jobUrl);
       setShowDialog(true);
 
@@ -1086,7 +1086,7 @@ const AboutTheJob = () => {
   // Redirect function
   const handleCloseDialog = () => {
     setShowDialog(false);
-    window.location.href = "http://localhost:3000/dashboard";
+    window.location.href = `${process.env.NEXT_PUBLIC_HOST}/dashboard`;
   };
 
   const renderStepContent = () => {
