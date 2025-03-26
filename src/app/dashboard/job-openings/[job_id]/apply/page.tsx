@@ -694,7 +694,7 @@ const ApplicationForm = () => {
       <Banner
         sx={{
           backgroundColor: theme.palette.primary.main,
-          backgroundImage: "url(/images/backgrounds/banner-bg.svg)",
+          backgroundImage: "url(/images/backgrounds/banner-bg-img.png)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

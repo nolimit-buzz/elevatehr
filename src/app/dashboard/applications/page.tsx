@@ -60,34 +60,13 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RestoreIcon from "@mui/icons-material/Restore";
 import CheckIcon from "@mui/icons-material/Check";
 
-// Types
-interface JobDetails {
-  title: string;
-  about_role: string;
-  job_type: string;
-  work_model: string;
-  location: string;
-  responsibilities?: string;
-  expectations?: string;
-  stage_counts: {
-    new: number;
-    skill_assessment: number;
-    interviews: number;
-    acceptance: number;
-    archived: number;
-  };
-  requirements?: string[];
-  experience_years?: string;
-  status: string;
-}
-
 interface FilterState {
+  jobTitle: string;
   yearsOfExperience: string;
   salaryMin: string;
   salaryMax: string;
   requiredSkills: string[];
   availability: string;
-  trial: string;
 }
 
 interface Candidate {
@@ -187,24 +166,7 @@ const StyledRadio = styled(Radio)({
   },
 
 });
-const PrimaryButton = styled(Button)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
-  borderRadius: "8px",
-  display: 'flex',
-  alignItems: 'center',
-  gap: '5px',
-  padding: '10px 20px',
-  fontSize: theme.typography.pxToRem(16),
-  color: theme.palette.secondary.light,
-  fontWeight: theme.typography.fontWeightMedium,
-  height: '52px',
-  transition: 'all 0.2s ease-in-out',
-  '&:hover': {
-    backgroundColor: '#6666E6',
-    transform: 'translateY(-1px)',
-    boxShadow: '0 4px 12px rgba(68, 68, 226, 0.15)',
-  },
-}));
+
 // Update TabPanel component
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -244,15 +206,14 @@ export default function Home() {
     archived: 0
   });
   const [filters, setFilters] = useState<FilterState>({
+    jobTitle: '',
     yearsOfExperience: '',
     salaryMin: '',
     salaryMax: '',
     requiredSkills: [],
     availability: '',
-    trial: '',
   });
   const [filteredCandidates, setFilteredCandidates] = useState<CandidateResponse>({ applications: [] });
-  const [jobDetails, setJobDetails] = useState<JobDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [candidates, setCandidates] = useState<CandidateResponse>({ applications: [] });
@@ -274,52 +235,6 @@ export default function Home() {
   const router = useRouter();
   const params = useParams();
 
-  const getJobId = useCallback((): string => {
-    return params['job_id'] as string;
-  }, [params]);
-
-  useEffect(() => {
-    const fetchJobDetails = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const token = localStorage.getItem("jwt");
-        const jobId = getJobId();
-        const response = await fetch(
-          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            cache: 'no-store'
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch job details: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Job details received:', data);
-        setJobDetails(data);
-        setLoading(false);
-        // Set stage totals from job details
-        if (data.stage_counts) {
-          setStageTotals(data.stage_counts);
-        }
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('Failed to fetch job details');
-        }
-        setLoading(false);
-      }
-    };
-
-    fetchJobDetails();
-  }, [getJobId]);
 
   useEffect(() => {
     const fetchCandidates = async () => {
@@ -327,10 +242,9 @@ export default function Home() {
       setError(null);
       try {
         const token = localStorage.getItem("jwt");
-        const jobId = getJobId();
         const stage = subTabValue === 0 ? "new" : getStageValue(subTabValue);
         const response = await fetch(
-          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications?stage=${stage}`,
+          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/applications?stage=${stage}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -361,22 +275,8 @@ export default function Home() {
     if (primaryTabValue === 0) {
       fetchCandidates();
     }
-  }, [getJobId, primaryTabValue, subTabValue]);
+  }, [ primaryTabValue, subTabValue]);
 
-  useEffect(() => {
-    console.log('Job details received:', jobDetails);
-    const loadSkills = async () => {
-
-      if (jobDetails) {
-        const skills = await getSkillsForRole(jobDetails.title, jobDetails.about_role);
-        setAvailableSkills(skills);
-      }
-    };
-
-    if (jobDetails) {
-      loadSkills();
-    }
-  }, [getJobId, jobDetails]);
 
   const getStageValue = (tabValue: number): StageType => {
     switch (tabValue) {
@@ -405,7 +305,6 @@ export default function Home() {
     setError(null);
     try {
       const token = localStorage.getItem("jwt");
-      const jobId = getJobId();
       const stage = subTabValue === 0 ? "new" : getStageValue(subTabValue);
 
       // Build query parameters from filters
@@ -423,11 +322,10 @@ export default function Home() {
         queryParams.append("skills", filters.requiredSkills.join(','));
       }
       if (filters.availability) queryParams.append("availability", filters.availability);
-      if (filters.trial) queryParams.append("trial", filters.trial);
       queryParams.append("stage", stage);
 
       const response = await fetch(
-        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications?${queryParams.toString()}`,
+        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/applications?${queryParams.toString()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -458,12 +356,12 @@ export default function Home() {
 
   const clearFilters = () => {
     setFilters({
+      jobTitle: "",
       yearsOfExperience: "",
       salaryMin: "",
       salaryMax: "",
       requiredSkills: [],
       availability: "",
-      trial: "",
     });
     setFilteredCandidates({ applications: [] });
   };
@@ -493,331 +391,6 @@ export default function Home() {
     setQuickActionsAnchor(null);
   };
 
-  const getSkillChipColor = (skill: string): SkillColor => {
-    const colors: SkillColors = {
-      Communication: { bg: "#FBE9E7", color: "#D84315" },
-      "Data analysis": { bg: "#E1F5FE", color: "#0288D1" },
-      "Strategic Thinking": { bg: "#F3E5F5", color: "#7B1FA2" },
-      Empathy: { bg: "#E8EAF6", color: "#3949AB" },
-      Prioritization: { bg: "#E8F5E9", color: "#388E3C" },
-      Research: { bg: "#FFEBEE", color: "#C62828" },
-    };
-
-    return colors[skill] || { bg: "#E0E0E0", color: "#616161" };
-  };
-
-  const renderJobDescription = () => {
-    if (loading) {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "400px",
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      );
-    }
-
-    if (error) {
-      return (
-        <Box sx={{ p: 3, textAlign: "center" }}>
-          <Typography color="error" variant="h6">
-            Error loading job details
-          </Typography>
-          <Typography color="textSecondary">{error}</Typography>
-          <Button
-            variant="contained"
-            sx={{ mt: 2 }}
-            onClick={() => {
-              setError(null);
-              setPrimaryTabValue(1);
-            }}
-          >
-            Retry
-          </Button>
-        </Box>
-      );
-    }
-
-    const jobData = jobDetails;
-
-    return (
-      <Stack direction={"row"} gap={4}>
-        <Card
-          sx={{
-            width: 308,
-            height: 345,
-            borderRadius: 2,
-            overflow: "hidden",
-            p: 3,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Typography
-            variant="h5"
-            fontWeight={600}
-            color="rgba(17, 17, 17, 0.92)"
-            mb={2}
-            sx={{
-              color: "rgba(17, 17, 17, 0.92)",
-              textTransform: "capitalize", // Equivalent to leading-trim: both and text-edge: cap
-              fontSize: "24px",
-              fontStyle: "normal",
-              fontWeight: 600,
-              lineHeight: 1, // Equivalent to 100%
-              letterSpacing: "0.12px",
-            }}
-          >
-            {jobData?.title || ''}
-          </Typography>
-
-          <Stack spacing={2} mb={3}>
-            <Chip
-              icon={<ClockIcon />}
-              label={jobData?.job_type}
-              sx={{
-                bgcolor: "#edeef1",
-                color: "rgba(17, 17, 17, 0.84)",
-                borderRadius: "28px",
-                height: 36,
-                width: "fit-content",
-                "& .MuiChip-label": {
-                  fontSize: 14,
-                  fontWeight: 400,
-                },
-              }}
-            />
-            <Chip
-              icon={<LocationIcon />}
-              label={jobData?.work_model}
-              sx={{
-                bgcolor: "#edeef1",
-                color: "rgba(17, 17, 17, 0.84)",
-                borderRadius: "28px",
-                height: 36,
-                width: "fit-content",
-                "& .MuiChip-label": {
-                  fontSize: 14,
-                  fontWeight: 400,
-                },
-              }}
-            />
-            <Chip
-              icon={<LocationIcon />}
-              label={jobData?.location?.split(" ")?.join(", ")}
-              sx={{
-                bgcolor: "#edeef1",
-                color: "rgba(17, 17, 17, 0.84)",
-                borderRadius: "28px",
-                height: 36,
-                width: "fit-content",
-                "& .MuiChip-label": {
-                  fontSize: 14,
-                  fontWeight: 400,
-                },
-              }}
-            />
-          </Stack>
-
-          <Divider sx={{ width: "100%", my: 2 }} />
-
-          <Stack spacing={2.5} mt={1}>
-            <Box display="flex" alignItems="center" gap={1}>
-              <FlashIcon sx={{ color: "#00C853", width: 20, height: 20 }} />
-              <Typography
-                fontWeight={500}
-                color="rgba(17, 17, 17, 0.84)"
-                fontSize={16}
-              >
-                {jobData?.experience_years} of Experience
-              </Typography>
-            </Box>
-            {jobData?.requirements?.map((requirement, index) => (
-              <Box key={index} display="flex" alignItems="center" gap={1}>
-                <FlashIcon sx={{ color: "#00C853", width: 20, height: 20 }} />
-                <Typography
-                  fontWeight={500}
-                  color="rgba(17, 17, 17, 0.84)"
-                  fontSize={16}
-                >
-                  {requirement}
-                </Typography>
-              </Box>
-            ))}
-          </Stack>
-        </Card>
-        <Paper
-          elevation={0}
-          sx={{
-            width: 956,
-            height: 902,
-            borderRadius: 2,
-            position: "relative",
-            overflow: "hidden",
-            p: 4,
-          }}
-        >
-          {/* Icon */}
-          <Box
-            sx={{
-              width: 108,
-              height: 108,
-              bgcolor: "#e6f9f1",
-              borderRadius: "80px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              border: "0.8px solid rgba(67, 67, 225, 0.12)",
-              mb: 4,
-            }}
-          >
-            <WorkOutline sx={{ width: 48, height: 48 }} />
-          </Box>
-
-          {/* Edit Button */}
-          <Link href={`/dashboard/create-job-posting/${getJobId()}`}>
-            <Button
-              variant="contained"
-              startIcon={<Edit />}
-              sx={{
-                position: "absolute",
-                top: 32,
-                right: 32,
-                bgcolor: "#f4f4f6",
-                color: "rgba(17, 17, 17, 0.84)",
-                textTransform: "none",
-                borderRadius: 2,
-                border: "0.5px solid rgba(17, 17, 17, 0.08)",
-                py: 1.25,
-                px: 2.5,
-                "&:hover": {
-                  bgcolor: "#e8e8ea",
-                },
-              }}
-            >
-              Edit
-            </Button>
-          </Link>
-
-          {/* About the Role Section */}
-          <Box sx={{ mb: 4 }}>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 600,
-                color: "rgba(17, 17, 17, 0.92)",
-                fontSize: 20,
-                mb: 1.5,
-                letterSpacing: "0.1px",
-                lineHeight: "20px",
-              }}
-            >
-              About the Role
-            </Typography>
-            <Typography
-              component="div"
-              variant="body1"
-              dangerouslySetInnerHTML={{ __html: jobDetails?.about_role || '' }}
-              sx={{
-                color: 'rgba(17, 17, 17, 0.84)',
-                maxWidth: 800,
-                letterSpacing: '0.15px',
-                lineHeight: '1.5',
-              }}
-            />
-          </Box>
-
-          <Divider sx={{ my: 3 }} />
-
-          {/* Job Responsibilities Section */}
-          <Box sx={{ mb: 4 }}>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 600,
-                color: "rgba(17, 17, 17, 0.92)",
-                fontSize: 20,
-                mb: 1.5,
-                letterSpacing: "0.1px",
-                lineHeight: "20px",
-              }}
-            >
-              Job Responsibilities
-            </Typography>
-            <Box
-              component="div"
-              dangerouslySetInnerHTML={{ __html: jobData?.responsibilities || '' }}
-              sx={{
-                "& ul": {
-                  marginBlockStart: 0,
-                  paddingInlineStart: "20px !important",
-                  "& li": {
-                    display: "list-item",
-                    listStyleType: "disc",
-                    p: 0,
-                    pb: 0.5,
-                    color: "rgba(17, 17, 17, 0.84)",
-                    letterSpacing: "0.16px",
-                    lineHeight: "24px",
-                  },
-                },
-              }}
-            />
-          </Box>
-
-          <Divider sx={{ my: 3 }} />
-
-          {/* Expectations Section */}
-          <Box>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 600,
-                color: "rgba(17, 17, 17, 0.92)",
-                fontSize: 20,
-                mb: 1.5,
-                letterSpacing: "0.1px",
-                lineHeight: "20px",
-              }}
-            >
-              Expectations of the Role
-            </Typography>
-            <List sx={{ maxWidth: 660, pl: 2 }}>
-              {jobData?.expectations?.split("|||")?.map((expectation, index) => (
-                <ListItem
-                  key={index}
-                  sx={{
-                    display: "list-item",
-                    listStyleType: "disc",
-                    p: 0,
-                    pb: 0.5,
-                  }}
-                >
-                  <ListItemText
-                    primary={expectation}
-                    primaryTypographyProps={{
-                      variant: "body1",
-                      sx: {
-                        color: "rgba(17, 17, 17, 0.84)",
-                        letterSpacing: "0.16px",
-                        lineHeight: "24px",
-                      },
-                    }}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        </Paper>
-      </Stack>
-    );
-  };
-
   const handleSelectCandidate = (id: number) => {
     setSelectedEntries((prev) => {
       if (prev.includes(id)) {
@@ -835,7 +408,6 @@ export default function Home() {
       if (!jwt) throw new Error('Authentication token not found');
 
       const entriesToUpdate = entries.length ? entries : selectedEntries;
-      const jobId = getJobId();
 
       console.log('Updating application stage:', stage, entriesToUpdate, jwt);
       const response = await fetch(
@@ -858,32 +430,10 @@ export default function Home() {
       if (!response.ok) {
         throw new Error('Failed to update stages');
       }
-
-      // Refetch job details to update stage counts
-      const jobDetailsResponse = await fetch(
-        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            "Content-Type": "application/json",
-          },
-          cache: 'no-store'
-        }
-      );
-
-      if (!jobDetailsResponse.ok) {
-        throw new Error('Failed to fetch updated job details');
-      }
-
-      const jobDetailsData = await jobDetailsResponse.json();
-      if (jobDetailsData.stage_counts) {
-        setStageTotals(jobDetailsData.stage_counts);
-      }
-
       // Refetch candidates for the current stage
       const currentStage = getStageValue(subTabValue);
       const candidatesResponse = await fetch(
-        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications?stage=${currentStage}`,
+        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/applications?stage=${currentStage}`,
         {
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -948,7 +498,7 @@ export default function Home() {
       filters.salaryMax !== "" ||
       filters.requiredSkills.length > 0 ||
       filters.availability !== "" ||
-      filters.trial !== ""
+      filters.jobTitle !== ""
     );
   };
 
@@ -957,100 +507,6 @@ export default function Home() {
       setError(error.message);
     } else {
       setError('An unexpected error occurred');
-    }
-  };
-
-  const handleCloseResponses = async () => {
-    try {
-      const token = localStorage.getItem("jwt");
-      if (!token) throw new Error('Authentication token not found');
-
-      const jobId = getJobId();
-      const newStatus = jobDetails?.status === 'close' ? 'active' : 'close';
-      
-      const response = await fetch(
-        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            ...jobDetails,
-            status: newStatus
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to update job status');
-      }
-
-      // Show success notification
-      setNotificationMessage(newStatus === 'close' ? 'Job posting closed successfully' : 'Job posting reopened successfully');
-      setNotificationSeverity('success');
-      setIsOpen(true);
-
-      // Refetch job details and candidates if reopening
-      if (newStatus === 'active') {
-        // Refetch job details
-        const jobDetailsResponse = await fetch(
-          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            cache: 'no-store'
-          }
-        );
-
-        if (!jobDetailsResponse.ok) {
-          throw new Error('Failed to fetch updated job details');
-        }
-
-        const jobDetailsData = await jobDetailsResponse.json();
-        setJobDetails(jobDetailsData);
-        if (jobDetailsData.stage_counts) {
-          setStageTotals(jobDetailsData.stage_counts);
-        }
-
-        // Refetch candidates for current stage
-        const currentStage = getStageValue(subTabValue);
-        const candidatesResponse = await fetch(
-          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications?stage=${currentStage}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            cache: 'no-store',
-          }
-        );
-
-        if (!candidatesResponse.ok) {
-          throw new Error('Failed to fetch updated candidates');
-        }
-
-        const candidatesData = await candidatesResponse.json();
-        setCandidates(candidatesData);
-        setFilteredCandidates(candidatesData);
-      } else {
-        // Redirect to dashboard if closing
-        setTimeout(() => {
-          router.push('/dashboard');
-        }, 1500);
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        setNotificationMessage(error.message);
-        setNotificationSeverity('error');
-        setIsOpen(true);
-      } else {
-        setNotificationMessage('An unexpected error occurred while updating the job status');
-        setNotificationSeverity('error');
-        setIsOpen(true);
-      }
     }
   };
 
@@ -1083,61 +539,13 @@ export default function Home() {
               lineHeight: "100%",
               letterSpacing: "0.12px"
             }}  >
-              {jobDetails?.title}
+             Applications
             </Typography>
           </Box>
-          <PrimaryButton
-            variant="contained"
-            onClick={handleCloseResponses}
-          >
-            {jobDetails?.status === 'close' ? 'Reopen Job Posting' : 'Close Responses for this Job'}
-          </PrimaryButton>
         </Box>
 
-        <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
-          <Tabs
-            value={primaryTabValue}
-            onChange={(_event: React.SyntheticEvent, newValue: number) => setPrimaryTabValue(newValue)}
-            aria-label="primary tabs"
-            sx={{
-              minHeight: 'auto',
-              '& .MuiTabs-indicator': {
-                backgroundColor: '#4444E2',
-              },
-              '& .MuiTab-root': {
-                transition: 'all 0.2s ease-in-out',
-                '&:hover': {
-                  color: theme.palette.secondary.main,
-                }
-              }
-            }}
-          >
-            <Tab
-              label="Applications"
-              sx={{
-                textTransform: "none",
-                fontWeight: primaryTabValue === 0 ? "bold" : "normal",
-                color:
-                  primaryTabValue === 0
-                    ? theme.palette.secondary.main
-                    : theme.palette.grey[100],
-              }}
-            />
-            <Tab
-              label="Job description"
-              sx={{
-                textTransform: "none",
-                fontWeight: primaryTabValue === 1 ? "bold" : "normal",
-                color:
-                  primaryTabValue === 1
-                    ? theme.palette.secondary.main
-                    : theme.palette.grey[100],
-              }}
-            />
-          </Tabs>
-        </Box>
+       
 
-        {primaryTabValue === 0 ? (
           <Stack direction="row" gap={3}>
             <Box sx={{ width: 300, flexShrink: 0 }}>
               <Paper elevation={0} sx={{ p: 3, mb: 2, borderRadius: 2 }}>
@@ -1177,7 +585,26 @@ export default function Home() {
                     Clear filter
                   </Button>
                 </Box>
-
+                <Box sx={{ mb: 3 }}>
+                  <Typography
+                    sx={{
+                      mb: 1.5,
+                      fontSize: '16px',
+                      fontWeight: 500,
+                      color: 'rgba(17, 17, 17, 0.92)'
+                    }}
+                  >
+                    Job Title
+                  </Typography>
+                  <FormControl fullWidth>
+                   <StyledTextField
+                    placeholder="Search by Job Title"
+                    fullWidth
+                    value={filters.jobTitle}
+                    onChange={(e) => handleFilterChange("jobTitle", e.target.value)}
+                   />
+                  </FormControl>
+                </Box>
                 <Box sx={{ mb: 3 }}>
                   <Typography
                     sx={{
@@ -1405,7 +832,7 @@ export default function Home() {
                   </RadioGroup>
                 </Box>
 
-                <PrimaryButton
+                <Button
                   variant="contained"
                   fullWidth
                   disabled={!hasActiveFilters()}
@@ -1431,7 +858,7 @@ export default function Home() {
                   onClick={applyFilters}
                 >
                   Apply Filter
-                </PrimaryButton>
+                </Button>
               </Paper>
             </Box>
             <Box sx={{ flexGrow: 1 }}>
@@ -1875,9 +1302,6 @@ export default function Home() {
               </Paper>
             </Box>
           </Stack>
-        ) : (
-          renderJobDescription()
-        )}
       </Container>
 
       {/* Add Snackbar for notifications */}

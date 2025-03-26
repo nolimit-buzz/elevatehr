@@ -77,10 +77,11 @@ const StyledSubtitleTypography = styled(Typography)(({ theme }) => ({
   width: 'max-content',
   textAlign: 'center',
   color: theme.palette.primary.main,
-  fontWeight: 500,
-  transition: 'background-color 0.2s ease-in-out',
+  fontWeight: 400,
+  transition: 'all 0.2s ease-in-out',
   '.MuiTableRow-root:hover &': {
-    background: theme.palette.secondary.dark
+    background: theme.palette.secondary.dark,
+    fontWeight: 500
   }
 }));
 
@@ -220,7 +221,7 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
                   >
                     <StyledTableCell>
                       <Stack>
-                        <StyledTypography>
+                        <StyledTypography textTransform={'capitalize'}>
                           {job.title}
                         </StyledTypography>
                         <Stack direction='row' gap={1}>
