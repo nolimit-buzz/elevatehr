@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 // components
 import Profile from "./Profile"
 import { IconBellRinging, IconMenu } from "@tabler/icons-react";
@@ -24,6 +25,7 @@ interface ItemType {
 }
 
 const Header = () => {
+  const pathname = usePathname();
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
@@ -55,17 +57,30 @@ const Header = () => {
     color: theme.palette.grey[600],
     borderRadius: "50px",
     border: `1px solid rgba(11, 18, 213, 0.40)`,
-        display: "flex",
+    display: "flex",
     gap: '10px',
+    transition: 'all 0.2s ease-in-out',
+    '&:hover': {
+      backgroundColor: 'rgba(11, 18, 213, 0.18)',
+      transform: 'translateY(-1px)',
+      boxShadow: '0 4px 12px rgba(11, 18, 213, 0.1)',
+    }
   }));
 
   const LinkStyled = styled(Link)(({ theme }) => ({
-    color: theme.palette.grey[200],
+    color: 'rgba(17, 17, 17, 0.72)',
     fontWeight: theme.typography.fontWeightMedium,
     textDecoration: "none",
+    transition: 'color 0.2s ease-in-out',
+    '&:hover': {
+      color: `rgba(11, 18, 213, 0.5)`,
+    },
+    '&.active': {
+      color: theme.palette.primary.main,
+    }
   }));
 
-  const links = [{ href: "/", title: "Dashboard" }, { href: "/applications", title: "Applications" }, { href: "/notifications", title: "Notifications" }];
+  const links = [{ href: "/dashboard", title: "Dashboard" }, { href: "/applications", title: "Applications" }, { href: "/notifications", title: "Notifications" }];
   return (
     <AppBarStyled position="sticky" color="default">
 
@@ -77,7 +92,17 @@ const Header = () => {
           height={56}
         />
         </Box>
-        <Stack direction='row' width='max-content' gap={2}>{links.map((link) => <LinkStyled key={link.title} href={link.href}>{link.title}</LinkStyled>)}</Stack>
+        <Stack direction='row' width='max-content' gap={4}>
+          {links.map((link) => (
+            <LinkStyled 
+              key={link.title} 
+              href={link.href}
+              className={pathname === link.href ? 'active' : ''}
+            >
+              {link.title}
+            </LinkStyled>
+          ))}
+        </Stack>
         <Stack spacing={1} direction="row" alignItems="center">
           <Box
             sx={{

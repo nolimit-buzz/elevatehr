@@ -38,13 +38,14 @@ const statCards = [
   {
     icon: (
       <SvgIcon>
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="16" fill="#1CC47E" />
-          <path d="M11.8335 11.8335L20.1668 20.1668" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M20.1667 13.5L20.1667 20.1667L13.5 20.1667" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <svg width="120" height="120" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="60" rx="30" fill="#1CC47E" />
+          <path d="M22.1879 22.1879L37.8128 37.8128" stroke="white" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M37.8125 25.3125L37.8125 37.8125L25.3125 37.8125" stroke="white" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </SvgIcon>
     ),
+    color: '#1CC47E',
     id: 'new',
     title: "Applicants",
     value: 0, // Will be updated with fetched data
@@ -52,17 +53,18 @@ const statCards = [
   {
     icon: (
       <SvgIcon>
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="16" fill="#5656E6" />
-          <path d="M15.1667 22.25H23.5001" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M15.1667 16.4167H23.5001" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M15.1667 10.5833H23.5001" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M8.5 10.5834L9.33333 11.4167L11.8333 8.91675" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M8.5 16.4167L9.33333 17.25L11.8333 14.75" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M8.5 22.2499L9.33333 23.0833L11.8333 20.5833" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+        <svg width="120" height="120" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="60" rx="30" fill="#5656E6" />
+          <path d="M28.4375 41.7188H44.0626" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M28.4375 30.7813H44.0626" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M28.4375 19.8438H44.0626" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M15.9375 19.8438L17.5 21.4063L22.1875 16.7188" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M15.9375 30.7813L17.5 32.3438L22.1875 27.6563" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M15.9375 41.7188L17.5 43.2813L22.1875 38.5938" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </SvgIcon>
     ),
+    color: '#5656E6',
     id: 'skill_assessment',
     title: "Skill Assessment",
     value: 0, // Will be updated with fetched data
@@ -70,14 +72,15 @@ const statCards = [
   {
     icon: (
       <SvgIcon>
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="16" fill="#FD8535" />
-          <path d="M16.4417 23.0167H11.1751C8.54175 23.0167 7.6667 21.2667 7.6667 19.5084V12.4917C7.6667 9.8584 8.54175 8.9834 11.1751 8.9834H16.4417C19.0751 8.9834 19.9501 9.8584 19.9501 12.4917V19.5084C19.9501 22.1417 19.0667 23.0167 16.4417 23.0167Z" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M22.2666 20.2499L19.95 18.6249V13.3665L22.2666 11.7415C23.4 10.9499 24.3333 11.4332 24.3333 12.8249V19.1749C24.3333 20.5665 23.4 21.0499 22.2666 20.2499Z" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M15.5833 15.1667C16.2736 15.1667 16.8333 14.6071 16.8333 13.9167C16.8333 13.2264 16.2736 12.6667 15.5833 12.6667C14.8929 12.6667 14.3333 13.2264 14.3333 13.9167C14.3333 14.6071 14.8929 15.1667 15.5833 15.1667Z" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+        <svg width="120" height="120" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="60" rx="30" fill="#FD8535" />
+          <path d="M30.8281 43.1563H20.9533C16.0158 43.1563 14.375 39.875 14.375 36.5781V23.4219C14.375 18.4844 16.0158 16.8438 20.9533 16.8438H30.8281C35.7656 16.8438 37.4062 18.4844 37.4062 23.4219V36.5781C37.4062 41.5156 35.75 43.1563 30.8281 43.1563Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M41.75 37.9688L37.4062 34.9219V25.0625L41.75 22.0156C43.875 20.5313 45.625 21.4375 45.625 24.0469V35.9531C45.625 38.5625 43.875 39.4688 41.75 37.9688Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M29.2188 28.4375C30.5125 27.9063 31.5625 27.3881 31.5625 25.0938C31.5625 22.6875 30.5125 21.25 29.2188 21.25C27.925 21.25 26.875 22.6875 26.875 25.0938C26.875 27.3881 27.925 27.9063 29.2188 28.4375Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </SvgIcon>
     ),
+    color: '#FD8535',
     id: 'interviews',
     title: "Interviews",
     value: 0, // Will be updated with fetched data
@@ -85,13 +88,14 @@ const statCards = [
   {
     icon: (
       <SvgIcon>
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="16" fill="#D834DE" />
-          <path d="M13.7083 13.5417C15.1916 14.0834 16.8083 14.0834 18.2916 13.5417" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M20.0166 7.66675H11.9833C10.2083 7.66675 8.7666 9.11675 8.7666 10.8834V22.6251C8.7666 24.1251 9.8416 24.7584 11.1583 24.0334L15.2249 21.7751C15.6583 21.5334 16.3583 21.5334 16.7833 21.7751L20.8499 24.0334C22.1666 24.7665 23.2416 24.1334 23.2416 22.6251V10.8834C23.2416 9.11675 21.7916 7.66675 20.0166 7.66675Z" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+        <svg width="120" height="120" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="60" rx="30" fill="#D834DE" />
+          <path d="M25.7031 25.3906C28.4844 26.4063 31.5156 26.4063 34.2969 25.3906" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M37.5312 14.375H22.4688C19.1406 14.375 17.4375 17.0938 17.4375 20.4062V42.4219C17.4375 45.2344 18.4531 46.4219 20.9219 45.0625L28.5469 40.8281C29.3594 40.375 30.6406 40.375 31.4688 40.8281L39.0938 45.0625C41.5625 46.4219 42.7031 45.2344 42.7031 42.4219V20.4062C42.7031 17.0938 41 14.375 37.5312 14.375Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </SvgIcon>
     ),
+    color: '#D834DE',
     id: 'archived',
     title: "Archived",
     value: 0, // Will be updated with fetched data
@@ -99,14 +103,15 @@ const statCards = [
   {
     icon: (
       <SvgIcon>
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="16" fill="#35B0FD" />
-          <path d="M18.0332 21.8751L19.2999 23.1417L21.8332 20.6084" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M16.1334 15.0584C16.0501 15.0501 15.9501 15.0501 15.8584 15.0584C13.875 14.9917 12.3001 13.3667 12.3001 11.3667C12.3001 9.32508 13.9501 7.66675 15.9917 7.66675C18.0334 7.66675 19.7001 9.32508 19.7001 11.3667C19.7001 13.3667 18.1084 14.9917 16.1334 15.0584Z" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M15.9917 24.1751C14.475 24.1751 12.9667 23.7917 11.8167 23.0251C10.8083 22.6751 10.8083 21.5334 11.825 20.1834L15.9917 16.1334C16.0084 15.9917 16.85 15.9917 17.3834 16.1334L20.8499 19.1749C23.2417 21.5665 24.3333 22.1417 24.3333 20.6251V10.8834C24.3333 9.12508 23.2417 7.66675 20.8499 7.66675H11.1583C8.76667 7.66675 7.66667 9.12508 7.66667 11.3667C7.66667 13.3667 8.76667 14.9917 11.1583 15.0584Z" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+        <svg width="120" height="120" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="60" rx="30" fill="#35B0FD" />
+          <path d="M33.8123 41.0156L36.1874 43.3906L40.9373 38.6406" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M30.25 28.2344C30.0938 28.2188 29.9062 28.2188 29.7344 28.2344C26.0156 28.1094 23.0625 25.125 23.0625 21.3125C23.0625 17.4844 26.0156 14.375 30 14.375C33.8125 14.375 36.9375 17.4844 36.9375 21.3125C36.9375 25.125 33.9531 28.1094 30.25 28.2344Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M30 45.3281C27.1406 45.3281 24.3125 44.6094 22.1562 43.1719C20.2656 42.0156 20.2656 40.75 22.1719 38.25L30 30.25C30.0156 30.125 31.5938 30.125 32.5938 30.25L39.0938 35.9531C43.5781 40.4375 45.625 41.5156 45.625 38.6719V20.4062C45.625 17.1094 43.5781 14.375 39.0938 14.375H20.9219C16.4375 14.375 14.375 17.1094 14.375 21.3125C14.375 25.125 16.4375 28.1094 20.9219 28.2344Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </SvgIcon>
     ),
+    color: '#35B0FD',
     id: 'acceptance',
     title: "Acceptance",
     value: 0, // Will be updated with fetched data
@@ -114,15 +119,16 @@ const statCards = [
   {
     icon: (
       <SvgIcon>
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="16" fill="#FDBD0D" />
-          <path d="M21.3417 21.0752L18.9917 23.4252" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M21.3417 23.4252L18.9917 21.0752" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M16.1334 15.0584C16.05 15.0501 15.95 15.0501 15.8584 15.0584C13.875 14.9917 12.3 13.3667 12.3 11.3667C12.3 9.32508 13.95 7.66675 16 7.66675C18.0417 7.66675 19.7 9.32508 19.7 11.3667C19.7 13.3667 18.1167 14.9917 16.1334 15.0584Z" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M16 24.1751C14.4833 24.1751 12.975 23.7917 11.825 23.0251C10.8167 22.6751 10.8167 21.5334 11.8334 20.1834L16 16.1334C16.0167 15.9917 16.85 15.9917 17.3834 16.1334L20.8499 19.1749C23.2417 21.5665 24.3333 22.1417 24.3333 20.6251V10.8834C24.3333 9.12508 23.2417 7.66675 20.8499 7.66675H11.1583C8.76667 7.66675 7.66667 9.12508 7.66667 11.3667C7.66667 13.3667 8.76667 14.9917 11.1583 15.0584Z" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+        <svg width="120" height="120" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="60" rx="30" fill="#FDBD0D" />
+          <path d="M40.0156 39.5156L35.6094 43.9219" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M40.0156 43.9219L35.6094 39.5156" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M30.25 28.2344C30.125 28.2188 29.9062 28.2188 29.7344 28.2344C26.0156 28.1094 23.0625 25.125 23.0625 21.3125C23.0625 17.4844 26.0156 14.375 30 14.375C33.8125 14.375 36.9375 17.4844 36.9375 21.3125C36.9375 25.125 33.9688 28.1094 30.25 28.2344Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M30 45.3281C27.1406 45.3281 24.3125 44.6094 22.1562 43.1719C20.2656 42.0156 20.2656 40.75 22.1719 38.25L30 30.25C30.0156 30.125 31.5938 30.125 32.5938 30.25L37.5938 35.9531C43.5781 40.4375 45.625 41.5156 45.625 38.6719V20.4062C45.625 17.1094 43.5781 14.375 39.0938 14.375H20.9219C16.4375 14.375 14.375 17.1094 14.375 21.3125C14.375 25.125 16.4375 28.1094 20.9219 28.2344Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </SvgIcon>
     ),
+    color: '#FDBD0D',
     id: 'rejection',
     title: "Rejected",
     value: 0, // Will be updated with fetched data
@@ -156,8 +162,11 @@ const PrimaryButton = styled(Button)(({ theme }) => ({
   color: theme.palette.secondary.light,
   fontWeight: theme.typography.fontWeightMedium,
   height: '52px',
+  transition: 'all 0.2s ease-in-out',
   '&:hover': {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: '#6666E6',
+    transform: 'translateY(-1px)',
+    boxShadow: '0 4px 12px rgba(68, 68, 226, 0.15)',
   },
 }));
 
@@ -214,14 +223,18 @@ const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: '8px',
   background: '#4444E2',
   color: '#FFF',
+  transition: 'all 0.2s ease-in-out',
   '&:hover': {
-    background: '#3333B3',
+    background: '#6666E6',
+    transform: 'translateY(-1px)',
+    boxShadow: '0 4px 12px rgba(68, 68, 226, 0.15)',
   },
 }));
 
 interface StatCardProps {
   card: {
     icon: React.ReactNode;
+    color: string;
     id: string;
     title: string;
     value: number;
@@ -230,25 +243,79 @@ interface StatCardProps {
   length: number;
 }
 
-const StatCard = ({ card, index, length }: StatCardProps) => (
-  <Grid item xs={2}>
-    <DashboardCard customStyle={{ borderRadius: index === 0 ? '10px 0 0 10px' : (index === length - 1 ? '0 10px 10px 0' : '0px'), borderRight: index < length - 1 ? '1px solid rgba(17,17,17,0.12)' : 'none', padding: '30px', }}>
-      <Stack>
-        {card.icon}
-        <Typography variant="h3" fontSize={'34px'} color='rgba(17,17,17,0.92)' marginTop={'20px'} marginBottom={'10px'} fontWeight="700">
-          {card.value?.toLocaleString()}
-        </Typography>
-        <Typography variant="subtitle2" fontSize="16px" color="rgba(17,17,17,0.62)">
-          {card.title}
-        </Typography>
-      </Stack>
-    </DashboardCard>
-  </Grid>
-);
+const StatCard = ({ card, index, length }: StatCardProps) => {
+  return (
+    <Grid item xs={2}>
+      <DashboardCard 
+        customStyle={{ 
+          borderRadius: index === 0 ? '10px 0 0 10px' : (index === length - 1 ? '0 10px 10px 0' : '0px'), 
+          borderRight: index < length - 1 ? '1px solid rgba(17,17,17,0.12)' : 'none', 
+          padding: '30px',
+          transition: 'all 0.3s ease-in-out',
+          cursor: 'pointer',
+          '&:hover': {
+            transform: 'translateY(-4px)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+            '& .stat-value': {
+              color: card.color
+            },
+            '& .stat-title': {
+              color: card.color
+            },
+            '& svg rect': {
+              fill: 'white',
+              transition: 'all 0.3s ease-in-out',
+              stroke: card.color,
+              strokeWidth: '1.5'
+            },
+            '& svg path': {
+              stroke: card.color,
+              transition: 'stroke 0.3s ease-in-out'
+            }
+          },
+          '& svg rect': {
+            transition: 'all 0.3s ease-in-out',
+            stroke: 'transparent',
+            strokeWidth: '1.5'
+          },
+          '& svg path': {
+            transition: 'stroke 0.3s ease-in-out'
+          }
+        }}
+      >
+        <Stack>
+          {card.icon}
+          <Typography 
+            className="stat-value"
+            variant="h3" 
+            fontSize={'34px'} 
+            color='rgba(17,17,17,0.92)'
+            marginTop={'20px'} 
+            marginBottom={'10px'} 
+            fontWeight="700"
+            sx={{ transition: 'color 0.3s ease-in-out' }}
+          >
+            {card.value?.toLocaleString()}
+          </Typography>
+          <Typography 
+            className="stat-title"
+            variant="subtitle2" 
+            fontSize="16px" 
+            color="rgba(17,17,17,0.62)"
+            sx={{ transition: 'color 0.3s ease-in-out' }}
+          >
+            {card.title}
+          </Typography>
+        </Stack>
+      </DashboardCard>
+    </Grid>
+  );
+};
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showSkeleton, setShowSkeleton] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [jobPostings, setJobPostings] = useState([]);
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'closed'>('all');
@@ -283,6 +350,9 @@ const Dashboard = () => {
         console.error('Error fetching job postings:', error);
       } finally {
         setLoading(false);
+        setTimeout(() => {
+          setShowSkeleton(false);
+        }, 2000);
       }
     };
 
@@ -363,7 +433,7 @@ const Dashboard = () => {
         console.error('Error creating job posting:', error);
       });
   };
-  if (loading) {
+  if (showSkeleton) {
     return <DashboardSkeleton />;
   }
   return (

@@ -1,4 +1,3 @@
-
 'use client'
 import { useState, useEffect, Fragment } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -805,7 +804,13 @@ export default function ApplicantDetails() {
                       borderRadius: 2,
                       textTransform: 'none',
                       px: 3,
-                      py: 1.5
+                      py: 1.5,
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        backgroundColor: 'rgba(68, 68, 226, 0.08)',
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 12px rgba(68, 68, 226, 0.1)',
+                      }
                     }}
                   >
                     Reject
@@ -819,8 +824,11 @@ export default function ApplicantDetails() {
                       px: 3,
                       py: 1.5,
                       bgcolor: 'primary.main',
+                      transition: 'all 0.2s ease-in-out',
                       '&:hover': {
-                        bgcolor: 'primary.dark'
+                        bgcolor: '#6666E6',
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 12px rgba(68, 68, 226, 0.15)',
                       }
                     }}
                   >

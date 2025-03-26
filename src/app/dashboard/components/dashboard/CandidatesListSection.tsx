@@ -100,6 +100,17 @@ export default function CandidateListSection({
     // { icon: <UserSearchIcon fontSize="small" />, text: "Open to trial" },
   ];
 
+  // Pastel colors for skill chips
+  const skillColors = [
+    { bg: 'rgba(114, 74, 59, 0.15)', color: '#724A3B' },
+    { bg: 'rgba(43, 101, 110, 0.15)', color: '#2B656E' },
+    { bg: 'rgba(118, 50, 95, 0.15)', color: '#76325F' },
+    { bg: 'rgba(59, 95, 158, 0.15)', color: '#3B5F9E' },
+  ];
+
+  // Limit skills to 4
+  const limitedSkills = skills.slice(0, 4);
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [loadingStage, setLoadingStage] = useState<string | null>(null);
 
@@ -158,7 +169,11 @@ export default function CandidateListSection({
         p: 2,
         borderBottom: "0.8px solid rgba(17, 17, 17, 0.08)",
         "&:hover": {
-          backgroundColor: "rgba(0, 0, 0, 0.02)",
+          backgroundColor: theme.palette.secondary.light,
+          "& .quick-actions-button": {
+            borderColor: "primary.main",
+            backgroundColor: "transparent",
+          }
         }
       }}
     >
@@ -213,10 +228,14 @@ export default function CandidateListSection({
           <Typography
             variant="h6"
             sx={{
+              color: 'rgba(17, 17, 17, 0.92)',
+              leadingTrim: 'both',
+              textEdge: 'cap',
+              fontSize: '18px',
+              fontStyle: 'normal',
               fontWeight: 600,
-              fontSize: 18,
-              lineHeight: "18px",
-              color: theme.palette.grey[200],
+              lineHeight: '100%',
+              letterSpacing: '0.27px',
             }}
           >
             {candidate?.personal_info.firstname}{" "}
@@ -277,13 +296,13 @@ export default function CandidateListSection({
 
         {/* Skills chips */}
         <Box sx={{ display: "flex", gap: 1, mt: 2, ml: "12px" }}>
-          {skills.map((skill, index) => (
+          {limitedSkills.map((skill, index) => (
             <Chip
               key={index}
               label={skill}
               sx={{
-                bgcolor: "#efefef",
-                color: theme.palette.grey[200],
+                bgcolor: skillColors[index % skillColors.length].bg,
+                color: skillColors[index % skillColors.length].color,
                 borderRadius: "28px",
                 fontSize: 14,
                 fontWeight: 400,
@@ -307,10 +326,10 @@ export default function CandidateListSection({
             borderColor: "grey[100]",
             color: "grey[100]",
             borderRadius: "8px",
-            "&:hover": {
-              borderColor: "grey[200]",
+            transition: "all 0.2s ease-in-out",
+            "&.Mui-disabled": {
               backgroundColor: "transparent",
-            },
+            }
           }}
         >
           {loadingStage ? 'Updating...' : 'Quick actions'}

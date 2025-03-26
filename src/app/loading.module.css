@@ -1,0 +1,62 @@
+.animatedLogo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background: #ffffff;
+}
+
+.animatedLogo svg {
+  max-width: 240px;
+  width: 100%;
+  height: auto;
+  padding: 24px;
+}
+
+.animatedLogo svg path {
+  stroke: #4444E2;
+  stroke-width: 0.5;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: flow 3s ease-in-out infinite;
+  transform-origin: center;
+  fill: rgba(17, 17, 17, 0.6);
+}
+
+.animatedLogo svg path:nth-of-type(1) {
+  animation: flow 3s ease-in-out infinite, fillColor 3s ease-in-out infinite;
+}
+
+.animatedLogo svg path:nth-of-type(2) {
+  animation: flow 3s ease-in-out infinite, pulse 3s ease-in-out infinite 0.5s, fillColor 3s ease-in-out infinite 0.5s;
+}
+
+.animatedLogo svg path:nth-of-type(3) {
+  animation: flow 3s ease-in-out infinite, pulse 3s ease-in-out infinite 1s, fillColor 3s ease-in-out infinite 1s;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes fillColor {
+  0% {
+    fill: rgba(17, 17, 17, 0.4);
+  }
+  30% {
+    fill: #4444E2;
+  }
+  70% {
+    fill: #4444E2;
+  }
+  100% {
+    fill: rgba(17, 17, 17, 0.4);
+  }
+} 

@@ -109,6 +109,12 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 500,
   lineHeight: '100%',
   letterSpacing: '0.16px',
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: '#6666E6',
+    transform: 'translateY(-1px)',
+    boxShadow: '0 4px 12px rgba(68, 68, 226, 0.15)',
+  }
 }));
 
 const StyledOutlineButton = styled(Button)(({ theme }) => ({
@@ -119,6 +125,12 @@ const StyledOutlineButton = styled(Button)(({ theme }) => ({
   fontWeight: 500,
   lineHeight: '100%',
   letterSpacing: '0.16px',
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: 'rgba(68, 68, 226, 0.08)',
+    transform: 'translateY(-1px)',
+    boxShadow: '0 4px 12px rgba(68, 68, 226, 0.1)',
+  }
 }));
 
 const StyledAutocomplete = styled(Autocomplete<string, true, false, true>)({
