@@ -961,7 +961,7 @@ export default function Home() {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton sx={{ mr: 1 }} aria-label="back">
+            <IconButton sx={{ mr: 1 }} aria-label="back" onClick={() => router.push('/dashboard')}>
               <ArrowBackIcon />
             </IconButton>
             <Typography variant="h5" component="h1" fontWeight="bold" sx={{
