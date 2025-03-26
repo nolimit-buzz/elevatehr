@@ -318,7 +318,8 @@ const Dashboard = () => {
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [jobPostings, setJobPostings] = useState([]);
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'closed'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'close'>('all');
+  const [isTabLoading, setIsTabLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -330,6 +331,7 @@ const Dashboard = () => {
   const [statistics, setStatistics] = useState(statCards);
   useEffect(() => {
     const fetchJobPostings = async () => {
+      setIsTabLoading(true);
       const token = localStorage.getItem('jwt');
       let url = 'https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs';
       if (statusFilter !== 'all') {
@@ -350,6 +352,7 @@ const Dashboard = () => {
         console.error('Error fetching job postings:', error);
       } finally {
         setLoading(false);
+        setIsTabLoading(false);
         setTimeout(() => {
           setShowSkeleton(false);
         }, 2000);
@@ -465,7 +468,13 @@ const Dashboard = () => {
                   <Skeleton key={index} variant="rectangular" width="100%" height={150} sx={{ mb: 2, borderRadius: 2 }} />
                 ))
               ) : (
-                <JobPostings customStyle={{ height: '100%', overflow: 'scroll' }} jobPostings={jobPostings} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
+                <JobPostings 
+                  customStyle={{ height: '100%', overflow: 'scroll' }} 
+                  jobPostings={jobPostings} 
+                  statusFilter={statusFilter} 
+                  setStatusFilter={setStatusFilter}
+                  isLoading={isTabLoading}
+                />
               )}
             </Grid>
             <Grid container item spacing={'12px'} xs={12} lg={4} minHeight={'500px'} maxHeight={'700px'}>
