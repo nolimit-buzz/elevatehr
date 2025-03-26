@@ -19,6 +19,7 @@ import { usePathname } from 'next/navigation'
 // components
 import Profile from "./Profile"
 import { IconBellRinging, IconMenu } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
@@ -26,7 +27,7 @@ interface ItemType {
 
 const Header = () => {
   const pathname = usePathname();
-
+  const router = useRouter();
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
     background: theme.palette.background.paper,
@@ -85,7 +86,8 @@ const Header = () => {
     <AppBarStyled position="sticky" color="default">
 
       <ToolbarStyled direction='row' alignItems='center' justifyContent='space-between'>
-        <Box>        <Image
+        <Box           sx={{cursor:'pointer'}}
+onClick={() => router.push('/dashboard')}>        <Image
           src="/images/logos/logo.svg"
           alt="elevatehr"
           width={120}
@@ -112,7 +114,7 @@ const Header = () => {
               },
             }}
           >
-            <ProfileButtonStyled>
+            <ProfileButtonStyled onClick={() => router.push('/dashboard/profile')}>
             <Avatar
                 src="/images/profile/user-1.jpg"
                 alt="image"

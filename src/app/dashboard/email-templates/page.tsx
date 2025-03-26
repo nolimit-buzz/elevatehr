@@ -251,21 +251,22 @@ const EmailTemplatePage = () => {
           <Paper
             elevation={0}
             sx={{ 
-              p: 2,
-            //   py: 4,
-              bgcolor: 'white',
               borderRadius: '10px',
+              overflow: 'hidden',
               height: 'max-content'
             }}
           >
+            <Typography 
+              variant="h6" 
+              sx={{ p: 2, borderBottom: '0.8px solid rgba(17, 17, 17, 0.08)' }}
+            >
+              Templates
+            </Typography>
             <List>
               {Object.entries(templates || {}).map(([key, value]) => (
                 <ListItem key={key} disablePadding sx={{ 
-                //   mb: 1,
                   '&:not(:last-child)': {
                     borderBottom: '0.8px solid rgba(17, 17, 17, 0.08)',
-                    // pb: 1,
-                    // mb: 1
                   }
                 }}>
                   <ListItemButton
