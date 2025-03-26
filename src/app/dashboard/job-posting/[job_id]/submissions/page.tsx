@@ -981,8 +981,11 @@ export default function Home() {
               color: theme.palette.secondary.light,
               borderRadius: 2,
               textTransform: "none",
+              transition: "all 0.2s ease-in-out",
               "&:hover": {
                 bgcolor: "primary.main",
+                transform: "translateY(-1px)",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
               },
             }}
           >
@@ -1000,6 +1003,12 @@ export default function Home() {
               '& .MuiTabs-indicator': {
                 backgroundColor: '#4444E2',
               },
+              '& .MuiTab-root': {
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  color: theme.palette.secondary.main,
+                }
+              }
             }}
           >
             <Tab
@@ -1055,7 +1064,12 @@ export default function Home() {
                       color: 'rgba(17, 17, 17, 0.72)',
                       textTransform: 'none',
                       fontSize: '14px',
-                      fontWeight: 400
+                      fontWeight: 400,
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        color: theme.palette.primary.main,
+                        backgroundColor: 'rgba(68, 68, 226, 0.04)',
+                      }
                     }}
                     onClick={clearFilters}
                   >
@@ -1302,8 +1316,11 @@ export default function Home() {
                     padding: '16px',
                     fontSize: '16px',
                     fontWeight: 500,
+                    transition: 'all 0.2s ease-in-out',
                     '&:hover': {
                       bgcolor: theme.palette.primary.main,
+                      transform: "translateY(-1px)",
+                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
                     },
                     '&.Mui-disabled': {
                       backgroundColor: 'rgba(0, 0, 0, 0.12)',
@@ -1335,7 +1352,16 @@ export default function Home() {
                   variant="scrollable"
                   scrollButtons="auto"
                   aria-label="submission tabs"
-                  sx={{ width: "100%", alignItems: "center" }}
+                  sx={{ 
+                    width: "100%", 
+                    alignItems: "center",
+                    '& .MuiTab-root': {
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        color: theme.palette.secondary.main,
+                      }
+                    }
+                  }}
                 >
                   <Tab
                     label={

@@ -168,11 +168,24 @@ export default function CandidateListSection({
         alignItems: "flex-start",
         p: 2,
         borderBottom: "0.8px solid rgba(17, 17, 17, 0.08)",
+        cursor: "pointer",
+        transition: "all 0.2s ease-in-out",
         "&:hover": {
           backgroundColor: theme.palette.secondary.light,
+          transform: "translateY(-2px)",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
           "& .quick-actions-button": {
             borderColor: "primary.main",
             backgroundColor: "transparent",
+            color: "primary.main",
+          },
+          "& .resume-link": {
+            color: "primary.main",
+            textDecorationColor: "primary.main",
+          },
+          "& .skill-chip": {
+            transform: "translateY(-1px)",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
           }
         }
       }}
@@ -279,6 +292,7 @@ export default function CandidateListSection({
             href={candidate?.attachments.cv}
             target="_blank"
             underline="always"
+            className="resume-link"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -288,6 +302,7 @@ export default function CandidateListSection({
               lineHeight: "16px",
               textDecoration: "underline",
               textDecorationColor: theme.palette.grey[100],
+              transition: "all 0.2s ease-in-out",
             }}
           >
             Resume <ArrowUpRightIcon sx={{ fontSize: 20 }} />
@@ -300,12 +315,14 @@ export default function CandidateListSection({
             <Chip
               key={index}
               label={skill}
+              className="skill-chip"
               sx={{
                 bgcolor: skillColors[index % skillColors.length].bg,
                 color: skillColors[index % skillColors.length].color,
                 borderRadius: "28px",
                 fontSize: 14,
                 fontWeight: 400,
+                transition: "all 0.2s ease-in-out",
               }}
             />
           ))}
