@@ -251,7 +251,7 @@ const EmailTemplatePage = () => {
           <Paper
             elevation={0}
             sx={{ 
-              px: 2,
+              p: 2,
             //   py: 4,
               bgcolor: 'white',
               borderRadius: '10px',
@@ -390,6 +390,11 @@ const EmailTemplatePage = () => {
                     bgcolor: '#FFF',
                     borderRadius: '8px',
                     border: '0.8px solid rgba(17, 17, 17, 0.14)',
+                    transition: 'all 0.3s ease',
+                    '&.Mui-focused': {
+                      border: `0.8px solid ${theme.palette.primary.main}`,
+                      boxShadow: `0 0 0 1px ${theme.palette.primary.main}25`,
+                    }
                   },
                   '& .MuiInputLabel-root': {
                     display: 'none'
@@ -413,6 +418,11 @@ const EmailTemplatePage = () => {
                   bgcolor: '#FFF',
                   borderRadius: '8px',
                   border: '0.8px solid rgba(17, 17, 17, 0.14)',
+                  transition: 'all 0.3s ease',
+                  '&:focus-within': {
+                    border: `0.8px solid ${theme.palette.primary.main}`,
+                    boxShadow: `0 0 0 1px ${theme.palette.primary.main}25`,
+                  },
                   '& .ql-toolbar': {
                     borderTopLeftRadius: '8px',
                     borderTopRightRadius: '8px',
