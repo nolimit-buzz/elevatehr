@@ -66,23 +66,6 @@ const EmailTemplates: React.FC<EmailTemplatesProps> = ({ customStyle }) => {
           >
             Email templates
           </Typography>
-
-          <Button
-            variant="outlined"
-            startIcon={<Add />}
-            size="small"
-            sx={{
-              borderColor: theme.palette.secondary.main,
-              color:  theme.palette.secondary.main,
-              textTransform: "none",
-              fontWeight: 500,
-              fontSize: "14px",
-              padding: "4px 10px 4px 6px",
-              borderRadius: "6px",
-            }}
-          >
-            Add new
-          </Button>
         </Box>
 
         <List sx={{ px: 2 }}>
@@ -94,8 +77,27 @@ const EmailTemplates: React.FC<EmailTemplatesProps> = ({ customStyle }) => {
                   bgcolor: theme.palette.secondary.light,
                   borderRadius: "6px",
                   height: "56px",
+                  transition: 'all 0.2s ease-in-out',
                   "&:hover": {
-                    bgcolor: theme.palette.secondary.light,
+                    bgcolor: theme.palette.secondary.dark,
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                    '& .MuiListItemText-primary': {
+                      color: theme.palette.primary.main,
+                    },
+                    '& .MuiBox-root': {
+                      transform: 'translateX(4px)',
+                    },
+                    '& .MuiBox-root svg path': {
+                      stroke: theme.palette.primary.main,
+                    },
+                    '& .MuiListItemIcon-root svg path:first-child': {
+                      fill: theme.palette.primary.main,
+                      stroke: theme.palette.primary.main,
+                    },
+                    '& .MuiListItemIcon-root svg path:not(:first-child)': {
+                      stroke: 'white',
+                    }
                   },
                 }}
               >
@@ -131,10 +133,18 @@ const EmailTemplates: React.FC<EmailTemplatesProps> = ({ customStyle }) => {
                     },
                   }}
                 />
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M5.83325 10H14.1666" stroke="#224F3E" stroke-opacity="0.68" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
-                  <path d="M10.8333 6.66675L14.1666 10.0001L10.8333 13.3334" stroke="#224F3E" stroke-opacity="0.68" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+                <Box sx={{ transition: 'all 0.2s ease-in-out' }}>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 20 20" 
+                    fill="none"
+                  >
+                    <path d="M5.83325 10H14.1666" stroke="#224F3E" stroke-opacity="0.68" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M10.8333 6.66675L14.1666 10.0001L10.8333 13.3334" stroke="#224F3E" stroke-opacity="0.68" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </Box>
               </ListItemButton>
             </ListItem>
           ))}
