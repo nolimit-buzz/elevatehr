@@ -1,171 +1,93 @@
-import React from 'react';
-import { styled, Box, Stack, Grid, Skeleton } from '@mui/material';
+"use client";
+import React from "react";
+import { Box, Skeleton, Grid } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-const AnimatedLogo = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  height: '100vh',
-  width: '100%',
-  background: theme.palette.background.default,
-  '& svg': {
-    maxWidth: '240px',
-    width: '100%',
-    height: 'auto',
-    padding: '24px',
-    '& path': {
-      stroke: theme.palette.primary.main,
-      strokeWidth: '0.5',
-      strokeDasharray: '1000',
-      strokeDashoffset: '1000',
-      animation: 'flow 3s ease-in-out infinite',
-      transformOrigin: 'center',
-      fill: 'rgba(17, 17, 17, 0.6)',
-      '&:nth-of-type(1)': {
-        animation: 'flow 3s ease-in-out infinite, fillColor 3s ease-in-out infinite',
-      },
-      '&:nth-of-type(2)': {
-        animation: 'flow 3s ease-in-out infinite, pulse 3s ease-in-out infinite 0.5s, fillColor 3s ease-in-out infinite 0.5s',
-      },
-      '&:nth-of-type(3)': {
-        animation: 'flow 3s ease-in-out infinite, pulse 3s ease-in-out infinite 1s, fillColor 3s ease-in-out infinite 1s',
-      }
+const StatCardSkeleton = styled(Box)<{ index: number; length: number }>(({ theme, index, length }) => ({
+  height: "180px",
+  background: "#FFFFFF",
+  borderRadius: index === 0 ? '10px 0 0 10px' : (index === length - 1 ? '0 10px 10px 0' : '0px'),
+  borderRight: index < length - 1 ? '1px solid rgba(17,17,17,0.12)' : 'none',
+  padding: "20px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
+  transition: "all 0.3s ease-in-out",
+  cursor: "pointer",
+  "&:hover": {
+    transform: "translateY(-4px)",
+    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.08)",
+    "& .stat-value": {
+      color: theme.palette.primary.main,
     },
-    '@keyframes pulse': {
-      '0%, 100%': {
-        transform: 'scale(1)'
-      },
-      '50%': {
-        transform: 'scale(1.05)'
-      }
+    "& .stat-title": {
+      color: theme.palette.primary.main,
     },
-    '@keyframes fillColor': {
-      '0%': {
-        fill: 'rgba(17, 17, 17, 0.4)'
-      },
-      '30%': {
-        fill: theme.palette.primary.main
-      },
-      '70%': {
-        fill: theme.palette.primary.main
-      },
-      '100%': {
-        fill: 'rgba(17, 17, 17, 0.4)'
-      }
-    }
-  }
-}));
-
-const LineLoader = styled('div')(({ theme }) => ({
-  width: '240px',
-  height: '2px',
-  background: theme.palette.primary.main,
-  position: 'relative',
-  overflow: 'hidden',
-  // marginTop: '4px',
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    top: -10,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    background: theme.palette.background.default,
-    animation: 'slide 2s ease-in-out infinite',
   },
-  '@keyframes slide': {
-    '0%': {
-      transform: 'translateX(-100%)'
-    },
-    '100%': {
-      transform: 'translateX(100%)'
-    }
-  }
-}));
-
-const StatCardSkeleton = styled(Box)(({ theme }) => ({
-  height: '160px',
-  background: '#FFFFFF',
-  borderRadius: '10px',
-  padding: '30px',
-  transition: 'all 0.3s ease-in-out',
-  cursor: 'pointer',
-  '&:hover': {
-    transform: 'translateY(-4px)',
-    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
-    '& .stat-value': {
-      color: theme.palette.primary.main
-    },
-    '& .stat-title': {
-      color: theme.palette.primary.main
-    }
-  }
 }));
 
 const DashboardSkeleton = () => {
+  const statCards = [1, 2, 3, 4, 5, 6];
+  
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', background: '#F3F4F7', minHeight: '100vh', padding: '40px 24px' }}>
       <Box sx={{ maxWidth: '1440px', width: '100%' }}>
         {/* Header Skeleton */}
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3} mt="40px">
-          <Stack spacing={1}>
-            <Skeleton variant="text" width={200} height={32} />
-            <Skeleton variant="text" width={300} height={24} />
-          </Stack>
-          <Skeleton variant="rectangular" width={180} height={52} sx={{ borderRadius: '8px' }} />
-        </Stack>
+        <Box sx={{ mb: 3, mt: "40px" }}>
+          <Skeleton variant="text" width={200} height={32} />
+          <Skeleton variant="text" width={300} height={24} />
+        </Box>
 
         {/* Stats Cards Skeleton */}
-        <Grid container spacing={2} mb={3}>
-          {[1, 2, 3, 4, 5, 6].map((index) => (
+        <Grid container spacing={0} mb={6}>
+          {statCards.map((_, index) => (
             <Grid item xs={2} key={index}>
-              <StatCardSkeleton>
-                <Stack spacing={2}>
-                  <Skeleton variant="rectangular" width={120} height={120} sx={{ borderRadius: '30px' }} />
-                  <Skeleton variant="text" width={100} height={40} className="stat-value" />
-                  <Skeleton variant="text" width={80} height={24} className="stat-title" />
-                </Stack>
+              <StatCardSkeleton index={index} length={statCards.length}>
+                <Box sx={{ width: '100%' }}>
+                  <Skeleton variant="rectangular" width={60} height={60} sx={{ borderRadius: '30px' }} />
+                  <Skeleton variant="text" width={60} height={40} className="stat-value" sx={{ mt: '16px', mb: '8px' }} />
+                  <Skeleton variant="text" width={50} height={24} className="stat-title" />
+                </Box>
               </StatCardSkeleton>
             </Grid>
           ))}
         </Grid>
 
         {/* Main Content Skeleton */}
-        <Grid container spacing={2}>
+        <Grid container spacing={4}>
           {/* Main Panel */}
           <Grid item xs={12} lg={8}>
-            <Box sx={{ background: '#FFFFFF', borderRadius: '10px', p: 3, height: '700px' }}>
-              <Stack spacing={2}>
+            <Box sx={{ background: '#FFFFFF', borderRadius: '10px', p: 3, height: '700px', overflow: 'scroll' }}>
+              <Box sx={{ mb: 2 }}>
                 <Skeleton variant="text" width={200} height={32} />
-                <Skeleton variant="rectangular" height={60} sx={{ borderRadius: '8px' }} />
-                {[1, 2, 3, 4, 5].map((index) => (
-                  <Skeleton key={index} variant="rectangular" height={150} sx={{ borderRadius: '8px' }} />
-                ))}
-              </Stack>
+              </Box>
+              <Skeleton variant="rectangular" height={60} sx={{ borderRadius: '8px', mb: 2 }} />
+              {[1, 2, 3, 4, 5].map((index) => (
+                <Skeleton key={index} variant="rectangular" height={150} sx={{ borderRadius: '8px', mb: 2 }} />
+              ))}
             </Box>
           </Grid>
 
           {/* Side Panel */}
-          <Grid container item spacing={2} xs={12} lg={4}>
-            <Grid item xs={12}>
+          <Grid container item spacing={4} xs={12} lg={4}>
+            <Grid item xs={12} sm={6} lg={12} sx={{ flex: 1, maxHeight: '50%', overflow: 'scroll' }}>
               <Box sx={{ background: '#FFFFFF', borderRadius: '10px', p: 3, height: '340px' }}>
-                <Stack spacing={2}>
+                <Box sx={{ mb: 2 }}>
                   <Skeleton variant="text" width={150} height={32} />
-                  {[1, 2, 3].map((index) => (
-                    <Skeleton key={index} variant="rectangular" height={80} sx={{ borderRadius: '8px' }} />
-                  ))}
-                </Stack>
+                </Box>
+                {[1, 2, 3].map((index) => (
+                  <Skeleton key={index} variant="rectangular" height={80} sx={{ borderRadius: '8px', mb: 2 }} />
+                ))}
               </Box>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6} lg={12} sx={{ flex: 1, maxHeight: '50%', overflow: 'scroll' }}>
               <Box sx={{ background: '#FFFFFF', borderRadius: '10px', p: 3, height: '340px' }}>
-                <Stack spacing={2}>
+                <Box sx={{ mb: 2 }}>
                   <Skeleton variant="text" width={150} height={32} />
-                  {[1, 2, 3].map((index) => (
-                    <Skeleton key={index} variant="rectangular" height={80} sx={{ borderRadius: '8px' }} />
-                  ))}
-                </Stack>
+                </Box>
+                {[1, 2, 3].map((index) => (
+                  <Skeleton key={index} variant="rectangular" height={80} sx={{ borderRadius: '8px', mb: 2 }} />
+                ))}
               </Box>
             </Grid>
           </Grid>
