@@ -42,12 +42,16 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     }
   },
   '& .MuiOutlinedInput-input': {
-    padding: '12px 16px',
+    padding: '14px 16px',
+    fontWeight: 400,
+    fontSize: '16px',
+    color: 'rgba(17, 17, 17, 0.92)',
   },
   '& .MuiInputLabel-root': {
     color: 'rgba(17, 17, 17, 0.6)',
-    fontSize: '14px',
-    transform: 'translate(16px, 14px) scale(1)',
+    fontSize: '15px',
+    fontWeight: 400,
+    transform: 'translate(16px, 15px) scale(1)',
     '&.Mui-focused, &.MuiFormLabel-filled': {
       transform: 'translate(16px, -9px) scale(0.75)',
       backgroundColor: '#FFF',
@@ -64,19 +68,23 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   }
 }));
 
-// Custom styled Button component
 const PrimaryButton = styled(Button)(({ theme }) => ({
-  borderRadius: '8px',
-  padding: '10px 24px',
   backgroundColor: theme.palette.primary.main,
-  color: theme.palette.common.white,
-  textTransform: 'none',
-  fontWeight: 500,
+  borderRadius: "8px",
+  display: 'flex',
+  alignItems: 'center',
+  gap: '5px',
+  padding: '10px 20px',
+  fontSize: theme.typography.pxToRem(16),
+  color: theme.palette.secondary.light,
+  fontWeight: theme.typography.fontWeightMedium,
+  height: '52px',
+  transition: 'all 0.2s ease-in-out',
   '&:hover': {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: '#6666E6',
     transform: 'translateY(-1px)',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-  }
+    boxShadow: '0 4px 12px rgba(68, 68, 226, 0.15)',
+  },
 }));
 
 interface ProfileData {
@@ -478,6 +486,7 @@ const ProfilePage = () => {
           sx={{
             color: 'rgba(17, 17, 17, 0.7)',
             fontWeight: 500,
+            fontSize: '15px',
             textTransform: 'none',
             '&:hover': {
               backgroundColor: 'rgba(0, 0, 0, 0.04)',
@@ -527,7 +536,6 @@ const ProfilePage = () => {
             gap: 3,
             width: '100%',
             height: '50px',
-
           }}>
             {/* Logo */}
             <Avatar
@@ -540,7 +548,6 @@ const ProfilePage = () => {
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
                 position: 'relative',
                 top: -80,
-                // marginBottom: -50,
                 bgcolor: 'white',
                 padding: 1.5,
                 '& img': {
@@ -553,7 +560,7 @@ const ProfilePage = () => {
             
             {/* Company Name and Website */}
             <Box sx={{ pb: 0, mt: -1 }}>
-              <Typography variant="h4" fontWeight={600} sx={{ color: 'rgba(17, 17, 17, 0.92)' }}>
+              <Typography variant="h4" fontWeight={600} sx={{ color: 'rgba(17, 17, 17, 0.92)', fontSize: '28px' }}>
                 {profileData.company.name || 'ElevateHR'}
               </Typography>
               
@@ -569,7 +576,7 @@ const ProfilePage = () => {
                   alignItems: 'center',
                   color: 'rgba(17, 17, 17, 0.6)',
                   textDecoration: 'none',
-                  fontSize: '14px',
+                  fontSize: '16px',
                   fontWeight: 500,
                   mt: 0.5,
                   '&:hover': {
@@ -580,7 +587,7 @@ const ProfilePage = () => {
               >
                 {profileData.company.website || 'www.elevatehr.ai'}
                 <Box component="span" sx={{ display: 'inline-block', ml: 0.5, transform: 'translateY(1px)' }}>
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M10 10.5H1.5V2H5.25V0.75H0.75C0.335786 0.75 0 1.08579 0 1.5V11.25C0 11.6642 0.335786 12 0.75 12H10.75C11.1642 12 11.5 11.6642 11.5 11.25V6.75H10V10.5ZM6.75 0.75V2H9.4425L3.2175 8.2275L4.2725 9.2825L10.5 3.0575V5.75H11.75V0.75H6.75Z" fill="currentColor"/>
                   </svg>
                 </Box>
@@ -596,116 +603,116 @@ const ProfilePage = () => {
           <Paper
             elevation={0}
             sx={{ 
+              bgcolor: 'white',
               borderRadius: '10px',
-              overflow: 'hidden',
-              height: 'max-content'
+              height: 'max-content',
+              overflow: 'hidden'
             }}
           >
             <Typography 
               variant="h6" 
-              sx={{ p: 2, borderBottom: '0.8px solid rgba(17, 17, 17, 0.08)' }}
+              sx={{ p: 2, borderBottom: '0.8px solid rgba(17, 17, 17, 0.08)', fontWeight: 500, fontSize: '18px' }}
             >
               Settings
             </Typography>
             <List>
-              <ListItem disablePadding sx={{ 
-                '&:not(:last-child)': {
-                  borderBottom: '0.8px solid rgba(17, 17, 17, 0.08)',
-                }
-              }}>
+              <ListItem disablePadding>
                 <ListItemButton
-                  selected={activeSection === 'personal'}
                   onClick={() => handleSectionChange('personal')}
+                  selected={activeSection === 'personal'}
                   sx={{
                     p: "12px 16px",
                     bgcolor: '#FFF',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                      bgcolor: theme.palette.secondary.light,
+                    },
                     '&.Mui-selected': {
                       bgcolor: theme.palette.secondary.light,
                       borderLeft: `3px solid ${theme.palette.primary.main}`,
-                    },
-                    '&:hover': {
-                      bgcolor: theme.palette.secondary.light,
+                      '&:hover': {
+                        bgcolor: theme.palette.secondary.light,
+                      }
                     }
                   }}
                 >
                   <ListItemText 
-                    primary="Personal Information"
-                    primaryTypographyProps={{
-                      sx: {
+                    primary="Personal Information" 
+                    sx={{
+                      '& .MuiListItemText-primary': {
                         color: activeSection === 'personal' ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)',
-                        fontSize: '16px',
                         fontWeight: activeSection === 'personal' ? 600 : 400,
-                        letterSpacing: '0.16px',
-                        lineHeight: '100%',
+                        fontSize: '16px',
                       }
                     }}
                   />
                 </ListItemButton>
               </ListItem>
               
-              <ListItem disablePadding sx={{ 
-                '&:not(:last-child)': {
-                  borderBottom: '0.8px solid rgba(17, 17, 17, 0.08)',
-                }
-              }}>
+              <Divider />
+              
+              <ListItem disablePadding>
                 <ListItemButton
-                  selected={activeSection === 'company'}
                   onClick={() => handleSectionChange('company')}
+                  selected={activeSection === 'company'}
                   sx={{
                     p: "12px 16px",
                     bgcolor: '#FFF',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                      bgcolor: theme.palette.secondary.light,
+                    },
                     '&.Mui-selected': {
                       bgcolor: theme.palette.secondary.light,
                       borderLeft: `3px solid ${theme.palette.primary.main}`,
-                    },
-                    '&:hover': {
-                      bgcolor: theme.palette.secondary.light,
+                      '&:hover': {
+                        bgcolor: theme.palette.secondary.light,
+                      }
                     }
                   }}
                 >
                   <ListItemText 
                     primary="Company Information"
-                    primaryTypographyProps={{
-                      sx: {
+                    sx={{
+                      '& .MuiListItemText-primary': {
                         color: activeSection === 'company' ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)',
-                        fontSize: '16px',
                         fontWeight: activeSection === 'company' ? 600 : 400,
-                        letterSpacing: '0.16px',
-                        lineHeight: '100%',
+                        fontSize: '16px',
                       }
                     }}
                   />
                 </ListItemButton>
               </ListItem>
               
+              <Divider />
+              
               <ListItem disablePadding>
                 <ListItemButton
-                  selected={activeSection === 'password'}
                   onClick={() => handleSectionChange('password')}
+                  selected={activeSection === 'password'}
                   sx={{
                     p: "12px 16px",
                     bgcolor: '#FFF',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                      bgcolor: theme.palette.secondary.light,
+                    },
                     '&.Mui-selected': {
                       bgcolor: theme.palette.secondary.light,
                       borderLeft: `3px solid ${theme.palette.primary.main}`,
-                    },
-                    '&:hover': {
-                      bgcolor: theme.palette.secondary.light,
+                      '&:hover': {
+                        bgcolor: theme.palette.secondary.light,
+                      }
                     }
                   }}
                 >
                   <ListItemText 
                     primary="Password"
-                    primaryTypographyProps={{
-                      sx: {
+                    sx={{
+                      '& .MuiListItemText-primary': {
                         color: activeSection === 'password' ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)',
-                        fontSize: '16px',
                         fontWeight: activeSection === 'password' ? 600 : 400,
-                        letterSpacing: '0.16px',
-                        lineHeight: '100%',
+                        fontSize: '16px',
                       }
                     }}
                   />
@@ -729,13 +736,14 @@ const ProfilePage = () => {
             {activeSection === 'personal' && (
               <>
                 <Box sx={{ mb: 3 }}>
-                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 600, mb: 1 }}>
+                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: '20px' }}>
                     Personal Information
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)' }}>
-                    Update your personal information and contact details.
+                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: '15px' }}>
+                    Update your personal details and contact information.
                   </Typography>
                 </Box>
+                
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={6}>
                     <StyledTextField
@@ -765,7 +773,7 @@ const ProfilePage = () => {
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <StyledTextField
-                      label="Phone"
+                      label="Phone Number"
                       value={profileData.personal.phone}
                       onChange={(e) => handleProfileChange('personal', 'phone', e.target.value)}
                       fullWidth
@@ -785,7 +793,7 @@ const ProfilePage = () => {
                       onClick={() => handleSaveProfile('personal')}
                       disabled={saving}
                     >
-                      {saving ? <CircularProgress size={24} color="inherit" /> : 'Save Changes'}
+                      {saving ?<> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving changes</Typography></>: 'Save Changes'}
                     </PrimaryButton>
                   </Grid>
                 </Grid>
@@ -795,10 +803,10 @@ const ProfilePage = () => {
             {activeSection === 'company' && (
               <>
                 <Box sx={{ mb: 3 }}>
-                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 600, mb: 1 }}>
+                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: '20px' }}>
                     Company Information
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)' }}>
+                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: '15px' }}>
                     Update your company details, logo, and company description.
                   </Typography>
                 </Box>
@@ -813,7 +821,7 @@ const ProfilePage = () => {
                     border: '0.8px solid rgba(17, 17, 17, 0.08)'
                   }}
                 >
-                  <Typography variant="subtitle1" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 600, mb: 2 }}>
+                  <Typography variant="subtitle1" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 2, fontSize: '18px' }}>
                     Company Logo
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
@@ -823,7 +831,7 @@ const ProfilePage = () => {
                       sx={{ width: 100, height: 100, border: '1px solid rgba(17, 17, 17, 0.08)' }}
                     />
                     <Box>
-                      <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', mb: 2 }}>
+                      <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', mb: 2, fontSize: '15px' }}>
                         Upload a logo for your company. This will be displayed on job postings and communications.
                       </Typography>
                       <Button
@@ -847,7 +855,7 @@ const ProfilePage = () => {
                   </Box>
                 </Paper>
                 
-                <Typography variant="subtitle1" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 600, mb: 2 }}>
+                <Typography variant="subtitle1" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 2, fontSize: '18px' }}>
                   Company Details
                 </Typography>
                 
@@ -903,7 +911,7 @@ const ProfilePage = () => {
                       onClick={() => handleSaveProfile('company')}
                       disabled={saving}
                     >
-                      {saving ? <CircularProgress size={24} color="inherit" /> : 'Save Changes'}
+                      {saving ?<><CircularProgress size={24} color="inherit" /> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving</Typography></> : 'Save Changes'}
                     </PrimaryButton>
                   </Grid>
                 </Grid>
@@ -913,10 +921,10 @@ const ProfilePage = () => {
             {activeSection === 'password' && (
               <>
                 <Box sx={{ mb: 3 }}>
-                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 600, mb: 1 }}>
+                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: '20px' }}>
                     Change Password
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)' }}>
+                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: '15px' }}>
                     Update your password to keep your account secure.
                   </Typography>
                 </Box>
@@ -931,7 +939,7 @@ const ProfilePage = () => {
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <StyledTextField
                       label="New Password"
                       type="password"
@@ -939,9 +947,10 @@ const ProfilePage = () => {
                       onChange={(e) => handlePasswordChange('newPassword', e.target.value)}
                       fullWidth
                       error={!!errors.password}
+                      helperText={errors.password ? errors.password : 'Minimum 8 characters recommended'}
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <StyledTextField
                       label="Confirm New Password"
                       type="password"
@@ -949,7 +958,6 @@ const ProfilePage = () => {
                       onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
                       fullWidth
                       error={!!errors.password}
-                      helperText={errors.password}
                     />
                   </Grid>
                   <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
@@ -958,7 +966,8 @@ const ProfilePage = () => {
                       onClick={handleChangePassword}
                       disabled={saving}
                     >
-                      {saving ? <CircularProgress size={24} color="inherit" /> : 'Change Password'}
+                      {saving ? <> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving</Typography>
+                      <CircularProgress size={24} color="inherit" /></> : 'Change Password'}
                     </PrimaryButton>
                   </Grid>
                 </Grid>
@@ -996,7 +1005,7 @@ const ProfilePage = () => {
             },
             '& .MuiAlert-message': {
               padding: '6px 0',
-              fontSize: '15px',
+              fontSize: '16px',
               textAlign: 'center',
               flex: 'unset',
             },

@@ -45,23 +45,23 @@ interface TemplatesResponse {
 }
 
 const PrimaryButton = styled(Button)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.main,
-    borderRadius: "8px",
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5px',
-    padding: '10px 20px',
-    fontSize: theme.typography.pxToRem(16),
-    color: theme.palette.secondary.light,
-    fontWeight: theme.typography.fontWeightMedium,
-    height: '52px',
-    transition: 'all 0.2s ease-in-out',
-    '&:hover': {
-      backgroundColor: '#6666E6',
-      transform: 'translateY(-1px)',
-      boxShadow: '0 4px 12px rgba(68, 68, 226, 0.15)',
-    },
-  }))
+  backgroundColor: theme.palette.primary.main,
+  borderRadius: "8px",
+  display: 'flex',
+  alignItems: 'center',
+  gap: '5px',
+  padding: '10px 20px',
+  fontSize: theme.typography.pxToRem(16),
+  color: theme.palette.secondary.light,
+  fontWeight: theme.typography.fontWeightMedium,
+  height: '52px',
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: '#6666E6',
+    transform: 'translateY(-1px)',
+    boxShadow: '0 4px 12px rgba(68, 68, 226, 0.15)',
+  },
+}))
 const EmailTemplatePage = () => {
   const theme = useTheme();
   const router = useRouter();
@@ -69,14 +69,14 @@ const EmailTemplatePage = () => {
   const [loading, setLoading] = useState(true);
   const [templates, setTemplates] = useState<Record<string, Template>>({});
   const templateType = searchParams.get('type') || 'application_received';
-  
+
   const [template, setTemplate] = useState<Template>({
     title: '',
     subject: '',
     content: ''
   });
   const [saving, setSaving] = useState(false);
-  
+
   // Notification states
   const [notification, setNotification] = useState({
     open: false,
@@ -99,7 +99,7 @@ const EmailTemplatePage = () => {
         if (data?.templates) {
           setTemplates(data.templates);
           console.log(data.templates);
-          
+
           // Set initial template if available
           if (data.templates[templateType]) {
             setTemplate(data.templates[templateType]);
@@ -129,18 +129,18 @@ const EmailTemplatePage = () => {
     try {
       setSaving(true);
       const token = localStorage.getItem('jwt');
-      
+
       // Create a copy of the templates object
       const updatedTemplates = { ...templates };
-      
+
       // Update the current template
       updatedTemplates[templateType] = template;
-      
+
       // Prepare request body
       const requestBody = {
         templates: updatedTemplates
       };
-      
+
       const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/email-templates', {
         method: 'PUT',
         headers: {
@@ -149,7 +149,7 @@ const EmailTemplatePage = () => {
         },
         body: JSON.stringify(requestBody)
       });
-      
+
       if (response.ok) {
         console.log('Templates updated successfully');
         // Update the local state with the new templates
@@ -187,8 +187,8 @@ const EmailTemplatePage = () => {
     toolbar: [
       [{ 'header': [1, 2, 3, false] }],
       ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'indent': '-1' }, { 'indent': '+1' }],
       ['link'],
       ['clean']
     ],
@@ -203,11 +203,11 @@ const EmailTemplatePage = () => {
 
   if (loading) {
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh' 
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
       }}>
         <CircularProgress />
       </Box>
@@ -216,8 +216,8 @@ const EmailTemplatePage = () => {
 
   return (
     <Box sx={{ maxWidth: '1280px', mx: 'auto' }}>
-      <Box sx={{ 
-        p: 3, 
+      <Box sx={{
+        p: 3,
         mt: 3,
         bgcolor: theme.palette.primary.main,
         color: 'white',
@@ -230,9 +230,9 @@ const EmailTemplatePage = () => {
         backgroundPosition: 'right',
         borderRadius: '10px'
       }}>
-        <IconButton 
+        <IconButton
           onClick={() => router.push('/dashboard')}
-          sx={{ 
+          sx={{
             color: 'white',
             '&:hover': {
               bgcolor: 'rgba(255, 255, 255, 0.1)',
@@ -250,21 +250,21 @@ const EmailTemplatePage = () => {
         <Box sx={{ width: '30%', minWidth: '300px', maxWidth: '416px' }}>
           <Paper
             elevation={0}
-            sx={{ 
+            sx={{
               borderRadius: '10px',
               overflow: 'hidden',
               height: 'max-content'
             }}
           >
-            <Typography 
-              variant="h6" 
+            <Typography
+              variant="h6"
               sx={{ p: 2, borderBottom: '0.8px solid rgba(17, 17, 17, 0.08)' }}
             >
               Templates
             </Typography>
             <List>
               {Object.entries(templates || {}).map(([key, value]) => (
-                <ListItem key={key} disablePadding sx={{ 
+                <ListItem key={key} disablePadding sx={{
                   '&:not(:last-child)': {
                     borderBottom: '0.8px solid rgba(17, 17, 17, 0.08)',
                   }
@@ -307,44 +307,44 @@ const EmailTemplatePage = () => {
                           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                         }}
                       >
-                        <svg 
-                          width="20" 
-                          height="20" 
-                          viewBox="0 0 20 20" 
-                          fill="none" 
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                           style={{ transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}
                         >
-                          <path 
-                            d="M17.5 5.83341V14.1667C17.5 16.6667 16.25 18.3334 13.3333 18.3334H6.66667C3.75 18.3334 2.5 16.6667 2.5 14.1667V5.83341C2.5 3.33341 3.75 1.66675 6.66667 1.66675H13.3333C16.25 1.66675 17.5 3.33341 17.5 5.83341Z" 
-                            stroke={templateType === key ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)'} 
-                            strokeWidth="1.25" 
-                            strokeMiterlimit="10" 
-                            strokeLinecap="round" 
+                          <path
+                            d="M17.5 5.83341V14.1667C17.5 16.6667 16.25 18.3334 13.3333 18.3334H6.66667C3.75 18.3334 2.5 16.6667 2.5 14.1667V5.83341C2.5 3.33341 3.75 1.66675 6.66667 1.66675H13.3333C16.25 1.66675 17.5 3.33341 17.5 5.83341Z"
+                            stroke={templateType === key ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)'}
+                            strokeWidth="1.25"
+                            strokeMiterlimit="10"
+                            strokeLinecap="round"
                             strokeLinejoin="round"
                           />
-                          <path 
-                            d="M12.084 3.75V5.41667C12.084 6.33333 12.834 7.08333 13.7507 7.08333H15.4173" 
-                            stroke={templateType === key ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)'} 
-                            strokeWidth="1.25" 
-                            strokeMiterlimit="10" 
-                            strokeLinecap="round" 
+                          <path
+                            d="M12.084 3.75V5.41667C12.084 6.33333 12.834 7.08333 13.7507 7.08333H15.4173"
+                            stroke={templateType === key ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)'}
+                            strokeWidth="1.25"
+                            strokeMiterlimit="10"
+                            strokeLinecap="round"
                             strokeLinejoin="round"
                           />
-                          <path 
-                            d="M6.66602 10.8333H9.99935" 
-                            stroke={templateType === key ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)'} 
-                            strokeWidth="1.25" 
-                            strokeMiterlimit="10" 
-                            strokeLinecap="round" 
+                          <path
+                            d="M6.66602 10.8333H9.99935"
+                            stroke={templateType === key ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)'}
+                            strokeWidth="1.25"
+                            strokeMiterlimit="10"
+                            strokeLinecap="round"
                             strokeLinejoin="round"
                           />
-                          <path 
-                            d="M6.66602 14.1667H13.3327" 
-                            stroke={templateType === key ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)'} 
-                            strokeWidth="1.25" 
-                            strokeMiterlimit="10" 
-                            strokeLinecap="round" 
+                          <path
+                            d="M6.66602 14.1667H13.3327"
+                            stroke={templateType === key ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)'}
+                            strokeWidth="1.25"
+                            strokeMiterlimit="10"
+                            strokeLinecap="round"
                             strokeLinejoin="round"
                           />
                         </svg>
@@ -371,9 +371,9 @@ const EmailTemplatePage = () => {
         </Box>
 
         <Box sx={{ flex: 1, ml: 3 }}>
-          <Paper 
+          <Paper
             elevation={0}
-            sx={{ 
+            sx={{
               p: 4,
               bgcolor: 'white',
               borderRadius: '10px',
@@ -414,8 +414,8 @@ const EmailTemplatePage = () => {
                 }}
               />
 
-              <Box sx={{ 
-                '& .quill': { 
+              <Box sx={{
+                '& .quill': {
                   bgcolor: '#FFF',
                   borderRadius: '8px',
                   border: '0.8px solid rgba(17, 17, 17, 0.14)',
@@ -452,7 +452,8 @@ const EmailTemplatePage = () => {
                   onClick={handleSave}
                   disabled={saving}
                 >
-                  {saving ? <CircularProgress size={24} color="inherit" /> : 'Save'}
+                  {saving ? <>        <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving</Typography>
+                    <CircularProgress size={24} color="inherit" /></> : 'Save'}
                 </PrimaryButton>
               </Box>
             </Stack>
