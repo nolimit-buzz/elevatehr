@@ -11,26 +11,18 @@ import {
   Tab,
   Stack,
   styled,
-  ButtonBase,
   Button,
-  TableContainer,
-  TablePagination,
-  Chip,
-  IconButton,
 } from "@mui/material";
 import DashboardCard from "@/app/dashboard/components/shared/DashboardCard";
 import zIndex from '@mui/material/styles/zIndex';
 import { useRouter } from 'next/navigation';
-import EditIcon from '@mui/icons-material/Edit';
 
 interface JobPosting {
-  id: number;
+  id: string;
   title: string;
   job_type: string;
   work_model: string;
   location: string;
-  level: string;
-  status: 'active' | 'closed';
   stage_counts: {
     new: number;
     skill_assessment: number;
@@ -41,10 +33,10 @@ interface JobPosting {
 }
 
 interface JobPostingsProps {
-  customStyle?: React.CSSProperties;
-  jobPostings: JobPosting[];
   statusFilter: 'all' | 'active' | 'closed';
-  setStatusFilter: (status: 'all' | 'active' | 'closed') => void;
+  setStatusFilter: (value: 'all' | 'active' | 'closed') => void;
+  jobPostings: JobPosting[];
+  customStyle?: React.CSSProperties;
 }
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -157,7 +149,7 @@ const StyledTableHeaderRow = styled(TableRow)(({ theme }) => ({
   }
 }));
 
-const StyledTableBodyRow = styled(ButtonBase)(({ theme }) => ({
+const StyledTableBodyRow = styled(TableRow)(({ theme }) => ({
   display: 'table-row',
   width: '100%',
   cursor: 'pointer',
@@ -170,132 +162,131 @@ const StyledTableBodyRow = styled(ButtonBase)(({ theme }) => ({
   },
 }));
 
-const JobPostings = ({ customStyle, jobPostings, statusFilter, setStatusFilter }: JobPostingsProps) => {
-  const router = useRouter();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle = {} }: JobPostingsProps) => {
+  const router = useRouter()
+  
+  const handleStatusChange = (_event: React.SyntheticEvent, newValue: 'all' | 'active' | 'closed') => {
+    setStatusFilter(newValue);
   };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleRowClick = (jobId: number) => {
-    router.push(`/dashboard/create-job-posting/${jobId}`);
-  };
-
-  const filteredJobPostings = jobPostings.filter(job => {
-    if (statusFilter === 'all') return true;
-    return job.status === statusFilter;
-  });
 
   return (
-    <DashboardCard customStyle={customStyle}>
+    <DashboardCard customStyle={{ padding: '0px', ...customStyle }}>
       <Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h6" fontWeight={600} color="rgba(17, 17, 17, 0.92)" fontSize={'20px'}>
-            Job Postings
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            {(['all', 'active', 'closed'] as const).map((status) => (
-              <Button
-                key={status}
-                onClick={() => setStatusFilter(status)}
-                sx={{
-                  textTransform: 'capitalize',
-                  color: statusFilter === status ? 'primary.main' : 'text.secondary',
-                  fontWeight: statusFilter === status ? 600 : 400,
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                  },
-                }}
-              >
-                {status}
-              </Button>
-            ))}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px' }}>
+          <Stack direction={'row'} alignItems={'center'} gap={1}>
+            <Typography variant="h2" fontWeight={'semibold'} fontSize={'24px'} color={'rgba(17,17,17,0.92)'} letterSpacing={'0.12px'}>
+              Job Postings
+            </Typography>
+            <Typography variant="h2" fontWeight={'semibold'} fontSize={'24px'} color={'rgba(17,17,17,0.52)'} letterSpacing={'0.12px'}>
+              {`(${jobPostings.length})`}
+            </Typography>
+          </Stack>
+          <StyledTabs value={statusFilter} onChange={handleStatusChange} aria-label="job status tabs">
+            <StyledTab label="All" value="all" />
+            <StyledTab label="Active" value="active" />
+            <StyledTab label="Closed" value="closed" />
+          </StyledTabs>
+        </Box>
+        <Box sx={{ overflow: "auto" }}>
+          <Box sx={{ width: "100%", display: "table", tableLayout: "fixed" }}>
+            <Table>
+              <TableHead>
+                <StyledTableHeaderRow>
+                  <StyledTableHeaderCell>
+                    Role
+                  </StyledTableHeaderCell>
+                  <StyledTableHeaderCell>
+                    Applicants
+                  </StyledTableHeaderCell>
+                  <StyledTableHeaderCell>
+                    Assessment
+                  </StyledTableHeaderCell>
+                  <StyledTableHeaderCell>
+                    Interviews
+                  </StyledTableHeaderCell>
+                  <StyledTableHeaderCell>
+                    Accepted
+                  </StyledTableHeaderCell>
+                  <StyledTableHeaderCell>
+                    Rejected
+                  </StyledTableHeaderCell>
+                </StyledTableHeaderRow>
+              </TableHead>
+              <TableBody>
+                {jobPostings && jobPostings?.map((job) => (
+                  <StyledTableBodyRow 
+                    key={job.id} 
+                    onClick={() =>  router.push(`/dashboard/job-posting/${job.id}/submissions`)}
+                  >
+                    <StyledTableCell>
+                      <Stack>
+                        <StyledTypography>
+                          {job.title}
+                        </StyledTypography>
+                        <Stack direction='row' gap={1}>
+                          <StyledSubtitleTypography>
+                            {job.job_type}
+                          </StyledSubtitleTypography>
+                          <StyledSubtitleTypography>
+                            {job.work_model}
+                          </StyledSubtitleTypography>
+                          <StyledSubtitleTypography>
+                            {job.location}
+                          </StyledSubtitleTypography>
+                        </Stack>
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'center' }}>
+                        <Box>
+                          <Typography color="rgba(17, 17, 17, 0.84)" fontWeight={500} fontSize={'16px'}>
+                            {job.stage_counts.new}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'center' }}>
+                        <Box>
+                          <Typography color="rgba(17, 17, 17, 0.84)" fontWeight={500} fontSize={'16px'}>
+                            {job.stage_counts.skill_assessment}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'center' }}>
+                        <Box>
+                          <Typography color="rgba(17, 17, 17, 0.84)" fontWeight={500} fontSize={'16px'}>
+                            {job.stage_counts.interviews}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'center' }}>
+                        <Box>
+                          <Typography color="rgba(17, 17, 17, 0.84)" fontWeight={500} fontSize={'16px'}>
+                            {job.stage_counts.acceptance}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'center' }}>
+                        <Box>
+                          <Typography color="rgba(17, 17, 17, 0.84)" fontWeight={500} fontSize={'16px'}>
+                            {job.stage_counts.rejection}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </StyledTableCell>
+                  </StyledTableBodyRow>
+                ))}
+              </TableBody>
+            </Table>
           </Box>
         </Box>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Level</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredJobPostings
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((job) => (
-                  <TableRow 
-                    key={job.id}
-                    hover
-                    onClick={() => handleRowClick(job.id)}
-                    sx={{ 
-                      cursor: 'pointer',
-                      '&:hover': {
-                        backgroundColor: 'rgba(68, 68, 226, 0.04)',
-                      },
-                    }}
-                  >
-                    <TableCell>
-                      <Typography variant="body2" fontWeight={500}>
-                        {job.title}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="text.secondary">
-                        {job.level}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="text.secondary">
-                        {job.job_type}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="text.secondary">
-                        {job.location}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={job.status}
-                        color={job.status === 'active' ? 'success' : 'default'}
-                        size="small"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <IconButton size="small" onClick={(e) => {
-                        e.stopPropagation();
-                        router.push(`/dashboard/create-job-posting/${job.id}`);
-                      }}>
-                        <EditIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          component="div"
-          count={filteredJobPostings.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[5, 10, 25]}
-          sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}
-        />
       </Box>
     </DashboardCard>
   );
