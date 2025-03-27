@@ -81,7 +81,7 @@ const Header = () => {
     }
   }));
 
-  const links = [{ href: "/dashboard", title: "Dashboard" }, { href: "/dashboard/applications", title: "Applications" }, { href: "/job-listings", title: "Job Listings" }];
+  const links = [{ href: "/dashboard", title: "Dashboard" }, { href: "/dashboard/applications", title: "Applications" }, { href: "/dashboard/job-listings", title: "Job Listings" }];
   return (
     <AppBarStyled position="sticky" color="default">
 

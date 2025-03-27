@@ -297,7 +297,7 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px' }}>
           <Stack direction={'row'} alignItems={'center'} gap={1}>
             <Typography variant="h2" fontWeight={'semibold'} fontSize={'24px'} color={'rgba(17,17,17,0.92)'} letterSpacing={'0.12px'}>
-              Job Postings
+              Job Listings
             </Typography>
             <Typography variant="h2" fontWeight={'semibold'} fontSize={'24px'} color={'rgba(17,17,17,0.52)'} letterSpacing={'0.12px'}>
               {`(${jobPostings.length})`}
