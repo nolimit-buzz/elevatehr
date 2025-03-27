@@ -1071,7 +1071,7 @@ const AboutTheJob = () => {
       );
 
       // Construct the job URL
-      const jobUrl = `${process.env.NEXT_PUBLIC_HOST}/dashboard/job-openings/${jobId}`;
+      const jobUrl = `${process.env.NEXT_PUBLIC_HOST}/job-openings/${jobId}`;
       setJobUrl(jobUrl);
       setShowDialog(true);
 

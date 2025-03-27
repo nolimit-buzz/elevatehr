@@ -293,7 +293,7 @@ const JobDetailsPage = () => {
             <StyledButton
               variant="contained"
               fullWidth
-              onClick={() => router.push(`/dashboard/job-openings/${job_id}/apply`)}
+              onClick={() => router.push(`/job-openings/${job_id}/apply`)}
             >
               Apply for this Job
             </StyledButton>
