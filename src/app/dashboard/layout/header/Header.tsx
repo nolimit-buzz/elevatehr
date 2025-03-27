@@ -45,7 +45,7 @@ const Header = () => {
     display: "flex",
     justifyContent: "space-between",
     padding: "0 20px",
-    maxWidth:'1536px',
+    maxWidth:'1440px',
     margin:'auto',
     // [theme.breakpoints.up("lg")]: {
     //   padding: "0 80px",
@@ -81,7 +81,7 @@ const Header = () => {
     }
   }));
 
-  const links = [{ href: "/dashboard", title: "Dashboard" }, { href: "/dashboard/applications", title: "Applications" }, { href: "/notifications", title: "Notifications" }];
+  const links = [{ href: "/dashboard", title: "Dashboard" }, { href: "/dashboard/applications", title: "Applications" }, { href: "/job-listings", title: "Job Listings" }];
   return (
     <AppBarStyled position="sticky" color="default">
 
