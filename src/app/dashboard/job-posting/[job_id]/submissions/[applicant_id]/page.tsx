@@ -15,18 +15,19 @@ import Alert from '@mui/material/Alert';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
 
 // Icons
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import LocationIcon from '@mui/icons-material/LocationOnOutlined';
+import SmsIcon from '@mui/icons-material/EmailOutlined';
+import ClockIcon from '@mui/icons-material/AccessTimeOutlined';
+import MoneyIcon from '@mui/icons-material/MonetizationOnOutlined';
+import CheckIcon from '@mui/icons-material/Check';
+import ArrowUpRightIcon from '@mui/icons-material/OpenInNew';
+import CloseIcon from '@mui/icons-material/Close';
+import UserSearchIcon from '@mui/icons-material/PersonSearchOutlined';
+import BriefcaseIcon from '@mui/icons-material/WorkOutline';
 import { Document, Page, pdfjs } from 'react-pdf';
 import mammoth from 'mammoth';
 import axios from 'axios';
@@ -370,28 +371,26 @@ export default function ApplicantDetails() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {/* Back button */}
-
+      <IconButton
+        onClick={handleBack}
+        sx={{ mb: 3 }}
+      >
+        <ArrowBackIcon />
+      </IconButton>
+      
       <Box sx={{ 
         display: 'flex', 
         gap: 3,
         minHeight: "100vh",
-        position: 'relative'
       }}>
-        <Stack spacing={2} sx={{
+        {/* Sidebar */}
+        <Box sx={{
           width: 320,
           position: 'sticky',
           top: '32px',
           height: 'fit-content',
           alignSelf: 'flex-start',
-          justifyContent: 'flex-start'
         }}>
-          <IconButton
-            onClick={handleBack}
-            sx={{ mb: 3, alignSelf: 'flex-start', mx:0 }}
-          >
-            <ArrowBackIcon />
-          </IconButton>
-          {/* Applicants List Sidebar */}
           <Paper
             elevation={0}
             sx={{
@@ -402,7 +401,6 @@ export default function ApplicantDetails() {
               overflow: 'auto'
             }}
           >
-
             <List sx={{ p: 0 }}>
               {applicants.map((item) => (
                 <ListItem
@@ -442,12 +440,12 @@ export default function ApplicantDetails() {
 
                   <Stack spacing={1} width="100%">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <AccessTimeOutlinedIcon sx={{ fontSize: 20, color: 'text.grey[100]' }} />
+                      <ClockIcon sx={{ fontSize: 20, color: 'text.grey[100]' }} />
                       <Typography variant="body2" color="text.grey[100]">
                         {item.professional_info.start_date}
                       </Typography>
                       <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-                        <PersonOutlineIcon sx={{ fontSize: 20, color: 'text.grey[100]' }} />
+                        <UserSearchIcon sx={{ fontSize: 20, color: 'text.grey[100]' }} />
                         <Typography variant="body2" color="text.grey[100]" sx={{ ml: 0.5 }}>
                           Open to trial
                         </Typography>
@@ -455,12 +453,12 @@ export default function ApplicantDetails() {
                     </Box>
 
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <WorkOutlineIcon sx={{ fontSize: 20, color: 'text.grey[100]' }} />
+                      <BriefcaseIcon sx={{ fontSize: 20, color: 'text.grey[100]' }} />
                       <Typography variant="body2" color="text.grey[100]">
                         {item.professional_info.experience}
                       </Typography>
                       <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-                        <AccountBalanceWalletOutlinedIcon sx={{ fontSize: 20, color: 'text.grey[100]' }} />
+                        <MoneyIcon sx={{ fontSize: 20, color: 'text.grey[100]' }} />
                         <Typography variant="body2" color="text.grey[100]" sx={{ ml: 0.5 }}>
                           {item.professional_info.salary_range}
                         </Typography>
@@ -471,36 +469,34 @@ export default function ApplicantDetails() {
               ))}
             </List>
           </Paper>
-
-        </Stack>
-
+        </Box>
 
         {/* Main Content - Applicant Details */}
-        <Paper elevation={0} sx={{ flex: 1, p: 4, borderRadius: 2, mt: '80px' }}>
-          <Paper elevation={0} sx={{ p: 4, borderRadius: 2 }}>
+        <Paper elevation={0} sx={{ flex: 1, p: 4, borderRadius: 2 }}>
+          <Paper elevation={0} sx={{ p: 2, borderRadius: 2 }}>
             {detailsLoading ? (
               <Box>
                 {/* Header Skeleton */}
                 <Box sx={{ mb: 4 }}>
                   <Stack direction="row" gap={'16px'} sx={{ mb: 2 }}>
-                    <Box sx={{ width: '200px', height: '32px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: 1 }} />
+                    <Box sx={{ width: '200px', height: '32px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 1 }} />
                     <Stack direction="row" gap={'28px'}>
-                      <Box sx={{ width: '150px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: 1 }} />
-                      <Box sx={{ width: '200px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: 1 }} />
+                      <Box sx={{ width: '150px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 1 }} />
+                      <Box sx={{ width: '200px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 1 }} />
                     </Stack>
                   </Stack>
 
                   {/* Skills Skeleton */}
                   <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
                     {[1, 2, 3, 4].map((i) => (
-                      <Box key={i} sx={{ width: '80px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: '16px' }} />
+                      <Box key={i} sx={{ width: '80px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: '16px' }} />
                     ))}
                   </Stack>
 
                   {/* Key Info Skeleton */}
                   <Stack direction="row" spacing={3}>
                     {[1, 2, 3, 4].map((i) => (
-                      <Box key={i} sx={{ width: '120px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: 1 }} />
+                      <Box key={i} sx={{ width: '120px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 1 }} />
                     ))}
                   </Stack>
                 </Box>
@@ -509,8 +505,8 @@ export default function ApplicantDetails() {
 
                 {/* Why hire section Skeleton */}
                 <Box sx={{ mb: 4 }}>
-                  <Box sx={{ width: '200px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: 1, mb: 2 }} />
-                  <Box sx={{ width: '100%', height: '100px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: 1 }} />
+                  <Box sx={{ width: '200px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 1, mb: 2 }} />
+                  <Box sx={{ width: '100%', height: '100px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 1 }} />
                 </Box>
 
                 <Divider sx={{ my: 3 }} />
@@ -518,16 +514,16 @@ export default function ApplicantDetails() {
                 {/* Resume section Skeleton */}
                 <Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-                    <Box sx={{ width: '100px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: 1 }} />
-                    <Box sx={{ width: '120px', height: '36px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: 2 }} />
+                    <Box sx={{ width: '100px', height: '24px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 1 }} />
+                    <Box sx={{ width: '120px', height: '36px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 2 }} />
                   </Box>
-                  <Box sx={{ height: '800px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: 2 }} />
+                  <Box sx={{ height: '800px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 2 }} />
                 </Box>
 
                 {/* Action Buttons Skeleton */}
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 4 }}>
-                  <Box sx={{ width: '100px', height: '36px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: 2 }} />
-                  <Box sx={{ width: '160px', height: '36px', bgcolor: 'rgba(0, 0, 0, 0.08)', borderRadius: 2 }} />
+                  <Box sx={{ width: '100px', height: '36px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 2 }} />
+                  <Box sx={{ width: '160px', height: '36px', bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 2 }} />
                 </Box>
               </Box>
             ) : !applicant ? (
@@ -546,19 +542,13 @@ export default function ApplicantDetails() {
                     </Typography>
                     <Stack direction="row" gap={'28px'}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: "8px" }}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                          <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" />
-                          <path d="M3.01675 7.07508C4.65842 -0.141583 15.3501 -0.13325 16.9834 7.08342C17.9418 11.3167 15.3084 14.9001 13.0001 17.1168C11.3251 18.7334 8.67508 18.7334 6.99175 17.1168C4.69175 14.9001 2.05842 11.3084 3.01675 7.07508Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" />
-                        </svg>
+                        <LocationIcon sx={{ fontSize: 20, color: 'text.grey[100]' }} />
                         <Typography color="text.grey[100]">
                           {applicant?.personal_info?.location}
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M14.1665 17.0834H5.83317C3.33317 17.0834 1.6665 15.8334 1.6665 12.9167V7.08341C1.6665 4.16675 3.33317 2.91675 5.83317 2.91675H14.1665C16.6665 2.91675 18.3332 4.16675 18.3332 7.08341V12.9167C18.3332 15.8334 16.6665 17.0834 14.1665 17.0834Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                          <path d="M14.1668 7.5L11.5585 9.58333C10.7002 10.2667 9.29183 10.2667 8.43349 9.58333L5.8335 7.5" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
+                        <SmsIcon sx={{ fontSize: 20, color: 'text.grey[100]' }} />
                         <Typography color="text.grey[100]">
                           {applicant?.personal_info?.email}
                         </Typography>
@@ -605,19 +595,19 @@ export default function ApplicantDetails() {
                   {/* Key Info */}
                   <Stack direction="row" spacing={3}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <AccessTimeIcon />
+                      <ClockIcon />
                       <Typography>{applicant?.professional_info?.experience}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <AccountBalanceWalletOutlinedIcon />
+                      <MoneyIcon />
                       <Typography>{applicant?.professional_info?.salary_range}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <AccessTimeIcon />
+                      <ClockIcon />
                       <Typography>{applicant?.professional_info?.start_date}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <CheckCircleOutlineIcon />
+                      <CheckIcon />
                       <Typography>Open to trial</Typography>
                     </Box>
                   </Stack>
@@ -725,7 +715,7 @@ export default function ApplicantDetails() {
                     {applicant?.attachments?.cv && (
                       <Button
                         variant="outlined"
-                        startIcon={<OpenInNewIcon />}
+                        startIcon={<ArrowUpRightIcon />}
                         component="a"
                         href={applicant.attachments.cv.url}
                         target="_blank"
