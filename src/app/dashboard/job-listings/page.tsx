@@ -222,7 +222,7 @@ const StyledTableBodyRow = styled(TableRow)(({ theme }) => ({
 
 const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boolean; onClose: () => void; jobTitle: string; jobId: string }) => {
   const theme = useTheme();
-  const jobUrl = useMemo(() => `${process.env.NEXT_PUBLIC_HOST}/dashboard/job-openings/${jobId}`, [jobId]);
+  const jobUrl = useMemo(() => `${process.env.NEXT_PUBLIC_HOST}/job-openings/${jobId}`, [jobId]);
   const shareText = useMemo(() => `Check out this job opportunity: ${jobTitle}`, [jobTitle]);
 
   const handleShare = (platform: string) => {
@@ -501,7 +501,7 @@ const JobPostings = () => {
   });
 
   const copyToClipboard = (jobId: string) => {
-    const link = `${process.env.NEXT_PUBLIC_HOST}/dashboard/job-openings/${jobId}`;
+    const link = `${process.env.NEXT_PUBLIC_HOST}/job-openings/${jobId}`;
     navigator.clipboard.writeText(link).then(() => {
       // You could add a toast notification here if desired
     });
