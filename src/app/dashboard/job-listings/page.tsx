@@ -680,9 +680,9 @@ const JobPostings = () => {
         <StyledTableCell>
           <Stack>
             <Stack direction="row" alignItems="center" gap={1}>
-            <StyledTypography textTransform={"capitalize"}>
-              {job.title}
-            </StyledTypography>
+              <StyledTypography textTransform={"capitalize"}>
+                {job.title}
+              </StyledTypography>
               <Tooltip 
                 title="Click to copy application page link" 
                 arrow
@@ -718,20 +718,65 @@ const JobPostings = () => {
                     }
                   }}
                 >
-                  <ContentCopyIcon sx={{ fontSize: '16px' }} />
+                  <ContentCopyRoundedIcon sx={{ fontSize: '16px' }} />
                 </IconButton>
               </Tooltip>
             </Stack>
-            <Stack direction="row" gap={1}>
-              <StyledSubtitleTypography>
-                {job.job_type}
-              </StyledSubtitleTypography>
-              <StyledSubtitleTypography>
-                {job.work_model}
-              </StyledSubtitleTypography>
-              <StyledSubtitleTypography>
-                {job.location}
-              </StyledSubtitleTypography>
+            <Stack direction="row" gap={2}>
+              <Stack 
+                direction="row" 
+                alignItems="center" 
+                spacing={1}
+                sx={{
+                  backgroundColor: '#FCEBE3',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                }}
+              >
+                <Typography sx={{ 
+                  fontSize: '14px',
+                  color: '#724A3B',
+                  fontWeight: 400
+                }}>
+                  {job.job_type}
+                </Typography>
+              </Stack>
+              <Stack 
+                direction="row" 
+                alignItems="center" 
+                spacing={1}
+                sx={{
+                  backgroundColor: '#D7EEF4',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                }}
+              >
+                <Typography sx={{ 
+                  fontSize: '14px',
+                  color: '#2B656E',
+                  fontWeight: 400
+                }}>
+                  {job.location}
+                </Typography>
+              </Stack>
+              <Stack 
+                direction="row" 
+                alignItems="center" 
+                spacing={1}
+                sx={{
+                  backgroundColor: '#F9E8F3',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                }}
+              >
+                <Typography sx={{ 
+                  fontSize: '14px',
+                  color: '#76325F',
+                  fontWeight: 400
+                }}>
+                  {job.work_model}
+                </Typography>
+              </Stack>
             </Stack>
           </Stack>
         </StyledTableCell>
@@ -1390,34 +1435,30 @@ const JobPostings = () => {
                               </Stack>
 
                               <Stack spacing={1} sx={{ mb: 2 }}>
-                                <Stack direction="row" alignItems="center" flexWrap="wrap" gap={2}>
-                                  <Stack direction="row" alignItems="center" spacing={1}>
-                                    <WorkIcon sx={{ fontSize: '16px', color: 'rgba(17, 17, 17, 0.48)' }} />
-                                    <Typography sx={{ 
-                                      fontSize: '14px',
-                                      color: 'rgba(17, 17, 17, 0.72)'
-                                    }}>
-                                      {job.job_type}
-                                    </Typography>
-                                  </Stack>
-                                  <Stack direction="row" alignItems="center" spacing={1}>
-                                    <LocationOnIcon sx={{ fontSize: '16px', color: 'rgba(17, 17, 17, 0.48)' }} />
-                                    <Typography sx={{ 
-                                      fontSize: '14px',
-                                      color: 'rgba(17, 17, 17, 0.72)'
-                                    }}>
-                                      {job.location}
-                                    </Typography>
-                                  </Stack>
-                                  <Stack direction="row" alignItems="center" spacing={1}>
-                                    <AccessTimeIcon sx={{ fontSize: '16px', color: 'rgba(17, 17, 17, 0.48)' }} />
-                                    <Typography sx={{ 
-                                      fontSize: '14px',
-                                      color: 'rgba(17, 17, 17, 0.72)'
-                                    }}>
-                                      {job.work_model}
-                                    </Typography>
-                                  </Stack>
+                                <Stack direction="row" alignItems="center" spacing={1}>
+                                  <Typography sx={{ 
+                                    fontSize: '14px',
+                                    color: 'rgba(17, 17, 17, 0.72)'
+                                  }}>
+                                    {job.job_type}
+                                  </Typography>
+                                </Stack>
+                                <Stack direction="row" alignItems="center" spacing={1}>
+                                  <LocationOnIcon sx={{ fontSize: '16px', color: 'rgba(17, 17, 17, 0.48)' }} />
+                                  <Typography sx={{ 
+                                    fontSize: '14px',
+                                    color: 'rgba(17, 17, 17, 0.72)'
+                                  }}>
+                                    {job.location}
+                                  </Typography>
+                                </Stack>
+                                <Stack direction="row" alignItems="center" spacing={1}>
+                                  <Typography sx={{ 
+                                    fontSize: '14px',
+                                    color: 'rgba(17, 17, 17, 0.72)'
+                                  }}>
+                                    {job.work_model}
+                                  </Typography>
                                 </Stack>
                               </Stack>
                             </Box>
