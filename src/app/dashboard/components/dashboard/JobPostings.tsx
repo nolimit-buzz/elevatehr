@@ -74,15 +74,24 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 const StyledSubtitleTypography = styled(Typography)(({ theme }) => ({
   fontSize: '13px',
   borderRadius: '28px',
-  background: theme.palette.secondary.light,
   padding: '8px 12px',
   width: 'max-content',
   textAlign: 'center',
-  color: theme.palette.primary.main,
   fontWeight: 400,
   transition: 'all 0.2s ease-in-out',
+  '&:nth-of-type(1)': {
+    backgroundColor: '#FCEBE3',
+    color: '#724A3B',
+  },
+  '&:nth-of-type(2)': {
+    backgroundColor: '#F9E8F3',
+    color: '#76325F',
+  },
+  '&:nth-of-type(3)': {
+    backgroundColor: '#D7EEF4',
+    color: '#2B656E',
+  },
   '.MuiTableRow-root:hover &': {
-    background: theme.palette.secondary.dark,
     fontWeight: 500
   }
 }));
