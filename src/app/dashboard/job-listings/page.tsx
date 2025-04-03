@@ -992,48 +992,6 @@ const JobPostings = () => {
                     color: 'rgba(17, 17, 17, 0.92)'
                   }}
                 >
-                  Status
-                </Typography>
-                <FormControl fullWidth>
-                  <Select
-                    value={tempStatusFilter}
-                    onChange={(e) => handleStatusChange(e as any, e.target.value as "all" | "active" | "close")}
-                    displayEmpty
-                    sx={{
-                      backgroundColor: '#fff',
-                      borderRadius: '12px',
-                      border: '1px solid rgba(17, 17, 17, 0.08)',
-                      '& .MuiSelect-select': {
-                        padding: '16px',
-                        color: 'rgba(17, 17, 17, 0.84)',
-                      },
-                      '& fieldset': {
-                        border: 'none',
-                      },
-                      '&:hover fieldset': {
-                        border: 'none',
-                      },
-                      '&.Mui-focused fieldset': {
-                        border: 'none',
-                      }
-                    }}
-                  >
-                    <MenuItem value="all">All Status</MenuItem>
-                    <MenuItem value="active">Active</MenuItem>
-                    <MenuItem value="close">Closed</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-
-              <Box sx={{ mb: 3 }}>
-                <Typography
-                  sx={{
-                    mb: 1.5,
-                    fontSize: '16px',
-                    fontWeight: 500,
-                    color: 'rgba(17, 17, 17, 0.92)'
-                  }}
-                >
                   Job Title
                 </Typography>
                 <TextField
@@ -1257,38 +1215,36 @@ const JobPostings = () => {
             </Typography>
           </Stack>
                   <Stack direction="row" spacing={2} alignItems="center">
-                    <Box sx={{ 
-                      display: 'flex', 
-                      gap: 1, 
-                      bgcolor: 'rgba(17, 17, 17, 0.04)',
-                      borderRadius: '12px',
-                      p: 0.5
-                    }}>
-                      <IconButton
-                        size="small"
-                        onClick={() => setViewMode('list')}
+                    <FormControl sx={{ minWidth: 150 }}>
+                      <Select
+                        value={tempStatusFilter}
+                        onChange={(e) => handleStatusChange(e as any, e.target.value as "all" | "active" | "close")}
+                        displayEmpty
                         sx={{
-                          color: viewMode === 'list' ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.48)',
-                          '&:hover': {
-                            backgroundColor: 'rgba(68, 68, 226, 0.04)',
+                          backgroundColor: '#fff',
+                          borderRadius: '12px',
+                          border: '1px solid rgba(17, 17, 17, 0.08)',
+                          height: '40px',
+                          '& .MuiSelect-select': {
+                            padding: '0 16px',
+                            color: 'rgba(17, 17, 17, 0.84)',
+                          },
+                          '& fieldset': {
+                            border: 'none',
+                          },
+                          '&:hover fieldset': {
+                            border: 'none',
+                          },
+                          '&.Mui-focused fieldset': {
+                            border: 'none',
                           }
                         }}
                       >
-                        <ViewListIcon />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => setViewMode('grid')}
-                        sx={{
-                          color: viewMode === 'grid' ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.48)',
-                          '&:hover': {
-                            backgroundColor: 'rgba(68, 68, 226, 0.04)',
-                          }
-                        }}
-                      >
-                        <ViewModuleIcon />
-                      </IconButton>
-                    </Box>
+                        <MenuItem value="all">All Status</MenuItem>
+                        <MenuItem value="active">Active</MenuItem>
+                        <MenuItem value="close">Closed</MenuItem>
+                      </Select>
+                    </FormControl>
                     <TextField
                       placeholder="Search jobs..."
                       value={searchQuery}
@@ -1318,6 +1274,54 @@ const JobPostings = () => {
                         }
                       }}
                     />
+                    <Box sx={{ 
+                      display: 'flex',
+                      bgcolor: 'rgba(17, 17, 17, 0.04)',
+                      borderRadius: '12px',
+                      p: 0.5,
+                      minHeight: '40px',
+                      transition: 'all 0.3s ease-in-out'
+                    }}>
+                      <Tabs
+                        value={viewMode}
+                        onChange={(_, newValue) => setViewMode(newValue)}
+                        sx={{
+                          minHeight: '40px',
+                          '& .MuiTabs-indicator': {
+                            display: 'none',
+                          },
+                          '& .MuiTab-root': {
+                            minHeight: '40px',
+                            minWidth: '40px',
+                            padding: '8px',
+                            color: 'rgba(17, 17, 17, 0.48)',
+                            transition: 'all 0.3s ease-in-out',
+                            '&.Mui-selected': {
+                              color: theme.palette.primary.main,
+                              backgroundColor: '#fff',
+                              borderRadius: '8px',
+                              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05)',
+                              transform: 'scale(1.05)',
+                            },
+                            '&:hover': {
+                              color: theme.palette.primary.main,
+                              transform: 'scale(1.05)',
+                            }
+                          }
+                        }}
+                      >
+                        <Tab 
+                          value="list" 
+                          icon={<ViewListIcon />}
+                          aria-label="list view"
+                        />
+                        <Tab 
+                          value="grid" 
+                          icon={<ViewModuleIcon />}
+                          aria-label="grid view"
+                        />
+                      </Tabs>
+                    </Box>
                   </Stack>
         </Box>
         <Box sx={{ overflow: "auto" }}>
