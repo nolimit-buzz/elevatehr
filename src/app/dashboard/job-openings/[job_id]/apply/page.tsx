@@ -128,7 +128,7 @@ export default function Typeform({
   });
 
   if (isLoading) {
-    return (
+        return (
       <Box sx={{ 
         display: 'flex', 
         justifyContent: 'center', 
@@ -137,12 +137,12 @@ export default function Typeform({
         backgroundColor: 'primary.main'
       }}>
         <CircularProgress sx={{ color: 'white' }} />
-      </Box>
-    );
-  }
+          </Box>
+        );
+      }
 
   if (!formData) {
-    return (
+      return (
       <Box sx={{ 
         display: 'flex', 
         justifyContent: 'center', 
@@ -151,15 +151,15 @@ export default function Typeform({
         backgroundColor: 'primary.main'
       }}>
         <Typography color="white">No form data available</Typography>
-      </Box>
-    );
-  }
+        </Box>
+      );
+    }
 
   const allFields = [...formData.required_fields, ...formData.custom_fields];
   const currentField = allFields[currentStep];
 console.log(allFields, currentField)
   if (isSubmitted) {
-    return (
+      return (
       <div className="flex items-center justify-center w-full h-screen">
         <div className="space-y-8 w-full">
           <img
@@ -180,7 +180,7 @@ console.log(allFields, currentField)
     );
   }
 
-  return (
+        return (
     <>
       {/* Progress Bar */}
       <div className="fixed top-0 left-0 right-0 z-10">
@@ -210,7 +210,7 @@ console.log(allFields, currentField)
                         setPreviousStep(currentStep);
                         setCurrentStep((step) => step - 1);
                       }}
-                      sx={{ 
+              sx={{ 
                         mb: 2, 
                         fontWeight: 600,
                         color: 'rgba(0, 0, 0, 0.6)',
@@ -230,7 +230,7 @@ console.log(allFields, currentField)
                     {currentField.required && (
                       <Typography component="span" color="error" sx={{ ml: 0.5, fontWeight: 600 }}>
                         *
-                      </Typography>
+            </Typography>
                     )}
                   </StyledFormLabel>
                   <FormControl fullWidth error={!!error}>
@@ -238,9 +238,9 @@ console.log(allFields, currentField)
                       <Select
                         {...field}
                         displayEmpty
-                        sx={{
-                          backgroundColor: '#F8F9FB',
-                          borderRadius: '8px',
+                sx={{
+                  backgroundColor: '#F8F9FB',
+                  borderRadius: '8px',
                           '& .MuiOutlinedInput-notchedOutline': {
                             borderColor: 'transparent',
                           },
@@ -272,10 +272,10 @@ console.log(allFields, currentField)
                       >
                         {currentField.options?.map((option) => (
                           <FormControlLabel
-                            key={option}
-                            value={option}
-                            control={<Radio />}
-                            label={option}
+                    key={option} 
+                    value={option} 
+                    control={<Radio />} 
+                    label={option} 
                             sx={{
                               backgroundColor: '#F8F9FB',
                               borderRadius: '8px',
@@ -291,9 +291,9 @@ console.log(allFields, currentField)
                                 fontWeight: 500,
                               },
                             }}
-                          />
-                        ))}
-                      </RadioGroup>
+                  />
+                ))}
+              </RadioGroup>
                     ) : (
                       <StyledTextField
                         {...field}
@@ -307,14 +307,14 @@ console.log(allFields, currentField)
                     {error && (
                       <StyledFormHelperText>{error.message}</StyledFormHelperText>
                     )}
-                  </FormControl>
+            </FormControl>
                 </Box>
               )}
             />
             {/* Form Actions/Buttons */}
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
+    <Box sx={{ 
+          display: 'flex',
+          alignItems: 'center',
               gap: 2,
               mt: 4
             }}>
@@ -338,13 +338,13 @@ console.log(allFields, currentField)
                       bgcolor: 'primary.dark',
                     }
                   }}
-                >
-                  Next
+                  >
+                    Next
                 </Button>
-              ) : (
+                ) : (
                 <Button
                   variant="contained"
-                  type="submit"
+                    type="submit"
                   disabled={form.formState.isSubmitting}
                   onClick={form.handleSubmit(async (values) => {
                     try {

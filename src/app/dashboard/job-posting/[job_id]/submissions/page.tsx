@@ -581,45 +581,54 @@ export default function Home() {
               icon={<ClockIcon />}
               label={jobData?.job_type}
               sx={{
-                bgcolor: "#edeef1",
-                color: "rgba(17, 17, 17, 0.84)",
-                borderRadius: "28px",
+                bgcolor: '#FCEBE3',
+                color: '#724A3B',
+                borderRadius: '28px',
                 height: 36,
-                width: "fit-content",
-                "& .MuiChip-label": {
+                width: 'fit-content',
+                '& .MuiChip-label': {
                   fontSize: 14,
                   fontWeight: 400,
                 },
+                '& .MuiChip-icon': {
+                  color: '#724A3B',
+                }
               }}
             />
             <Chip
               icon={<LocationIcon />}
               label={jobData?.work_model}
               sx={{
-                bgcolor: "#edeef1",
-                color: "rgba(17, 17, 17, 0.84)",
-                borderRadius: "28px",
+                bgcolor: '#F9E8F3',
+                color: '#76325F',
+                borderRadius: '28px',
                 height: 36,
-                width: "fit-content",
-                "& .MuiChip-label": {
+                width: 'fit-content',
+                '& .MuiChip-label': {
                   fontSize: 14,
                   fontWeight: 400,
                 },
+                '& .MuiChip-icon': {
+                  color: '#76325F',
+                }
               }}
             />
             <Chip
               icon={<LocationIcon />}
               label={jobData?.location?.split(" ")?.join(", ")}
               sx={{
-                bgcolor: "#edeef1",
-                color: "rgba(17, 17, 17, 0.84)",
-                borderRadius: "28px",
+                bgcolor: '#D7EEF4',
+                color: '#2B656E',
+                borderRadius: '28px',
                 height: 36,
-                width: "fit-content",
-                "& .MuiChip-label": {
+                width: 'fit-content',
+                '& .MuiChip-label': {
                   fontSize: 14,
                   fontWeight: 400,
                 },
+                '& .MuiChip-icon': {
+                  color: '#2B656E',
+                }
               }}
             />
           </Stack>

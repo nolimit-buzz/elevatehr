@@ -20,12 +20,18 @@ import {
   Snackbar,
   Alert,
   styled,
-  InputAdornment
+  InputAdornment,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton as MuiIconButton
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import CheckIcon from '@mui/icons-material/Check';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from 'next/navigation';
 
 // Custom styled TextField component
@@ -106,7 +112,7 @@ interface ProfileData {
 }
 
 // Define section type for navigation
-type ProfileSection = 'personal' | 'company' | 'password';
+type ProfileSection = 'personal' | 'company' | 'password' | 'applications' | 'integrations';
 
 interface ErrorState {
   email?: string;
@@ -149,6 +155,25 @@ const ProfilePage = () => {
     confirmPassword: '',
   });
   const [errors, setErrors] = useState<ErrorState>({});
+  const [integrations, setIntegrations] = useState({
+    calendly: {
+      connected: false,
+    },
+    zoom: {
+      connected: false,
+      email: '',
+    },
+    googleCalendar: {
+      connected: false,
+    }
+  });
+  const [calendlyModalOpen, setCalendlyModalOpen] = useState(false);
+  const [eventDetails, setEventDetails] = useState<{
+    name: string;
+    duration: number;
+    description: string;
+    schedulingUrl: string;
+  } | null>(null);
 
   useEffect(() => {
     // Fetch profile data
@@ -468,6 +493,73 @@ const ProfilePage = () => {
     setNotification(prev => ({ ...prev, open: false }));
   };
 
+  const handleIntegrationConnect = async (integration: string) => {
+    try {
+      setSaving(true);
+      const token = localStorage.getItem('jwt');
+      
+      // Here you would typically handle OAuth flow or API connection
+      // For now, we'll just simulate a connection
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setIntegrations(prev => ({
+        ...prev,
+        [integration]: {
+          ...prev[integration as keyof typeof prev],
+          connected: true
+        }
+      }));
+      
+      setNotification({
+        open: true,
+        message: `${integration.charAt(0).toUpperCase() + integration.slice(1)} connected successfully`,
+        severity: 'success'
+      });
+    } catch (error) {
+      console.error(`Error connecting ${integration}:`, error);
+      setNotification({
+        open: true,
+        message: `Failed to connect ${integration}`,
+        severity: 'error'
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCalendlyConnect = () => {
+    const width = 600;
+    const height = 700;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+    
+    window.open(
+      `https://auth.calendly.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_CALENDLY_CLIENT_ID}&response_type=code&redirect_uri=http://localhost:3000/auth/calendly`,
+      'Calendly OAuth',
+      `width=${width},height=${height},left=${left},top=${top}`
+    );
+
+    // Listen for messages from the popup
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data.type === 'CALENDLY_AUTH_SUCCESS') {
+        setIntegrations(prev => ({
+          ...prev,
+          calendly: { ...prev.calendly, connected: true }
+        }));
+        setEventDetails(event.data.eventData);
+        setNotification({
+          open: true,
+          message: 'Calendly event created successfully!',
+          severity: 'success'
+        });
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '70vh' }}>
@@ -712,6 +804,41 @@ const ProfilePage = () => {
                       '& .MuiListItemText-primary': {
                         color: activeSection === 'password' ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)',
                         fontWeight: activeSection === 'password' ? 600 : 400,
+                        fontSize: '16px',
+                      }
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+              
+              <Divider />
+              
+              <ListItem disablePadding>
+                <ListItemButton
+                  onClick={() => handleSectionChange('integrations')}
+                  selected={activeSection === 'integrations'}
+                  sx={{
+                    p: "12px 16px",
+                    bgcolor: '#FFF',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                      bgcolor: theme.palette.secondary.light,
+                    },
+                    '&.Mui-selected': {
+                      bgcolor: theme.palette.secondary.light,
+                      borderLeft: `3px solid ${theme.palette.primary.main}`,
+                      '&:hover': {
+                        bgcolor: theme.palette.secondary.light,
+                      }
+                    }
+                  }}
+                >
+                  <ListItemText 
+                    primary="Integrations"
+                    sx={{
+                      '& .MuiListItemText-primary': {
+                        color: activeSection === 'integrations' ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)',
+                        fontWeight: activeSection === 'integrations' ? 600 : 400,
                         fontSize: '16px',
                       }
                     }}
@@ -970,6 +1097,82 @@ const ProfilePage = () => {
                       <CircularProgress size={24} color="inherit" /></> : 'Change Password'}
                     </PrimaryButton>
                   </Grid>
+                </Grid>
+              </>
+            )}
+
+            {activeSection === 'integrations' && (
+              <>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: '20px' }}>
+                    Integrations
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: '15px' }}>
+                    Connect your favorite tools and services to enhance your experience.
+                  </Typography>
+                </Box>
+
+                <Grid container spacing={3}>
+                  {/* Calendly Integration */}
+                  <Grid item xs={12}>
+                    <Paper 
+                      elevation={0} 
+                      sx={{ 
+                        p: 3, 
+                        border: '1px solid',
+                        borderColor: 'divider',
+                        borderRadius: '8px',
+                        bgcolor: integrations.calendly.connected ? 'success.light' : 'background.paper'
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                        <Box>
+                          <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 0.5 }}>
+                            Calendly
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: 'text.grey.100' }}>
+                            Schedule interviews and meetings seamlessly
+                          </Typography>
+                        </Box>
+                        <Button
+                          variant={integrations.calendly.connected ? "outlined" : "contained"}
+                          onClick={handleCalendlyConnect}
+                          disabled={saving}
+                        >
+                          {integrations.calendly.connected ? 'Connected' : 'Connect'}
+                        </Button>
+                      </Box>
+                    </Paper>
+                  </Grid>
+
+                  {eventDetails && (
+                    <Grid item xs={12}>
+                      <Paper sx={{ p: 3, mt: 2 }}>
+                        <Typography variant="h6" sx={{ mb: 2 }}>Calendly Event Details:</Typography>
+                        <Typography>Name: {eventDetails.name}</Typography>
+                        <Typography>Duration: {eventDetails.duration} minutes</Typography>
+                        <Typography>Description: {eventDetails.description}</Typography>
+                        <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Typography>Scheduling URL:</Typography>
+                          <Typography sx={{ flex: 1, wordBreak: 'break-all' }}>{eventDetails.schedulingUrl}</Typography>
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={() => {
+                              navigator.clipboard.writeText(eventDetails.schedulingUrl);
+                              setNotification({
+                                open: true,
+                                message: 'Scheduling URL copied to clipboard!',
+                                severity: 'success'
+                              });
+                            }}
+                          >
+                            Copy
+                          </Button>
+                        </Box>
+                      </Paper>
+                    </Grid>
+                  )}
                 </Grid>
               </>
             )}
