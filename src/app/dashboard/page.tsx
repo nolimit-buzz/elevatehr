@@ -137,18 +137,33 @@ const statCards = [
 
 const ToolbarStyled = styled(Stack)(({ theme }) => ({
   width: "100%",
+  maxWidth: '1440px',
   color: theme.palette.text.secondary,
   display: "flex",
   justifyContent: "space-between",
-  marginBottom: theme.spacing(3),
-  marginTop:'40px'
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(1.5),
+    marginTop: '15px',
+    alignItems: 'flex-start'
+  },
+  [theme.breakpoints.up('sm')]: {
+    marginBottom: theme.spacing(3),
+    marginTop: '40px',
+    alignItems: 'center'
+  }
 }));
 
 const Greeting = styled(Typography)(({ theme }) => ({
   color: theme.palette.grey[100],
-  fontFamily: theme.typography.fontFamily,
   fontWeight: theme.typography.fontWeightBold,
-  fontSize: theme.typography.pxToRem(24),
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '18px',
+  },
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '20px',
+  },
+  lineHeight: '24px',
+  letterSpacing: '0.15px',
 }));
 
 const PrimaryButton = styled(Button)(({ theme }) => ({
@@ -163,6 +178,15 @@ const PrimaryButton = styled(Button)(({ theme }) => ({
   fontWeight: theme.typography.fontWeightMedium,
   height: '52px',
   transition: 'all 0.2s ease-in-out',
+  [theme.breakpoints.down('sm')]: {
+    borderRadius: '50%',
+    padding: '0',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '52px',
+    height: '52px',
+    minWidth: '52px',
+  },
   '&:hover': {
     backgroundColor: '#6666E6',
     transform: 'translateY(-1px)',
@@ -179,12 +203,18 @@ const StyledRadioGroup = styled(RadioGroup)(({ theme }) => ({
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
-    width: '520px',
+    width: '100%',
+    maxWidth: { xs: '520px', md: '666px' },
     height: '666px',
     flexShrink: 0,
     borderRadius: '8px',
     background: '#FFF',
-    padding: '32px'
+    padding: '32px',
+    '&::-webkit-scrollbar': {
+      display: 'none'
+    },
+    msOverflowStyle: 'none',
+    scrollbarWidth: 'none'
   },
 }));
 
@@ -245,12 +275,12 @@ interface StatCardProps {
 
 const StatCard = ({ card, index, length }: StatCardProps) => {
   return (
-    <Grid item xs={2}>
+    <Grid item xs={2} minWidth={{xs: '170px',md: '220px'}}>
       <DashboardCard 
         customStyle={{ 
           borderRadius: index === 0 ? '10px 0 0 10px' : (index === length - 1 ? '0 10px 10px 0' : '0px'), 
           borderRight: index < length - 1 ? '1px solid rgba(17,17,17,0.12)' : 'none', 
-          padding: '30px',
+          padding: {xs: '15px', md: '30px'},
           transition: 'all 0.3s ease-in-out',
           cursor: 'pointer',
           '&:hover': {
@@ -442,26 +472,76 @@ const Dashboard = () => {
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
       <ToolbarStyled direction='row' alignItems='center' justifyContent='space-between'>
-        <Stack spacing={'12px'}>
+        <Stack 
+          spacing={2} 
+          sx={{
+            [theme.breakpoints.up('sm')]: {
+              mb: 3,
+              mt: 3
+            },
+            [theme.breakpoints.down('sm')]: {
+              mb: 2,
+              mt: 1
+            }
+          }}
+        >
           <Greeting variant='body1' fontWeight='semibold'>Hello Recruiter,</Greeting>
-          <Typography variant='body2' fontWeight='semibold' fontSize='16px' color={'rgba(17,17,17,0.62)'}>Welcome to your Dashboard</Typography>
+          <Typography 
+            variant='body2' 
+            fontWeight='semibold' 
+            fontSize='16px' 
+            color={'rgba(17,17,17,0.62)'}
+            sx={{
+              [theme.breakpoints.up('sm')]: {
+                mt: '16px !important'
+              },
+              [theme.breakpoints.down('sm')]: {
+                mt: '8px !important'
+              }
+            }}
+          >
+            Welcome to your Dashboard
+          </Typography>
         </Stack>
         <PrimaryButton onClick={handleOpen}>
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 10H15" stroke="rgba(205, 247, 235, 0.92)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M10 15L10 5" stroke="rgba(205, 247, 235, 0.92)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 5V19M5 12H19"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
-          <Typography fontWeight={'medium'}>Create new Position</Typography>
+          <Typography fontWeight={'medium'} sx={{ display: { xs: 'none', sm: 'block' } }}>
+            Create new Position
+          </Typography>
         </PrimaryButton>
       </ToolbarStyled>
       <Box>
         <Grid container spacing={3}>
-          <Grid container item xs={12} marginBottom={3}>
-            {statistics.map((card, index) => (
-              <StatCard key={index} card={card} index={index} length={statistics.length} />
-            ))}
+          <Grid container item xs={12} marginBottom={3} sx={{
+            overflowX: 'scroll',
+            width: '100%',
+            '&::-webkit-scrollbar': {
+              display: 'none'
+            },
+            msOverflowStyle: 'none',
+            scrollbarWidth: 'none'
+          }}>
+            <Stack direction={'row'} flexWrap={'nowrap'} minWidth={'1300px'} maxWidth={'1440px'} width={'100%'} >
+              {statistics.map((card, index) => (
+                <StatCard key={index} card={card} index={index} length={statistics.length} />
+              ))}
+            </Stack>
           </Grid>
-          <Grid container item xs={12} spacing={3} justifyContent={'space-between'} minHeight={'500px'} maxHeight={'700px'}>
+          <Grid container item xs={12} spacing={3} justifyContent={'space-between'} minHeight={'600px'} maxHeight={'700px'}>
             <Grid item xs={12} lg={8} maxHeight={'100%'} overflow={'scroll'}>
               {loading ? (
                 Array.from({ length: 5 }).map((_, index) => (
@@ -477,11 +557,11 @@ const Dashboard = () => {
                 />
               )}
             </Grid>
-            <Grid container item spacing={'12px'} xs={12} lg={4} minHeight={'500px'} maxHeight={'700px'}>
-              <Grid item xs={12} sm={6} lg={12} flex={1} maxHeight={'50%'} overflow={'scroll'}>
+            <Grid container item spacing={{ xs: 3, md: '12px' }} xs={12} lg={4} minHeight={'600px'} maxHeight={'700px'} direction={{ xs: 'column', md: 'row' }}>
+              <Grid item xs={12} md={6} lg={12} flex={1} maxHeight={'50%'} overflow={'scroll'}>
                 <Notifications customStyle={{ height: '100%', overflow: 'scroll' }} />
               </Grid>
-              <Grid item xs={12} sm={6} lg={12} flex={1} maxHeight={'50%'} overflow={'scroll'}>
+              <Grid item xs={12} md={6} lg={12} flex={1} maxHeight={'50%'} overflow={'scroll'}>
                 <EmailTemplates customStyle={{ height: '100%', overflow: 'scroll' }} />
               </Grid>
             </Grid>

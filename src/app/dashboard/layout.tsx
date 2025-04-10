@@ -17,6 +17,7 @@ const PageWrapper = styled("div")(() => ({
   flexDirection: "column",
   zIndex: 1,
   backgroundColor: "transparent",
+  width: "100%",
 }));
 
 interface Props {

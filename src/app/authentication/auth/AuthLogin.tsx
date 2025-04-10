@@ -99,24 +99,72 @@ const AuthLogin: React.FC<AuthLoginProps> = ({ title, subtitle, subtext }) => {
         </Typography>
       )}
 
-      <Stack spacing={3}>
+      <Stack spacing={1}>
         <CustomTextField label="Email" name="email" placeholder="Enter your email" type="email" value={formData.email} onChange={handleChange} error={!!errors.email} helperText={errors.email} />
         <CustomTextField label="Password" name="password" placeholder="Enter your password" type="password" value={formData.password} onChange={handleChange} error={!!errors.password} helperText={errors.password} />
 
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
-        <Button  variant="contained" size="large" fullWidth type="submit" sx={{ borderRadius: "8px", background: "#4444E2", padding: "18px 24px",color:"secondary.light",bgcolor:"primary.main" }} disabled={loading}>
+        <Button
+          variant="contained"
+          size="large"
+          fullWidth
+          type="submit"
+          sx={{
+            borderRadius: "8px",
+            background: "#4444E2",
+            padding: { xs: "12px 16px", sm: "18px 24px" },
+            color: "secondary.light",
+            bgcolor: "primary.main",
+            fontSize: { xs: "14px", sm: "16px" },
+            '&:hover': {
+              backgroundColor: '#6666E6',
+              transform: 'translateY(-1px)',
+              boxShadow: '0 4px 12px rgba(68, 68, 226, 0.15)',
+            },
+          }}
+          disabled={loading}
+        >
           {loading ? "Signing In..." : "Sign In"}
         </Button>
 
-        <Typography sx={{ color: "rgba(17, 17, 17, 0.68)", textAlign: "center", fontSize: "18px", fontWeight: 400, lineHeight: "120%", mt: 2 }}>
+        <Typography
+          sx={{
+            color: "rgba(17, 17, 17, 0.68)",
+            textAlign: "center",
+            fontSize: { xs: "14px", sm: "18px" },
+            fontWeight: 400,
+            lineHeight: "120%",
+            mt: 1
+          }}
+        >
           Don&apos;t have an account?{" "}
-          <Typography component={Link} href="/authentication/register" sx={{ color: "primary.main", fontSize: "18px", fontWeight: 600, textDecoration: "underline" }}>
+          <Typography
+            component={Link}
+            href="/authentication/register"
+            sx={{
+              color: "primary.main",
+              fontSize: { xs: "12px", sm: "18px" },
+              fontWeight: 600,
+              textDecoration: "underline"
+            }}
+          >
             Create an account
           </Typography>
         </Typography>
 
-        <Typography component={Link} href="/" sx={{ color: "primary.main", mt: 2, textAlign: "center", fontSize: "18px", fontWeight: 600, textDecoration: "underline" }}>
+        <Typography
+          component={Link}
+          href="/"
+          sx={{
+            color: "primary.main",
+            mt: 0.5,
+            textAlign: "center",
+            fontSize: { xs: "14px", sm: "18px" },
+            fontWeight: 600,
+            textDecoration: "underline"
+          }}
+        >
           Forgot Password?
         </Typography>
       </Stack>
