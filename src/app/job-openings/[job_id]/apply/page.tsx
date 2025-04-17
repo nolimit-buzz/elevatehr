@@ -35,6 +35,7 @@ import { LoaderCircle } from "lucide-react";
 import Progress from "@/app/dashboard/layout/progress";
 import axios from "axios";
 import { CheckCircle, Close } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
@@ -106,16 +107,22 @@ export default function Typeform({
 
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<FormData | null>(null);
   const [fileInputs, setFileInputs] = useState<{ [key: string]: File | null }>({});
   const delta = currentStep - previousStep;
+  const router = useRouter();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleFileChange = (fieldKey: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setFileInputs(prev => ({ ...prev, [fieldKey]: file }));
+      form.setValue(fieldKey as keyof Inputs, file.name);
     }
   };
 
@@ -185,8 +192,13 @@ export default function Typeform({
     if (currentField.required) {
       const value = form.getValues(field);
       
-      // Check if the value is empty or undefined
-      if (!value || (typeof value === 'string' && value.trim() === '')) {
+      // For file fields, check if a file was uploaded
+      if (currentField.type === 'file') {
+        if (!fileInputs[field]) {
+          form.setError(field, { type: 'required', message: 'This field is required' });
+          return;
+        }
+      } else if (!value || (typeof value === 'string' && value.trim() === '')) {
         form.setError(field, { type: 'required', message: 'This field is required' });
         return;
       }
@@ -220,6 +232,7 @@ export default function Typeform({
 
   async function submitForm(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setIsSubmitting(true);
     if (currentStep === allFields.length - 1) {
       try {
         const formData = new FormData();
@@ -255,15 +268,33 @@ export default function Typeform({
         const data = await response.json();
         console.log("Application submitted successfully:", data);
         toast.success("Application submitted successfully");
-        setIsSubmitted(true);
+        setIsSubmitted(true); 
+        setIsSubmitting(false);
+        handleSuccess();
       } catch (error) {
         console.error("Error submitting application:", error);
         toast.error("Error submitting the application. Please try again later.");
+        setIsSubmitting(false);
+        handleError("Error submitting the application. Please try again later.");
       }
     } else {
       next();
     }
   }
+
+  const handleSuccess = () => {
+    setShowSuccessModal(true);
+    // Close modal after 3 seconds
+    setTimeout(() => {
+      setShowSuccessModal(false);
+      router.push('/job-openings');
+    }, 3000);
+  };
+
+  const handleError = (message: string) => {
+    setErrorMessage(message);
+    setShowErrorModal(true);
+  };
 
   if (isSubmitted) {
     return (
@@ -283,7 +314,7 @@ export default function Typeform({
         }}
       >
         <IconButton
-          onClick={() => window.location.href = '/'}
+          onClick={() => router.push(`/job-openings/${params.job_id}`)}
           sx={{
             position: 'absolute',
             right: 16,
@@ -367,7 +398,7 @@ export default function Typeform({
         <DialogActions sx={{ justifyContent: 'center', pt: 2, gap: 2 }}>
           <Button
             variant="outlined"
-            onClick={() => window.location.href = '/'}
+            onClick={() =>router.push(`/job-openings/${params.job_id}`)}
             sx={{
               borderColor: 'primary.main',
               color: 'primary.main',
@@ -386,7 +417,7 @@ export default function Typeform({
               transition: 'all 0.2s ease-in-out'
             }}
           >
-            View Other Jobs
+            Close
           </Button>
         </DialogActions>
       </Dialog>
@@ -633,7 +664,7 @@ export default function Typeform({
                   <Button
                     type="submit"
                     variant="contained"
-                    disabled={form.formState.isSubmitting}
+                    disabled={isSubmitting}
                     sx={{
                       bgcolor: 'secondary.light',
                       color: 'primary.main',
@@ -644,11 +675,11 @@ export default function Typeform({
                     }}
                     onClick={submitForm}
                   >
-                    {form.formState.isSubmitting ? (
-                      <>
-                        <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                        Please wait
-                      </>
+                    {isSubmitting ? (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <CircularProgress size={20} sx={{ color: 'primary.main' }} />
+                        <span>Submitting...</span>
+                      </Box>
                     ) : (
                       "Submit"
                     )}
