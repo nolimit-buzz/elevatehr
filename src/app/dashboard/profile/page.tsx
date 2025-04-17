@@ -1263,10 +1263,7 @@ const ProfilePage = () => {
                               </Link>
                             </Typography>
                             <Typography component="li" variant="body2" sx={{ color: 'text.grey.100', mb: 1 }}>
-                              Create an OAuth application in your Calendly developer dashboard
-                            </Typography>
-                            <Typography component="li" variant="body2" sx={{ color: 'text.grey.100', mb: 1 }}>
-                              Whitelist the following domain in your Calendly OAuth application settings:
+                              Create an OAuth application and whitelist this domain:
                               <Box component="code" sx={{ 
                                 display: 'block', 
                                 mt: 1, 
@@ -1278,25 +1275,11 @@ const ProfilePage = () => {
                                 {window.location.origin}
                               </Box>
                             </Typography>
-                            <Typography component="li" variant="body2" sx={{ color: 'text.grey.100', mb: 1 }}>
-                              Send us your Calendly OAuth application credentials:
-                              <Box component="ul" sx={{ pl: 2, mt: 1 }}>
-                                <Typography component="li" variant="body2" sx={{ color: 'text.grey.100' }}>
-                                  Client ID
-                                </Typography>
-                                <Typography component="li" variant="body2" sx={{ color: 'text.grey.100' }}>
-                                  Client Secret
-                                </Typography>
-                              </Box>
-                              <Typography variant="body2" sx={{ color: 'text.grey.100', mt: 1, fontStyle: 'italic' }}>
-                                Please send these credentials to{' '}
-                                <Link href="mailto:info@nolimitbuzz.net" sx={{ color: 'primary.main' }}>
-                                  info@nolimitbuzz.net
-                                </Link>
-                              </Typography>
-                            </Typography>
                             <Typography component="li" variant="body2" sx={{ color: 'text.grey.100' }}>
-                              Set up your event types and scheduling preferences in Calendly
+                              Send your Client ID and Secret to{' '}
+                              <Link href="mailto:info@nolimitbuzz.net" sx={{ color: 'primary.main' }}>
+                                info@nolimitbuzz.net
+                              </Link>
                             </Typography>
                           </Box>
                         </Box>
