@@ -268,7 +268,7 @@ export default function Typeform({
         const data = await response.json();
         console.log("Application submitted successfully:", data);
         toast.success("Application submitted successfully");
-        setIsSubmitted(true); 
+        setIsSubmitted(true);
         setIsSubmitting(false);
         handleSuccess();
       } catch (error) {
@@ -523,8 +523,8 @@ export default function Typeform({
                             Object.entries(currentField.options as Record<string, string>).map(([value, label]) => (
                               <MenuItem key={value} value={value}>
                                 {label}
-                              </MenuItem>
-                            ))}
+                            </MenuItem>
+                          ))}
                         </Select>
                       ) : currentField.type === 'radio' ? (
                         <RadioGroup

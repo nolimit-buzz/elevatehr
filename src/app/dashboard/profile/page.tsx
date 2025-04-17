@@ -25,7 +25,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  IconButton as MuiIconButton
+  IconButton as MuiIconButton,
+  Tabs,
+  Tab
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ArrowBack from '@mui/icons-material/ArrowBack';
@@ -692,9 +694,9 @@ const ProfilePage = () => {
                 bgcolor: 'white',
                 padding: 1.5,
                 '& img': {
-                  width: '95%',
-                  height: '95%',
-                  objectFit: 'contain',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
                 }
               }}
             />
@@ -738,9 +740,14 @@ const ProfilePage = () => {
         </Box>
       </Paper>
 
-      <Box sx={{ display: 'flex', mt: 3, gap: 3 }}>
-        {/* Sidebar */}
-        <Box sx={{ width: '30%', minWidth: '250px', maxWidth: '300px' }}>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, mt: 3, gap: 3 }}>
+        {/* Sidebar - Only visible on lg screens and up */}
+        <Box sx={{ 
+          display: { xs: 'none', lg: 'block' },
+          width: '30%', 
+          minWidth: '250px', 
+          maxWidth: '300px' 
+        }}>
           <Paper
             elevation={0}
             sx={{ 
@@ -899,28 +906,66 @@ const ProfilePage = () => {
         </Box>
 
         {/* Main Content */}
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, width: { xs: '100%', lg: 'auto' } }}>
           <Paper 
             elevation={0} 
             sx={{ 
-              p: 4,
+              p: { xs: 2, md: 4 },
               borderRadius: '10px',
               overflow: 'hidden',
               height: 'max-content',
             }}
           >
+            {/* Tabs - Only visible on screens smaller than lg */}
+            <Box sx={{ display: { xs: 'block', lg: 'none' }, mb: 3 }}>
+              <Tabs
+                value={activeSection}
+                onChange={(_, newValue) => handleSectionChange(newValue)}
+                variant="scrollable"
+                scrollButtons="auto"
+                sx={{
+                  borderBottom: 1,
+                  borderColor: 'divider',
+                  '& .MuiTabs-indicator': {
+                    backgroundColor: theme.palette.primary.main,
+                    height: 3,
+                  },
+                  '& .MuiTab-root': {
+                    textTransform: 'none',
+                    fontSize: '16px',
+                    fontWeight: 400,
+                    color: 'rgba(17, 17, 17, 0.84)',
+                    padding: '12px 16px',
+                    minHeight: 'auto',
+                    '&.Mui-selected': {
+                      color: theme.palette.primary.main,
+                      fontWeight: 600,
+                    },
+                    '&:hover': {
+                      backgroundColor: theme.palette.secondary.light,
+                    }
+                  }
+                }}
+              >
+                <Tab value="personal" label="Personal Information" />
+                <Tab value="company" label="Company Information" />
+                <Tab value="password" label="Password" />
+                <Tab value="integrations" label="Integrations" />
+              </Tabs>
+            </Box>
+
             {activeSection === 'personal' && (
               <>
                 <Box sx={{ mb: 3 }}>
-                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: '20px' }}>
+                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: { xs: '18px', md: '20px' } }}>
                     Personal Information
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: '15px' }}>
+                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: { xs: '14px', md: '15px' }, lineHeight: 1.6 }}>
                     Update your personal details and contact information.
                   </Typography>
                 </Box>
                 
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
                     <StyledTextField
                       label="First Name"
@@ -968,8 +1013,9 @@ const ProfilePage = () => {
                       variant="contained"
                       onClick={handleSaveProfile}
                       disabled={saving}
+                      fullWidth={window.innerWidth < 600}
                     >
-                      {saving ?<> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving changes</Typography></>: 'Save Changes'}
+                      {saving ? <> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving changes</Typography></> : 'Save Changes'}
                     </PrimaryButton>
                   </Grid>
                 </Grid>
@@ -979,10 +1025,10 @@ const ProfilePage = () => {
             {activeSection === 'company' && (
               <>
                 <Box sx={{ mb: 3 }}>
-                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: '20px' }}>
+                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: { xs: '18px', md: '20px' } }}>
                     Company Information
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: '15px' }}>
+                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: { xs: '14px', md: '15px' }, lineHeight: 1.6 }}>
                     Update your company details, logo, and company description.
                   </Typography>
                 </Box>
@@ -990,24 +1036,33 @@ const ProfilePage = () => {
                 <Paper 
                   elevation={0} 
                   sx={{ 
-                    p: 3, 
+                    p: { xs: 2, md: 3 }, 
                     mb: 4, 
                     bgcolor: '#F8F9FA', 
                     borderRadius: '8px',
                     border: '0.8px solid rgba(17, 17, 17, 0.08)'
                   }}
                 >
-                  <Typography variant="subtitle1" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 2, fontSize: '18px' }}>
+                  <Typography variant="subtitle1" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 2, fontSize: { xs: '16px', md: '18px' } }}>
                     Company Logo
                   </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                  <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'center', sm: 'flex-start' }, gap: 3 }}>
                     <Avatar
                       src={profileData.company.logo || '/images/logos/logo.svg'}
                       alt={profileData.company.name}
-                      sx={{ width: 100, height: 100, border: '1px solid rgba(17, 17, 17, 0.08)' }}
+                      sx={{ 
+                        width: { xs: 80, sm: 100 }, 
+                        height: { xs: 80, sm: 100 }, 
+                        border: '1px solid rgba(17, 17, 17, 0.08)',
+                        '& img': {
+                          objectFit: 'cover',
+                          width: '100%',
+                          height: '100%'
+                        }
+                      }}
                     />
-                    <Box>
-                      <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', mb: 2, fontSize: '15px' }}>
+                    <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
+                      <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', mb: 2, fontSize: { xs: '14px', md: '15px' } }}>
                         Upload a logo for your company. This will be displayed on job postings and communications.
                       </Typography>
                       <Button
@@ -1016,7 +1071,8 @@ const ProfilePage = () => {
                         startIcon={logoUploading ? <CircularProgress size={20} /> : <CloudUploadIcon />}
                         sx={{ 
                           textTransform: 'none',
-                          borderRadius: '8px'
+                          borderRadius: '8px',
+                          width: { xs: '100%', sm: 'auto' }
                         }}
                         disabled={logoUploading}
                       >
@@ -1032,11 +1088,11 @@ const ProfilePage = () => {
                   </Box>
                 </Paper>
                 
-                <Typography variant="subtitle1" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 2, fontSize: '18px' }}>
+                <Typography variant="subtitle1" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 2, fontSize: { xs: '16px', md: '18px' } }}>
                   Company Details
                 </Typography>
                 
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
                     <StyledTextField
                       label="Company Name"
@@ -1087,8 +1143,9 @@ const ProfilePage = () => {
                       variant="contained"
                       onClick={handleSaveProfile}
                       disabled={saving}
+                      fullWidth={window.innerWidth < 600}
                     >
-                      {saving ?<><CircularProgress size={24} color="inherit" /> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving</Typography></> : 'Save Changes'}
+                      {saving ? <> <CircularProgress size={24} color="inherit" /> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving</Typography></> : 'Save Changes'}
                     </PrimaryButton>
                   </Grid>
                 </Grid>
@@ -1101,7 +1158,7 @@ const ProfilePage = () => {
                   <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: '20px' }}>
                     Change Password
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: '15px' }}>
+                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: { xs: '14px', md: '15px' }, lineHeight: 1.6 }}>
                     Update your password to keep your account secure.
                   </Typography>
                 </Box>
@@ -1157,7 +1214,7 @@ const ProfilePage = () => {
                   <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: '20px' }}>
                     Integrations
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: '15px' }}>
+                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: { xs: '14px', md: '15px' }, lineHeight: 1.6 }}>
                     Connect your favorite tools and services to enhance your experience.
                   </Typography>
                 </Box>
