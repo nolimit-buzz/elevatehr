@@ -287,7 +287,7 @@ export default function Typeform({
     // Close modal after 3 seconds
     setTimeout(() => {
       setShowSuccessModal(false);
-      router.push('/job-openings');
+      router.push(`/job-openings/${params.job_id}`);
     }, 3000);
   };
 

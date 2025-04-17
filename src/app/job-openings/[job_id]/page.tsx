@@ -14,6 +14,7 @@ import {
   Button,
   Grid,
   Skeleton,
+  Divider,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ElectricBoltIcon from "@mui/icons-material/ElectricBolt";
@@ -178,13 +179,13 @@ const JobDetailsPage = () => {
             position: "relative",
           }}
         >
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{padding: { xs: "0"} }}>
             <Grid item xs={12} md={8}>
               <Box
                 sx={{
                   backgroundColor: "transparent",
                   borderRadius: "8px",
-                  padding: "40px",
+                  // padding: "40px",
                   marginBottom: "24px",
                 }}
               >
@@ -283,15 +284,16 @@ const JobDetailsPage = () => {
           maxWidth: "1063px !important",
           backgroundColor: "white",
           position: "relative",
+          padding: { xs: "20px", },
         }}
       >
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ flexDirection: { xs: "column-reverse", md: "row" }  }}> 
           <Grid item xs={12} md={8}>
             <Box
               sx={{
                 backgroundColor: "transparent",
                 borderRadius: "8px",
-                padding: "40px",
+                // padding: "40px",
                 marginBottom: "24px",
               }}
             >
@@ -324,6 +326,7 @@ const JobDetailsPage = () => {
                       fontSize: "24px",
                       fontWeight: "600",
                       marginBottom: "16px",
+                      textTransform: "capitalize",
                     }}
                   >
                     {jobData?.qualifications} {jobData?.title}
@@ -333,6 +336,7 @@ const JobDetailsPage = () => {
                     alignItems={"center"}
                     gap={"8px"}
                     mt={"16px"}
+                    flexWrap={"wrap"}
                   >
                     <Pill
                       label={jobData?.location}
@@ -518,16 +522,16 @@ const JobDetailsPage = () => {
               sx={{
                 backgroundColor: "#fff",
                 borderRadius: "8px",
-                padding: "24px",
-                marginBottom: "24px",
+                // padding: "24px",
+                marginBottom: "0",
               }}
             >
               <Stack
                 spacing={2}
                 sx={{
-                  border: "1px solid #E0E0E0",
+                  border: { xs: "none", md: "1px solid #E0E0E0" },
                   borderRadius: "8px",
-                  padding: "24px",
+                  // padding: "24px",
                 }}
               >
                 
@@ -655,6 +659,7 @@ const JobDetailsPage = () => {
                
               </Stack>
             </Box>
+            <Divider sx={{display: { xs: "block", md: "none", } ,margin: "10px 0" }} />
           </Grid>
         </Grid>
       </Container>
