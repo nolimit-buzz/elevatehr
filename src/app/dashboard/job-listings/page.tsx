@@ -429,23 +429,7 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
           </ListItem>
         </List>
       </DialogContent>
-      <DialogActions sx={{ p: 2 }}>
-        <Button 
-          onClick={onClose}
-          sx={{
-            color: 'rgba(17, 17, 17, 0.72)',
-            textTransform: 'none',
-            fontSize: '14px',
-            fontWeight: 400,
-            '&:hover': {
-              backgroundColor: 'rgba(68, 68, 226, 0.04)',
-              color: theme.palette.primary.main,
-            }
-          }}
-        >
-          Close
-        </Button>
-      </DialogActions>
+     
     </Dialog>
   );
 });

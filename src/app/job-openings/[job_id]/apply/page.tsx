@@ -305,11 +305,12 @@ export default function Typeform({
         PaperProps={{
           sx: {
             borderRadius: '16px',
-            padding: '32px 0px',
+            padding: { xs: '16px', sm: '32px' },
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
             background: 'linear-gradient(145deg, #ffffff, #f5f5f5)',
             position: 'relative',
-            maxWidth: '620px'
+            maxWidth: { xs: '90%', sm: '620px' },
+            margin: { xs: '16px', sm: '32px' }
           }
         }}
       >
@@ -317,11 +318,17 @@ export default function Typeform({
           onClick={() => router.push(`/job-openings/${params.job_id}`)}
           sx={{
             position: 'absolute',
-            right: 16,
-            top: 16,
+            right: { xs: 8, sm: 16 },
+            top: { xs: 8, sm: 16 },
             color: 'grey.500',
+            border: '1px solid',
+            borderColor: 'grey.500',
+            borderRadius: '50%',
+            width: { xs: '32px', sm: '40px' },
+            height: { xs: '32px', sm: '40px' },
             '&:hover': {
               color: 'grey.700',
+              borderColor: 'grey.700',
               backgroundColor: 'rgba(0, 0, 0, 0.04)',
             },
             transition: 'all 0.2s ease-in-out'
@@ -329,15 +336,19 @@ export default function Typeform({
         >
           <Close />
         </IconButton>
-        <DialogContent sx={{ textAlign: 'center', pt: 4 }}>
+        <DialogContent sx={{ 
+          textAlign: 'center', 
+          pt: { xs: 2, sm: 4 },
+          px: { xs: 2, sm: 4 }
+        }}>
           <Box 
             sx={{ 
-              mb: 3,
+              mb: { xs: 2, sm: 3 },
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              height: '120px',
-              width: '120px',
+              height: { xs: '80px', sm: '120px' },
+              width: { xs: '80px', sm: '120px' },
               mx: 'auto',
               borderRadius: '50%',
               backgroundColor: 'rgba(76, 175, 80, 0.08)',
@@ -346,8 +357,8 @@ export default function Typeform({
           >
             <Grow in={true} timeout={1000} style={{ transformOrigin: 'center center' }}>
               <svg 
-                width="60" 
-                height="60" 
+                width={40} 
+                height={40} 
                 viewBox="0 0 24 24" 
                 fill="none" 
                 xmlns="http://www.w3.org/2000/svg"
@@ -364,18 +375,24 @@ export default function Typeform({
               </svg>
             </Grow>
           </Box>
-          <DialogTitle sx={{ textAlign: 'center', pb: 2 }}>
+          <DialogTitle sx={{ 
+            textAlign: 'center', 
+            pb: { xs: 1, sm: 2 },
+            px: 0
+          }}>
             <Typography 
               variant="h5" 
               component="h1" 
               sx={{ 
-                width: 'max-content',
+                width: '100%',
                 mx: 'auto',
-                px: 0,
+                px: { xs: 2, sm: 4 },
                 fontWeight: 600, 
                 color: 'grey.100',
-                fontSize: { xs: '1.5rem', sm: '1.75rem' },
-                mb: 1
+                fontSize: { xs: '1.25rem', sm: '1.75rem' },
+                mb: 1,
+                wordWrap: 'break-word',
+                overflowWrap: 'break-word'
               }}
             >
               Thank you for your application!
@@ -385,41 +402,21 @@ export default function Typeform({
             variant="body1" 
             color="grey.200" 
             sx={{ 
-              mb: 2,
-              fontSize: '1.1rem',
+              mb: { xs: 1, sm: 2 },
+              fontSize: { xs: '0.9rem', sm: '1.1rem' },
               lineHeight: 1.6,
-              maxWidth: '400px',
-              mx: 'auto'
+              width: '100%',
+              mx: 'auto',
+              px: { xs: 2, sm: 4 },
+              wordWrap: 'break-word',
+              overflowWrap: 'break-word',
+              whiteSpace: 'normal'
             }}
           >
             Your application is in! We'll review it and get back to you via email.
           </Typography>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'center', pt: 2, gap: 2 }}>
-          <Button
-            variant="outlined"
-            onClick={() =>router.push(`/job-openings/${params.job_id}`)}
-            sx={{
-              borderColor: 'primary.main',
-              color: 'primary.main',
-              fontWeight: 500,
-              px: 4,
-              py: 1.5,
-              borderRadius: '8px',
-              textTransform: 'none',
-              fontSize: '1rem',
-              '&:hover': {
-                borderColor: 'primary.dark',
-                backgroundColor: 'rgba(25, 118, 210, 0.04)',
-                transform: 'translateY(-2px)',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-              },
-              transition: 'all 0.2s ease-in-out'
-            }}
-          >
-            Close
-          </Button>
-        </DialogActions>
+       
       </Dialog>
     );
   }
