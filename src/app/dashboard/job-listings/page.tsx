@@ -1813,7 +1813,7 @@ const JobPostings = () => {
                               borderRadius: '8px',
                             }}>
                               <Grid container alignItems="center" spacing={2} sx={{
-                              bgcolor: 'rgba(17, 17, 17, 0.04)', 
+                              bgcolor: 'rgba(68, 68, 226, 0.04)', 
                                 borderRadius: '8px',
                                 margin: 'auto',
                                 width: '100%',
