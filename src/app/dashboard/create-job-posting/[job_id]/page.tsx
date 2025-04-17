@@ -444,7 +444,6 @@ const FormBuilderField: React.FC<FormBuilderFieldProps> = ({
   isRequired
 }) => {
   const theme = useTheme();
-  const isDefaultField = defaultCustomFields.some(df => df.key === field.key);
 
   return (
     <Stack alignItems="flex-start" width={'100%'} sx={{ padding: '20px 22px', border: '1px solid rgba(17, 17, 17, 0.14)', borderRadius: '8px' }}>
@@ -461,7 +460,7 @@ const FormBuilderField: React.FC<FormBuilderFieldProps> = ({
               width: '100%',
               '& .MuiInputBase-root': {
                 '& input': {
-                  pointerEvents: isRequired || isDefaultField ? 'none' : 'auto',
+                  pointerEvents: isRequired ? 'none' : 'auto',
                   paddingX:0,
                   fontSize: '16px !important',
                   color: 'black',
@@ -479,13 +478,13 @@ const FormBuilderField: React.FC<FormBuilderFieldProps> = ({
               }
             }}
           />
-          {!isRequired && !isDefaultField && (
+          {!isRequired  && (
             <Stack direction={'row'} gap={2} alignItems={'center'} justifyContent={{ xs: 'space-between', sm: 'flex-start' }} width={{ xs: '100%', sm: 'max-content' }} mb={{ xs: 2, sm: 0 }}>
               <FormControl variant="outlined" style={{ minWidth: 150 }}>
                 <Select
                   value={field.type}
                   onChange={(e) => handleTypeChange(index, e.target.value)}
-                  disabled={isDefaultField}
+                  disabled={isRequired}
                   sx={{
                     '& .MuiSelect-select': {
                       padding: '5px 8px',
@@ -518,14 +517,14 @@ const FormBuilderField: React.FC<FormBuilderFieldProps> = ({
         </Stack>
       </Stack>
 
-      {field.type === 'text' && (
+      {(field.type === 'text' || field.type === 'number') && (
         <TextField
           fullWidth
           value={field.value || ''}
           onChange={(e) => handleChange(index, 'value', e.target.value)}
           variant="outlined"
           InputProps={{
-            readOnly: isRequired || isDefaultField,
+            readOnly: isRequired,
             autoFocus: true,
           }}
           placeholder="Response field"
@@ -556,15 +555,18 @@ const FormBuilderField: React.FC<FormBuilderFieldProps> = ({
 
       {field.type === 'select' && (
         <Stack width={'100%'} gap={1}>
-          {(field.options || []).map((option, optionIndex) => (
+          {Object.entries(field.options || {}).map(([value, label], optionIndex) => (
             <Stack key={optionIndex} direction={'row'} gap={1} alignItems={'center'}>
               <TextField
                 fullWidth
-                value={option || ''}
-                onChange={(e) => handleChange(index, 'options', e.target.value, optionIndex)}
+                value={label || ''}
+                onChange={(e) => {
+                  const newOptions = { ...field.options, [value]: e.target.value };
+                  handleChange(index, 'options', JSON.stringify(newOptions));
+                }}
                 variant="outlined"
                 placeholder="Option"
-                disabled={isDefaultField}
+                disabled={isRequired}
                 sx={{
                   flex: 1,
                   '& .MuiInputBase-root': {
@@ -588,14 +590,14 @@ const FormBuilderField: React.FC<FormBuilderFieldProps> = ({
                   }
                 }}
               />
-              {!isRequired && !isDefaultField && (
+              {!isRequired  && (
                 <IconButton onClick={() => handleDelete(index, optionIndex)}>
                   <DeleteIcon />
                 </IconButton>
               )}
             </Stack>
           ))}
-          {!isRequired && !isDefaultField && (
+          {!isRequired && (
             <StyledOutlineButton
               variant="outlined"
               color="primary"
@@ -620,7 +622,7 @@ const FormBuilderField: React.FC<FormBuilderFieldProps> = ({
               fontSize: '16px',
               // fontWeight: 500,
               borderColor: 'rgba(17, 17, 17, 0.14)',
-              pointerEvents: isDefaultField || isRequired ? 'none' : 'auto',
+              pointerEvents: isRequired ? 'none' : 'auto',
               lineHeight: '100%',
               letterSpacing: '0.14px',
               backgroundColor: '#F8F9FB',
@@ -756,28 +758,28 @@ const AssessmentStep: React.FC<AssessmentStepProps> = ({
   );
 };
 
-const defaultCustomFields: CustomField[] = [
-  {
-    key: 'experience',
-    label: 'Years of Experience',
-    type: 'text',
-    required: true
-  },
-  {
-    key: 'skills',
-    label: 'Relevant Skills',
-    type: 'text',
-    required: true,
-    description: 'List your relevant skills for this position'
-  },
-  {
-    key: 'availability',
-    label: 'When can you start?',
-    type: 'select',
-    required: true,
-    options: ['Immediately', 'In 2 weeks', 'In a month', 'In 2 months']
-  }
-];
+// const defaultCustomFields: CustomField[] = [
+//   {
+//     key: 'experience',
+//     label: 'Years of Experience',
+//     type: 'text',
+//     required: true
+//   },
+//   {
+//     key: 'skills',
+//     label: 'Relevant Skills',
+//     type: 'text',
+//     required: true,
+//     description: 'List your relevant skills for this position'
+//   },
+//   {
+//     key: 'availability',
+//     label: 'When can you start?',
+//     type: 'select',
+//     required: true,
+//     options: ['Immediately', 'In 2 weeks', 'In a month', 'In 2 months']
+//   }
+// ];
 
 const AboutTheJob = () => {
   const params = useParams();
@@ -866,7 +868,6 @@ const AboutTheJob = () => {
             skills: allSkills.slice(0, 6)
           });
           // Only set default custom fields if no custom fields exist in job data
-          setCustomFields(jobData.application_form?.custom_fields?.length ? jobData.application_form.custom_fields : defaultCustomFields);
           setFormFields(jobData.application_form?.required_fields || []);
           setLoading(false);
           return;
@@ -882,7 +883,6 @@ const AboutTheJob = () => {
           skills: jobData.skills.split(',')
         });
         // Only set default custom fields if no custom fields exist in job data
-        setCustomFields(jobData.application_form?.custom_fields?.length ? jobData.application_form.custom_fields : defaultCustomFields);
         setFormFields(jobData.application_form?.required_fields || []);
 
         setLoading(false);

@@ -130,18 +130,15 @@ const JobDetailsPage = () => {
 
       try {
         setLoading(true);
-        const token = localStorage.getItem("jwt");
-        const config: AxiosRequestConfig = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        };
         const response = await axios.get(
-          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${job_id}`,
-          config
+          `https://app.elevatehr.ai/wp-json/elevatehr/v1/active-jobs/${job_id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
-        setJobData(response.data);
+        setJobData(response.data.jobs);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching job details:", err);
