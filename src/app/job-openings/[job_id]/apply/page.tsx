@@ -54,10 +54,11 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
-  fontSize: '24px',
+  fontSize: '28px',
   fontWeight: 500,
   color: theme.palette.secondary.light,
-  marginBottom: '18px',
+  display: 'block',
+  marginBottom: '10px',
   '&.Mui-focused': {
     color: theme.palette.primary.main,
   },
@@ -277,27 +278,32 @@ export default function Typeform({
               style={{height:"max-content", width:"800px", maxWidth:"600px"}}
               key={currentStep}
               className="w-full mx-auto px-"
-              initial={{ y: delta >= 0 ? "100%" : "-100%", opacity: 0 }}
-              exit={{ y: delta >= 0 ? "-100%" : "100%", opacity: 0 }}
+              initial={{ y: delta >= 0 ? "60%" : "-60%", opacity: 0 }}
+              exit={{ y: delta >= 0 ? "-60%" : "100%", opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              transition={{ duration: 0.3, ease: "easeInOut", delay: 0.1 }}
             >
               <FormField
                 control={form.control}
                 name={currentField.key as keyof Inputs}
                 render={({ field, fieldState: { error } }) => (
-                  <Box sx={{ mb: 4, height:"100%", width:"100%" }}>
+                  <Box sx={{ mb: 4, height:"max-content", width:"100%" }}>
                     {currentStep > 0 && (
                       <Button
                         type="button"
                         variant="text"
                         onClick={prev}
                         sx={{ 
+                          minWidth:"max-content",
+                          width:"max-content",
+                          px:0,
+                          m:0,
                           mb: 2, 
                           fontWeight: 600,
-                          color: 'rgba(0, 0, 0, 0.6)',
+                          color: 'secondary.light',
+                          // backgroundColor: 'rgba(255, 255, 255, 0.1 )',
                           '&:hover': {
-                            backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                            color: 'secondary.dark',
                           }
                         }}
                       >
@@ -310,7 +316,7 @@ export default function Typeform({
                     <StyledFormLabel>
                       {currentField.label}
                       {currentField.required && (
-                        <Typography component="span" color="error" sx={{ ml: 0.5, fontWeight: 600 }}>
+                        <Typography component="span" color="error" sx={{ ml: 0.5,  fontWeight: 600 }}>
                           *
                         </Typography>
                       )}
@@ -320,7 +326,7 @@ export default function Typeform({
                         {currentField.description}
                       </Typography>
                     )}
-                    <FormControl fullWidth error={!!error}>
+                    <FormControl fullWidth error={!!error} sx={{height:"max-content"}}>
                       {currentField.type === 'select' ? (
                         <Select
                           {...field}
@@ -396,6 +402,7 @@ export default function Typeform({
                                 borderColor: 'transparent',
                                 '&:hover': {
                                   borderColor: 'primary.main',
+                                  backgroundColor: 'secondary.light',
                                 },
                               }}
                             >
@@ -435,9 +442,9 @@ export default function Typeform({
                           autoFocus
                         />
                       )}
-                      {error && (
+                      {/* {error && (
                         <StyledFormHelperText>{error.message}</StyledFormHelperText>
-                      )}
+                      )} */}
                     </FormControl>
                   </Box>
                 )}

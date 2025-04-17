@@ -438,7 +438,7 @@ const JobPostings = () => {
     _event: React.SyntheticEvent,
     newValue: "all" | "active" | "close"
   ) => {
-    setTempStatusFilter(newValue);
+    setStatusFilter(newValue);
   };
 
   const handleFilterChange = (filterName: keyof FilterState, value: string) => {
@@ -680,9 +680,9 @@ const JobPostings = () => {
         <StyledTableCell>
           <Stack>
             <Stack direction="row" alignItems="center" gap={1}>
-              <StyledTypography textTransform={"capitalize"}>
-                {job.title}
-              </StyledTypography>
+            <StyledTypography textTransform={"capitalize"}>
+              {job.title}
+            </StyledTypography>
               <Tooltip 
                 title="Click to copy application page link" 
                 arrow
@@ -738,7 +738,7 @@ const JobPostings = () => {
                   color: '#724A3B',
                   fontWeight: 400
                 }}>
-                  {job.job_type}
+                {job.job_type}
                 </Typography>
               </Stack>
               <Stack 
@@ -756,7 +756,7 @@ const JobPostings = () => {
                   color: '#2B656E',
                   fontWeight: 400
                 }}>
-                  {job.location}
+                {job.location}
                 </Typography>
               </Stack>
               <Stack 
@@ -1217,7 +1217,7 @@ const JobPostings = () => {
                   <Stack direction="row" spacing={2} alignItems="center">
                     <FormControl sx={{ minWidth: 150 }}>
                       <Select
-                        value={tempStatusFilter}
+            value={statusFilter}
                         onChange={(e) => handleStatusChange(e as any, e.target.value as "all" | "active" | "close")}
                         displayEmpty
                         sx={{
@@ -1438,38 +1438,64 @@ const JobPostings = () => {
                                 </Tooltip>
                               </Stack>
 
-                              <Stack spacing={1} sx={{ mb: 2 }}>
+                              <Stack spacing={1} sx={{ my: 2 }} direction='row'>
                                 <Stack direction="row" alignItems="center" spacing={1}>
-                                  <Typography sx={{ 
-                                    fontSize: '14px',
-                                    color: 'rgba(17, 17, 17, 0.72)'
-                                  }}>
-                                    {job.job_type}
-                                  </Typography>
+                                  <Chip
+                                    label={job.job_type}
+                                    size="small"
+                                    sx={{
+                                      backgroundColor: '#FCEBE3',
+                                      color: '#724A3B',
+                                      borderRadius: '20px',
+                                      fontSize: '14px',
+                                      fontWeight: 400,
+                                      height: '28px'
+                                    }}
+                                  />
                                 </Stack>
                                 <Stack direction="row" alignItems="center" spacing={1}>
-                                  <LocationOnIcon sx={{ fontSize: '16px', color: 'rgba(17, 17, 17, 0.48)' }} />
-                                  <Typography sx={{ 
-                                    fontSize: '14px',
-                                    color: 'rgba(17, 17, 17, 0.72)'
-                                  }}>
-                                    {job.location}
-                                  </Typography>
+                                  <Chip
+                                    label={job.location}
+                                    size="small"
+                                    icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25"/>
+                                      <path d="M3.01675 7.07508C4.65842 -0.141583 15.3501 -0.13325 16.9834 7.08342C17.9418 11.3167 15.3084 14.9001 13.0001 17.1168C11.3251 18.7334 8.67508 18.7334 6.99175 17.1168C4.69175 14.9001 2.05842 11.3084 3.01675 7.07508Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25"/>
+                                      </svg>
+                                      }
+                                    sx={{
+                                      backgroundColor: '#D7EEF4',
+                                      color: '#2B656E',
+                                      borderRadius: '20px',
+                                      fontSize: '14px',
+                                      fontWeight: 400,
+                                      height: '28px',
+                                      '& .MuiChip-icon': {
+                                        marginLeft: '8px',
+                                        marginRight: '-4px'
+                                      }
+                                    }}
+                                  />
                                 </Stack>
                                 <Stack direction="row" alignItems="center" spacing={1}>
-                                  <Typography sx={{ 
-                                    fontSize: '14px',
-                                    color: 'rgba(17, 17, 17, 0.72)'
-                                  }}>
-                                    {job.work_model}
-                                  </Typography>
+                                  <Chip
+                                    label={job.work_model}
+                                    size="small"
+                                    sx={{
+                                      backgroundColor: '#F9E8F3',
+                                      color: '#76325F',
+                                      borderRadius: '20px',
+                                      fontSize: '14px',
+                                      fontWeight: 400,
+                                      height: '28px'
+                                    }}
+                                  />
                                 </Stack>
                               </Stack>
                             </Box>
 
                             <Box sx={{ 
                               p: 2, 
-                              bgcolor: 'rgba(17, 17, 17, 0.04)', 
+                              bgcolor: 'rgba(239, 239, 250, 0.6)', 
                               borderRadius: 2
                             }}>
                               <Grid container spacing={2}>
@@ -1491,6 +1517,7 @@ const JobPostings = () => {
                                     </Typography>
                                   </Box>
                                 </Grid>
+                               
                                 <Grid item xs={6}>
                                   <Box>
                                     <Typography variant="body2" sx={{ 
@@ -1509,6 +1536,11 @@ const JobPostings = () => {
                                     </Typography>
                                   </Box>
                                 </Grid>
+                                <Divider orientation="horizontal"  flexItem sx={{
+                                  bgcolor: 'rgba(17, 17, 17, 0.08)',
+                                  my: 2,
+                                  width: '100%'
+                                }} />
                                 <Grid item xs={6}>
                                   <Box>
                                     <Typography variant="body2" sx={{ 
@@ -1526,8 +1558,11 @@ const JobPostings = () => {
                                       {job.stage_counts.interviews}
                                     </Typography>
                                   </Box>
+                                  
                                 </Grid>
+                                
                                 <Grid item xs={6}>
+                                  
                                   <Box>
                                     <Typography variant="body2" sx={{ 
                                       color: 'rgba(17, 17, 17, 0.72)',
