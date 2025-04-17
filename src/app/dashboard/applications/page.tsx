@@ -587,6 +587,10 @@ export default function Home() {
     }
   };
 
+  const handleUpdateStagesWrapper = (stage: string, entries: number[]) => {
+    handleUpdateStages({ stage: stage as StageType, entries });
+  };
+
   return (
     <Box
       sx={{
@@ -1138,15 +1142,9 @@ export default function Home() {
                   }}
                 >
                   <Tab
-                  sx={{
-                    '& .MuiTab-root': {
-                      padding: '0px !important',
-                      backgroundColor: 'red',
-                    }
-                  }}
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <span>Application Review</span>
+                        <span>All</span>
                         <Chip
                           label={stageTotals.new}
                           size="small"
@@ -1158,19 +1156,23 @@ export default function Home() {
                               px: 1,
                               fontSize: '12px',
                               fontWeight: 500
-                            },
-                           
+                            }
                           }}
                         />
                       </Box>
                     }
                     sx={{
                       textTransform: "none",
-                      color:
-                        subTabValue === 0
-                          ? theme.palette.grey[100]
-                          : theme.palette.grey[200],
+                      color: subTabValue === 0 ? theme.palette.grey[100] : theme.palette.grey[200],
                       flex: 1,
+                      "&.Mui-selected": {
+                        color: "primary.main"
+                      },
+                      padding: '0px !important',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        color: theme.palette.secondary.main,
+                      }
                     }}
                   />
                   <Tab
@@ -1337,7 +1339,7 @@ export default function Home() {
                           key={option.action}
                           variant="outlined"
                           startIcon={isMovingStage === option.action ? <CircularProgress size={20} /> : <option.icon />}
-                          onClick={() => handleUpdateStages({ stage: option.action as StageType })}
+                          onClick={() => handleUpdateStagesWrapper(option.action, selectedEntries)}
                           disabled={isMovingStage.length > 0}
                           sx={{
                             color: 'rgba(17, 17, 17, 0.84)',
@@ -1518,7 +1520,7 @@ export default function Home() {
                               key={option.action}
                               variant="outlined"
                               startIcon={isMovingStage === option.action ? <CircularProgress size={20} /> : <option.icon />}
-                              onClick={() => handleUpdateStages({ stage: option.action as StageType, entries: [candidate.id] })}
+                              onClick={() => handleUpdateStagesWrapper(option.action, selectedEntries)}
                               disabled={isMovingStage.length > 0}
                               fullWidth
                               sx={{
@@ -1561,7 +1563,7 @@ export default function Home() {
                     isSelected={selectedEntries.includes(candidate.id)}
                     onSelectCandidate={handleSelectCandidate}
                     selectedEntries={selectedEntries}
-                    onUpdateStages={handleUpdateStages}
+                    onUpdateStages={handleUpdateStagesWrapper}
                     currentStage={getStageValue(subTabValue)}
                     onNotification={(message, severity) => {
                       setNotificationMessage(message);

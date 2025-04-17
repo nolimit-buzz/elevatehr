@@ -28,7 +28,8 @@ import {
   IconButton as MuiIconButton,
   Tabs,
   Tab,
-  Link
+  Link,
+  Chip
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ArrowBack from '@mui/icons-material/ArrowBack';
@@ -36,6 +37,9 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from 'next/navigation';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 // Custom styled TextField component
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -48,6 +52,11 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     '&.Mui-focused': {
       border: `0.8px solid ${theme.palette.primary.main}`,
       boxShadow: `0 0 0 1px ${theme.palette.primary.main}25`,
+    },
+    '& .MuiOutlinedInput-helperText': {
+      color: 'rgba(17, 17, 17, 0.6)',
+      fontSize: '15px',
+      fontWeight: 400,
     }
   },
   '& .MuiOutlinedInput-input': {
@@ -161,7 +170,7 @@ const ProfilePage = () => {
   const [errors, setErrors] = useState<ErrorState>({});
   const [integrations, setIntegrations] = useState({
     calendly: {
-      connected: false,
+      connected: Boolean(process.env.NEXT_PUBLIC_CALENDLY_CLIENT_ID && process.env.NEXT_PUBLIC_CALENDLY_CLIENT_SECRET),
     },
     zoom: {
       connected: false,
@@ -178,6 +187,8 @@ const ProfilePage = () => {
     description: string;
     schedulingUrl: string;
   } | null>(null);
+  const [calendlyEvents, setCalendlyEvents] = useState<any[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState(false);
 
   useEffect(() => {
     // Get profile data from localStorage
@@ -611,6 +622,92 @@ const ProfilePage = () => {
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
   };
+
+  // Function to get Calendly access token
+  const getCalendlyAccessToken = async () => {
+    try {
+      const response = await fetch('https://auth.calendly.com/oauth/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          grant_type: 'client_credentials',
+          client_id: process.env.NEXT_PUBLIC_CALENDLY_CLIENT_ID || '',
+          client_secret: process.env.NEXT_PUBLIC_CALENDLY_CLIENT_SECRET || '',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get access token');
+      }
+
+      const data = await response.json();
+      return data.access_token;
+    } catch (error) {
+      console.error('Error getting Calendly access token:', error);
+      throw error;
+    }
+  };
+
+  // Function to fetch Calendly events
+  const fetchCalendlyEvents = async () => {
+    try {
+      setLoadingEvents(true);
+      const accessToken = await getCalendlyAccessToken();
+      console.log('accessToken', accessToken);
+      
+      // First get the user profile
+      const userResponse = await fetch('https://api.calendly.com/users/me', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!userResponse.ok) {
+        throw new Error('Failed to fetch user profile');
+      }
+
+      const userData = await userResponse.json();
+      const userUri = userData.resource.uri;
+      const userUuid = userUri.split('/').pop(); // Extract UUID from URI
+
+      // Then fetch events using the user's UUID
+      const eventsResponse = await fetch(`https://api.calendly.com/scheduled_events?user=${userUuid}`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!eventsResponse.ok) {
+        throw new Error('Failed to fetch events');
+      }
+
+      const eventsData = await eventsResponse.json();
+      setCalendlyEvents(eventsData.collection || []);
+    } catch (error) {
+      console.error('Error fetching Calendly events:', error);
+      setNotification({
+        open: true,
+        message: 'Failed to fetch Calendly events',
+        severity: 'error',
+      });
+    } finally {
+      setLoadingEvents(false);
+    }
+  };
+
+  // Fetch events when Calendly tab is active
+  useEffect(() => {
+  console.log('activeSection', activeSection);
+  console.log('integrations.calendly.connected', integrations);
+    if (activeSection === 'calendly' && integrations.calendly.connected) {
+    console.log('fetching calendly events');
+      fetchCalendlyEvents();
+    }
+  }, [activeSection, integrations.calendly.connected]);
 
   if (loading) {
     return (
@@ -1335,75 +1432,106 @@ const ProfilePage = () => {
               <>
                 <Box sx={{ mb: 3 }}>
                   <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: '20px' }}>
-                    Calendly Integration
+                    Calendly Events
                   </Typography>
                   <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: { xs: '14px', md: '15px' }, lineHeight: 1.6 }}>
-                    Manage your Calendly integration settings and event types.
+                    View and manage your scheduled events.
                   </Typography>
                 </Box>
 
-                <Grid container spacing={3}>
-                  {/* Calendly Integration Card */}
-                  <Grid item xs={12}>
-                    <Paper 
-                      elevation={0} 
-                      sx={{ 
-                        p: 3, 
-                        border: '1px solid',
-                        borderColor: 'divider',
-                        borderRadius: '8px',
-                        bgcolor: integrations.calendly.connected ? 'success.light' : 'background.paper'
-                      }}
+                <Paper 
+                  elevation={0} 
+                  sx={{ 
+                    p: 3, 
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    borderRadius: '8px',
+                    bgcolor: 'background.paper'
+                  }}
+                >
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                      Upcoming Events
+                    </Typography>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      startIcon={<RefreshIcon />}
+                      onClick={fetchCalendlyEvents}
+                      disabled={loadingEvents}
                     >
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                        <Box>
-                          <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 0.5 }}>
-                            Calendly
-                          </Typography>
-                          <Typography variant="body2" sx={{ color: 'text.grey.100' }}>
-                            Schedule interviews and meetings seamlessly
-                          </Typography>
-                        </Box>
-                        <Button
-                          variant={integrations.calendly.connected ? "outlined" : "contained"}
-                          onClick={() => router.push('/dashboard/profile/calendly-setup')}
-                          disabled={saving}
-                        >
-                          {integrations.calendly.connected ? 'Connected' : 'Setup'}
-                        </Button>
-                      </Box>
-                    </Paper>
-                  </Grid>
+                      {loadingEvents ? 'Refreshing...' : 'Refresh'}
+                    </Button>
+                  </Box>
 
-                  {eventDetails && (
-                    <Grid item xs={12}>
-                      <Paper sx={{ p: 3, mt: 2 }}>
-                        <Typography variant="h6" sx={{ mb: 2 }}>Calendly Event Details:</Typography>
-                        <Typography>Name: {eventDetails.name}</Typography>
-                        <Typography>Duration: {eventDetails.duration} minutes</Typography>
-                        <Typography>Description: {eventDetails.description}</Typography>
-                        <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Typography>Scheduling URL:</Typography>
-                          <Typography sx={{ flex: 1, wordBreak: 'break-all' }}>{eventDetails.schedulingUrl}</Typography>
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => {
-                              navigator.clipboard.writeText(eventDetails.schedulingUrl);
-                              setNotification({
-                                open: true,
-                                message: 'Scheduling URL copied to clipboard!',
-                                severity: 'success'
-                              });
-                            }}
-                          >
-                            Copy
-                          </Button>
-                        </Box>
-                      </Paper>
-                    </Grid>
-                  )}
-                </Grid>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {loadingEvents ? (
+                      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                        <CircularProgress />
+                      </Box>
+                    ) : calendlyEvents.length > 0 ? (
+                      calendlyEvents.map((event) => (
+                        <Paper 
+                          key={event.uri}
+                          elevation={0}
+                          sx={{ 
+                            p: 2,
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            borderRadius: '8px',
+                            '&:hover': {
+                              bgcolor: 'rgba(0, 0, 0, 0.02)',
+                              transition: 'background-color 0.2s ease'
+                            }
+                          }}
+                        >
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                            <Box>
+                              <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 0.5 }}>
+                                {event.name}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: 'text.grey.100' }}>
+                                Guest: {event.invitees_counter.active}
+                              </Typography>
+                            </Box>
+                            <Chip 
+                              label="Upcoming" 
+                              color="success" 
+                              size="small"
+                              sx={{ 
+                                bgcolor: 'success.light',
+                                color: 'success.dark',
+                                fontWeight: 500
+                              }}
+                            />
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.grey.100' }}>
+                            <AccessTimeIcon sx={{ fontSize: 16 }} />
+                            <Typography variant="body2">
+                              {new Date(event.start_time).toLocaleDateString()} • {new Date(event.start_time).toLocaleTimeString()} - {new Date(event.end_time).toLocaleTimeString()}
+                            </Typography>
+                          </Box>
+                        </Paper>
+                      ))
+                    ) : (
+                      <Box sx={{ 
+                        p: 4, 
+                        textAlign: 'center',
+                        border: '1px dashed',
+                        borderColor: 'divider',
+                        borderRadius: '8px'
+                      }}>
+                        <EventNoteIcon sx={{ fontSize: 48, color: 'text.grey.100', mb: 2 }} />
+                        <Typography variant="body1" sx={{ color: 'text.grey.100', mb: 1 }}>
+                          No upcoming events scheduled
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.grey.100' }}>
+                          Your scheduled events will appear here
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
+                </Paper>
               </>
             )}
           </Paper>

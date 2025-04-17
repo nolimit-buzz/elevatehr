@@ -1657,7 +1657,9 @@ export default function Home() {
                 <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
                   <Tabs
                     value={subTabValue}
-                    onChange={handleSubTabChange}
+                    onChange={(_event: React.SyntheticEvent, newValue: number) => {
+                      handleSubTabChange(_event, newValue);
+                    }}
                     indicatorColor="secondary"
                     variant="scrollable"
                     scrollButtons="auto"
@@ -1827,7 +1829,10 @@ export default function Home() {
                     <FormControl fullWidth>
                       <Select
                         value={subTabValue}
-                        onChange={(e) => handleSubTabChange(null, e.target.value as number)}
+                        onChange={(e) => {
+                          const value = e.target.value as number;
+                          handleSubTabChange(e as unknown as React.SyntheticEvent, value);
+                        }}
                         displayEmpty
                         sx={{
                           backgroundColor: '#fff',

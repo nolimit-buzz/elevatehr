@@ -672,22 +672,18 @@ export default function Typeform({
                     variant="contained"
                     disabled={isSubmitting}
                     sx={{
-                      bgcolor: 'secondary.light',
-                      color: 'primary.main',
+                      bgcolor: "secondary.light",
+                      color: "primary.main",
                       fontWeight: 600,
-                      '&:hover': {
-                        bgcolor: 'primary.dark',
-                      }
+                      "&:hover": {
+                        bgcolor: "primary.dark",
+                      },
                     }}
-                    onClick={submitForm}
                   >
                     {isSubmitting ? (
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <CircularProgress size={20} sx={{ color: 'primary.main' }} />
-                        <span>Submitting...</span>
-                      </Box>
+                      <CircularProgress size={24} color="inherit" />
                     ) : (
-                      "Submit"
+                      "Submit Application"
                     )}
                   </Button>
                 )}

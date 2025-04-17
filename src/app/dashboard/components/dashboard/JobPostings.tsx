@@ -66,14 +66,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const StyledTypography = styled(Typography)(({ theme }) => ({
+const StyledTypography = styled(Typography)({
   color: 'rgba(17, 17, 17, 0.92)',
-  fontSize: { xs: '19px', sm: '18px' },
+  fontSize: '19px',
   fontWeight: 600,
   lineHeight: '100%',
-  letterSpacing: '0.27px',
-  marginBottom: '16px',
-}));
+  letterSpacing: '0.12px',
+  '@media (min-width:600px)': {
+    fontSize: '18px'
+  }
+});
 
 const StyledSubtitleTypography = styled(Typography)(({ theme }) => ({
   fontSize: '13px',

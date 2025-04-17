@@ -2,9 +2,10 @@
 import Link from "next/link";
 import { Box, Stack, Typography, Container, styled, Chip } from "@mui/material";
 import PageContainer from "@/app/dashboard/components/container/PageContainer";
-import AuthLogin from "./authentication/auth/AuthLogin";
+import AuthLogin from "@/app/dashboard/components/auth/AuthLogin";
 import Image from "next/image";
 import { useTheme } from '@mui/material/styles';
+import { useRouter } from 'next/navigation';
 
 const Banner = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -26,6 +27,7 @@ const Pill = styled(Chip)(({ theme }) => ({
 
 const Login = () => {
   const theme = useTheme();
+  const router = useRouter();
 
   return (
     <PageContainer
@@ -260,18 +262,20 @@ const Login = () => {
                 </Stack>
               }
               onSuccess={(response) => {
-                // Save token
-                localStorage.setItem('token', response.token);
-                
-                // Save user profile data
-                localStorage.setItem('userProfile', JSON.stringify({
-                  userId: response.user_id,
-                  personalInfo: response.personal_info,
-                  companyInfo: response.company_info
-                }));
+                if (typeof window !== 'undefined') {
+                  // Save token
+                  localStorage.setItem('token', response.token);
+                  
+                  // Save user profile data
+                  localStorage.setItem('userProfile', JSON.stringify({
+                    userId: response.user_id,
+                    personalInfo: response.personal_info,
+                    companyInfo: response.company_info
+                  }));
 
-                // Redirect to dashboard
-                window.location.href = '/dashboard';
+                  // Redirect to dashboard using Next.js router
+                  router.push('/dashboard');
+                }
               }}
             />
           </Box>
