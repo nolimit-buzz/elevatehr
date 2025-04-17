@@ -248,10 +248,10 @@ const Login = () => {
                   <Typography
                     component={Link}
                     href="/authentication/register"
+                    color="primary"
+                    variant="h6"
                     fontWeight={500}
                     sx={{
-                      textDecoration: "none",
-                      color: "primary.main",
                       fontSize: { xs: '12px', sm: '16px' }
                     }}
                   >
@@ -259,6 +259,20 @@ const Login = () => {
                   </Typography>
                 </Stack>
               }
+              onSuccess={(response) => {
+                // Save token
+                localStorage.setItem('token', response.token);
+                
+                // Save user profile data
+                localStorage.setItem('userProfile', JSON.stringify({
+                  userId: response.user_id,
+                  personalInfo: response.personal_info,
+                  companyInfo: response.company_info
+                }));
+
+                // Redirect to dashboard
+                window.location.href = '/dashboard';
+              }}
             />
           </Box>
         </Stack>

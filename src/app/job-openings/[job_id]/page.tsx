@@ -531,7 +531,7 @@ const JobDetailsPage = () => {
                 sx={{
                   border: { xs: "none", md: "1px solid #E0E0E0" },
                   borderRadius: "8px",
-                  // padding: "24px",
+                  padding: { xs: "0px", md: "24px" },
                 }}
               >
                 

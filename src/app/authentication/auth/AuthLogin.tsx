@@ -75,6 +75,11 @@ const AuthLogin: React.FC<AuthLoginProps> = ({ title, subtitle, subtext }) => {
 
       const token = response.data.token;
       localStorage.setItem("jwt", token); // Save JWT in localStorage
+      localStorage.setItem('userProfile', JSON.stringify({
+        userId: response.data.user_id,
+        personalInfo: response.data.personal_info,
+        companyInfo: response.data.company_info
+      }));
 
       console.log("Login successful:", response.data);
       router.push("/dashboard"); // Redirect to dashboard after login

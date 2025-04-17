@@ -363,6 +363,7 @@ export default function Typeform({
               component="h1" 
               sx={{ 
                 width: '100%',
+                maxWidth: { xs: '280px', sm: '400px', md: '100%' },
                 mx: 'auto',
                 px: { xs: 2, sm: 4 },
                 fontWeight: 600, 
@@ -384,6 +385,7 @@ export default function Typeform({
               fontSize: { xs: '0.9rem', sm: '1.1rem' },
               lineHeight: 1.6,
               width: '100%',
+              maxWidth: { xs: '280px', sm: '400px', md: '100%' },
               mx: 'auto',
               px: { xs: 2, sm: 4 },
               wordWrap: 'break-word',

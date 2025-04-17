@@ -127,6 +127,7 @@ const ProfilePage = () => {
   const [activeSection, setActiveSection] = useState<ProfileSection>('personal');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [logoUploading, setLogoUploading] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({
     personal: {
       firstName: '',
@@ -176,56 +177,62 @@ const ProfilePage = () => {
   } | null>(null);
 
   useEffect(() => {
-    // Fetch profile data
-    const fetchProfileData = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem('jwt');
-        const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/company/profile', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          
-          // Map API response to our state structure
-          setProfileData({
-            personal: {
-              firstName: data.first_name || '',
-              lastName: data.last_name || '',
-              email: data.email || '',
-              phone: data.phone || '',
-              jobTitle: data.job_title || '',
-            },
-            company: {
-              name: data.company_name || '',
-              logo: data.company_logo || '',
-              size: data.number_of_employees?.toString() || '0',
-              about: data.company_about || '',
-              bookingLink: data.booking_link || '',
-              website: data.website || '',
-            }
-          });
-        } else {
-          throw new Error('Failed to fetch profile data');
+    // Get profile data from localStorage
+    const userProfile = localStorage.getItem('userProfile');
+    if (userProfile) {
+      const profile = JSON.parse(userProfile);
+      
+      // Map localStorage data to our state structure
+      setProfileData({
+        personal: {
+          firstName: profile.personalInfo.first_name || '',
+          lastName: profile.personalInfo.last_name || '',
+          email: profile.personalInfo.email || '',
+          phone: profile.personalInfo.phone_number || '',
+          jobTitle: profile.companyInfo.job_title || '',
+        },
+        company: {
+          name: profile.companyInfo.company_name || '',
+          logo: profile.companyInfo.company_logo || '',
+          size: profile.companyInfo.number_of_employees || '0',
+          about: profile.companyInfo.about_company || '',
+          bookingLink: profile.companyInfo.booking_link || '',
+          website: profile.companyInfo.company_website || '',
         }
-      } catch (error) {
-        console.error('Error fetching profile data:', error);
-        setNotification({
-          open: true,
-          message: 'Failed to load profile data',
-          severity: 'error'
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfileData();
+      });
+    }
+    setLoading(false);
   }, []);
+
+  // Update localStorage when profile data changes
+  useEffect(() => {
+    if (profileData.personal.firstName || profileData.personal.lastName) {
+      const userProfile = localStorage.getItem('userProfile');
+      if (userProfile) {
+        const profile = JSON.parse(userProfile);
+        const updatedProfile = {
+          ...profile,
+          personalInfo: {
+            ...profile.personalInfo,
+            first_name: profileData.personal.firstName,
+            last_name: profileData.personal.lastName,
+            email: profileData.personal.email,
+            phone_number: profileData.personal.phone,
+          },
+          companyInfo: {
+            ...profile.companyInfo,
+            job_title: profileData.personal.jobTitle,
+            company_name: profileData.company.name,
+            number_of_employees: profileData.company.size,
+            about_company: profileData.company.about,
+            booking_link: profileData.company.bookingLink,
+            company_website: profileData.company.website,
+          }
+        };
+        localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+      }
+    }
+  }, [profileData]);
 
   const handleSectionChange = (section: ProfileSection) => {
     setActiveSection(section);
@@ -323,63 +330,80 @@ const ProfilePage = () => {
   };
   
   // Save profile data
-  const handleSaveProfile = async (section: ProfileSection) => {
-    setSaving(true);
-    
-    // Validate data before saving
-    if (!validateForm(section)) {
-      setSaving(false);
-      return;
-    }
-    
-    // Only send the profile update for personal and company sections
-    // Password changes are handled by handleChangePassword
-    if (section === 'password') {
-      setSaving(false);
-      return handleChangePassword();
-    }
-    
+  const handleSaveProfile = async () => {
     try {
+      setSaving(true);
       const token = localStorage.getItem('jwt');
       
-      // Prepare the payload according to the API's expected format
-      const payload = {
-        email: profileData.personal.email,
-        first_name: profileData.personal.firstName,
-        last_name: profileData.personal.lastName,
-        company_name: profileData.company.name,
-        booking_link: profileData.company.bookingLink,
-        number_of_employees: parseInt(profileData.company.size) || 0,
-      };
+      const formData = new FormData();
+      formData.append('first_name', profileData.personal.firstName);
+      formData.append('last_name', profileData.personal.lastName);
+      formData.append('email', profileData.personal.email);
+      formData.append('phone', profileData.personal.phone);
+      formData.append('job_title', profileData.personal.jobTitle);
+      formData.append('company_name', profileData.company.name);
+      formData.append('number_of_employees', profileData.company.size);
+      formData.append('company_about', profileData.company.about);
+      formData.append('booking_link', profileData.company.bookingLink);
+      formData.append('website', profileData.company.website);
       
-      // Send PUT request to update profile
       const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/company/profile', {
-        method: 'PUT',
+        method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(payload)
+        body: formData
       });
       
       if (response.ok) {
-        // Show success notification
         setNotification({
           open: true,
-          message: section === 'company' ? 
-            'Company profile updated successfully' : 
-            'Profile updated successfully',
+          message: String('Profile updated successfully'),
           severity: 'success'
         });
+        
+        // Update localStorage with the new data
+        const userProfile = localStorage.getItem('userProfile');
+        if (userProfile) {
+          const profile = JSON.parse(userProfile);
+          const updatedProfile = {
+            ...profile,
+            personalInfo: {
+              ...profile.personalInfo,
+              first_name: profileData.personal.firstName,
+              last_name: profileData.personal.lastName,
+              email: profileData.personal.email,
+              phone_number: profileData.personal.phone,
+            },
+            companyInfo: {
+              ...profile.companyInfo,
+              job_title: profileData.personal.jobTitle,
+              company_name: profileData.company.name,
+              number_of_employees: profileData.company.size,
+              about_company: profileData.company.about,
+              booking_link: profileData.company.bookingLink,
+              company_website: profileData.company.website,
+            }
+          };
+          localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+        }
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to update profile');
+        if (errorData.code === 'upload_error' && !errorData.message) {
+          // Ignore upload error if not inside handleLogoUpload
+          return;
+        } 
+        setNotification({
+          open: true,
+          message: 'Successfully updated profile',
+          severity: 'error'
+        });
       }
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error('Error updating profile:', error);
       setNotification({
         open: true,
-        message: error instanceof Error ? error.message : 'Failed to update profile',
+        message: 'Error updating profile',
         severity: 'error'
       });
     } finally {
@@ -441,16 +465,16 @@ const ProfilePage = () => {
     if (!file) return;
     
     try {
-      setSaving(true);
+      setLogoUploading(true);
       const token = localStorage.getItem('jwt');
       
       const formData = new FormData();
-      formData.append('logo', file);
+      formData.append('company_logo', file);
       
-      const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/upload-logo', {
+      const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/company/profile', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`
         },
         body: formData
       });
@@ -461,31 +485,56 @@ const ProfilePage = () => {
           ...prev,
           company: {
             ...prev.company,
-            logo: data.logo
+            logo: data.user.company_logo
           }
         }));
         
+        // Update localStorage with the new data
+        const userProfile = localStorage.getItem('userProfile');
+        if (userProfile) {
+          const profile = JSON.parse(userProfile);
+          const updatedProfile = {
+            ...profile,
+            personalInfo: {
+              ...profile.personalInfo,
+              first_name: data.user.first_name,
+              last_name: data.user.last_name,
+              email: data.user.email,
+              phone_number: data.user.phone_number,
+            },
+            companyInfo: {
+              ...profile.companyInfo,
+              company_name: data.user.company_name,
+              number_of_employees: data.user.number_of_employees,
+              booking_link: data.user.booking_link,
+              company_logo: data.user.company_logo,
+            }
+          };
+          localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+        }
+        
         setNotification({
           open: true,
-          message: 'Logo uploaded successfully',
+          message: 'Profile updated successfully',
           severity: 'success',
         });
       } else {
+        const errorData = await response.json();
         setNotification({
           open: true,
-          message: 'Failed to upload logo',
+          message: errorData.message ? JSON.stringify(errorData.message) : 'Failed to update profile',
           severity: 'error',
         });
       }
     } catch (error) {
-      console.error('Error uploading logo:', error);
+      console.error('Error updating profile:', error);
       setNotification({
         open: true,
-        message: 'Error uploading logo',
+        message: 'Error updating profile',
         severity: 'error',
       });
     } finally {
-      setSaving(false);
+      setLogoUploading(false);
     }
   };
 
@@ -917,7 +966,7 @@ const ProfilePage = () => {
                   <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                     <PrimaryButton
                       variant="contained"
-                      onClick={() => handleSaveProfile('personal')}
+                      onClick={handleSaveProfile}
                       disabled={saving}
                     >
                       {saving ?<> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving changes</Typography></>: 'Save Changes'}
@@ -964,13 +1013,14 @@ const ProfilePage = () => {
                       <Button
                         component="label"
                         variant="outlined"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={logoUploading ? <CircularProgress size={20} /> : <CloudUploadIcon />}
                         sx={{ 
                           textTransform: 'none',
                           borderRadius: '8px'
                         }}
+                        disabled={logoUploading}
                       >
-                        Upload Logo
+                        {logoUploading ? 'Uploading...' : 'Upload Logo'}
                         <input
                           type="file"
                           hidden
@@ -1035,7 +1085,7 @@ const ProfilePage = () => {
                   <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                     <PrimaryButton
                       variant="contained"
-                      onClick={() => handleSaveProfile('company')}
+                      onClick={handleSaveProfile}
                       disabled={saving}
                     >
                       {saving ?<><CircularProgress size={24} color="inherit" /> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving</Typography></> : 'Save Changes'}
