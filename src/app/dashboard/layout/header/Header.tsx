@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   AppBar,
@@ -11,14 +11,25 @@ import {
   Typography,
   Grid,
   Link,
-  Avatar
+  Avatar,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Divider,
+  BottomNavigation,
+  BottomNavigationAction,
+  Paper
 } from "@mui/material";
 import PropTypes from "prop-types";
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 // components
 import Profile from "./Profile"
-import { IconBellRinging, IconMenu } from "@tabler/icons-react";
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
+import WorkHistoryRoundedIcon from '@mui/icons-material/WorkHistoryRounded';
 import { useRouter } from "next/navigation";
 
 interface ItemType {
@@ -28,12 +39,12 @@ interface ItemType {
 const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
+
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
     background: theme.palette.background.paper,
     justifyContent: "center",
     backdropFilter: "blur(4px)",
-
     [theme.breakpoints.up("lg")]: {
       minHeight: "70px",
     },
@@ -47,9 +58,6 @@ const Header = () => {
     padding: "0 20px",
     maxWidth:'1440px',
     margin:'auto',
-    // [theme.breakpoints.up("lg")]: {
-    //   padding: "0 80px",
-    // },
   }));
   
   const ProfileButtonStyled = styled(Button)(({ theme }) => ({
@@ -69,7 +77,7 @@ const Header = () => {
   }));
 
   const LinkStyled = styled(Link)(({ theme }) => ({
-    color: 'rgba(17, 17, 17, 0.72)',
+    color: 'rgba(17, 17, 17, 0.42)',
     fontWeight: theme.typography.fontWeightMedium,
     textDecoration: "none",
     transition: 'color 0.2s ease-in-out',
@@ -81,56 +89,114 @@ const Header = () => {
     }
   }));
 
-  const links = [{ href: "/dashboard", title: "Dashboard" }, { href: "/dashboard/applications", title: "Applications" }, { href: "/dashboard/job-listings", title: "Job Listings" }];
+  const BottomNav = styled(Paper)(({ theme }) => ({
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: theme.zIndex.appBar,
+    display: 'block',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    },
+    '& .MuiBottomNavigation-root': {
+      backgroundColor: theme.palette.background.paper,
+    },
+    '& .MuiBottomNavigationAction-root': {
+      color: 'rgba(17, 17, 17, 0.42)',
+      '& .MuiBottomNavigationAction-label': {
+        fontSize: '0.75rem',
+        opacity: 0.7
+      },
+      '&.Mui-selected': {
+        color: theme.palette.primary.main,
+        '& .MuiBottomNavigationAction-label': {
+          opacity: 1
+        }
+      }
+    }
+  }));
+
+  const links = [
+    { href: "/dashboard", title: "Dashboard", icon: <DashboardRoundedIcon /> },
+    { href: "/dashboard/applications", title: "Applications", icon: <DescriptionRoundedIcon /> },
+    { href: "/dashboard/job-listings", title: "Job Listings", icon: <WorkHistoryRoundedIcon /> }
+  ];
+  
   return (
-    <AppBarStyled position="sticky" color="default">
-
-      <ToolbarStyled direction='row' alignItems='center' justifyContent='space-between'>
-        <Box           sx={{cursor:'pointer'}}
-onClick={() => router.push('/dashboard')}>        <Image
-          src="/images/logos/logo.svg"
-          alt="elevatehr"
-          width={120}
-          height={56}
-        />
-        </Box>
-        <Stack direction='row' width='max-content' gap={4}>
-          {links.map((link) => (
-            <LinkStyled 
-              key={link.title} 
-              href={link.href}
-              className={pathname === link.href ? 'active' : ''}
-            >
-              {link.title}
-            </LinkStyled>
-          ))}
-        </Stack>
-        <Stack spacing={1} direction="row" alignItems="center">
-          <Box
-            sx={{
-              display: {
-                xs: "none",
-                sm: "block",
-              },
-            }}
-          >
-            <ProfileButtonStyled onClick={() => router.push('/dashboard/profile')}>
-            <Avatar
-                src="/images/profile/user-1.jpg"
-                alt="image"
-                sx={{
-                  width: 28,
-                  height: 28,
-                }}
-              />
-              <Typography>Alimosho J.</Typography>
-
-            </ProfileButtonStyled>
+    <>
+      <AppBarStyled position="sticky" color="default">
+        <ToolbarStyled direction='row' alignItems='center' justifyContent='space-between'>
+          <Box sx={{cursor:'pointer'}} onClick={() => router.push('/dashboard')}>
+            <Image
+              src="/images/logos/logo.svg"
+              alt="elevatehr"
+              width={120}
+              height={56}
+            />
           </Box>
+          
+          <Stack direction='row' width='max-content' gap={4} sx={{ display: { xs: 'none', sm: 'flex' } }}>
+            {links.map((link) => (
+              <LinkStyled 
+                key={link.title} 
+                href={link.href}
+                className={pathname === link.href ? 'active' : ''}
+              >
+                {link.title}
+              </LinkStyled>
+            ))}
+          </Stack>
 
-        </Stack>
-      </ToolbarStyled>
-    </AppBarStyled>
+          <Stack spacing={1} direction="row" alignItems="center">
+            <Box sx={{ display: { xs: "none", sm: "block" } }}>
+              <ProfileButtonStyled onClick={() => router.push('/dashboard/profile')}>
+                <Avatar
+                  src="/images/profile/user-1.jpg"
+                  alt="image"
+                  sx={{
+                    width: 28,
+                    height: 28,
+                  }}
+                />
+                <Typography>Alimosho J.</Typography>
+              </ProfileButtonStyled>
+            </Box>
+
+            <Avatar
+              src="/images/profile/user-1.jpg"
+              alt="image"
+              sx={{
+                width: 32,
+                height: 32,
+                display: { xs: 'block', sm: 'none' },
+                cursor: 'pointer'
+              }}
+              onClick={() => router.push('/dashboard/profile')}
+            />
+          </Stack>
+        </ToolbarStyled>
+      </AppBarStyled>
+
+      <BottomNav elevation={3}>
+        <BottomNavigation
+          showLabels
+          value={pathname}
+          onChange={(event, newValue) => {
+            router.push(newValue);
+          }}
+        >
+          {links.map((link) => (
+            <BottomNavigationAction
+              key={link.title}
+              label={link.title}
+              value={link.href}
+              icon={link.icon}
+            />
+          ))}
+        </BottomNavigation>
+      </BottomNav>
+    </>
   );
 };
 

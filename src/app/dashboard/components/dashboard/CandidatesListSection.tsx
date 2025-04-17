@@ -83,7 +83,7 @@ export default function CandidateListSection({
       <path d="M2.18333 9.3916C4.05833 10.6749 6.175 11.4499 8.33333 11.6916" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       ,
-      text: candidate?.professional_info?.experience + " years",
+      text: candidate?.professional_info?.experience + " experience",
     },
     // {
     //   icon: <MoneyIcon fontSize="small" />,

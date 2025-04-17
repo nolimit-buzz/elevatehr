@@ -9,7 +9,10 @@ const StyledInputWrapper = styled('div')(({ theme }) => ({
   borderRadius: "8px",
   border: "0.5px solid rgba(17, 17, 17, 0.12)",
   background: "#F3F4F7",
-  padding: "12px",
+  padding: "8px",
+  [theme.breakpoints.up('sm')]: {
+    padding: "12px"
+  },
   display: "flex",
   flexDirection: "column",
 }));
@@ -20,7 +23,10 @@ const StyledLabel = styled('label')(({ theme }) => ({
   fontStyle: "normal",
   fontWeight: 400,
   lineHeight: "100%",
-  marginBottom: "4px",
+  marginBottom: 0,
+  [theme.breakpoints.up('sm')]: {
+    marginBottom: "4px"
+  }
 }));
 
 const StyledInputContainer = styled('div')(({ theme }) => ({
