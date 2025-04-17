@@ -115,7 +115,7 @@ interface ProfileData {
 }
 
 // Define section type for navigation
-type ProfileSection = 'personal' | 'company' | 'password' | 'applications' | 'integrations';
+type ProfileSection = 'personal' | 'company' | 'password' | 'applications' | 'integrations' | 'calendly';
 
 interface ErrorState {
   email?: string;
@@ -902,6 +902,44 @@ const ProfilePage = () => {
                   />
                 </ListItemButton>
               </ListItem>
+
+              {process.env.NEXT_PUBLIC_CALENDLY_CLIENT_ID && process.env.NEXT_PUBLIC_CALENDLY_CLIENT_SECRET && (
+                <>
+                  <Divider />
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={() => handleSectionChange('calendly')}
+                      selected={activeSection === 'calendly'}
+                      sx={{
+                        p: "12px 16px",
+                        bgcolor: '#FFF',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        '&:hover': {
+                          bgcolor: theme.palette.secondary.light,
+                        },
+                        '&.Mui-selected': {
+                          bgcolor: theme.palette.secondary.light,
+                          borderLeft: `3px solid ${theme.palette.primary.main}`,
+                          '&:hover': {
+                            bgcolor: theme.palette.secondary.light,
+                          }
+                        }
+                      }}
+                    >
+                      <ListItemText 
+                        primary="Calendly"
+                        sx={{
+                          '& .MuiListItemText-primary': {
+                            color: activeSection === 'calendly' ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)',
+                            fontWeight: activeSection === 'calendly' ? 600 : 400,
+                            fontSize: '16px',
+                          }
+                        }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                </>
+              )}
             </List>
           </Paper>
         </Box>
@@ -952,6 +990,9 @@ const ProfilePage = () => {
                 <Tab value="company" label="Company Information" />
                 <Tab value="password" label="Password" />
                 <Tab value="integrations" label="Integrations" />
+                {process.env.NEXT_PUBLIC_CALENDLY_CLIENT_ID && process.env.NEXT_PUBLIC_CALENDLY_CLIENT_SECRET && (
+                  <Tab value="calendly" label="Calendly" />
+                )}
               </Tabs>
             </Box>
 
@@ -1284,6 +1325,53 @@ const ProfilePage = () => {
                           </Box>
                         </Box>
                       )}
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </>
+            )}
+
+            {activeSection === 'calendly' && (
+              <>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: '20px' }}>
+                    Calendly Integration
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: { xs: '14px', md: '15px' }, lineHeight: 1.6 }}>
+                    Manage your Calendly integration settings and event types.
+                  </Typography>
+                </Box>
+
+                <Grid container spacing={3}>
+                  {/* Calendly Integration Card */}
+                  <Grid item xs={12}>
+                    <Paper 
+                      elevation={0} 
+                      sx={{ 
+                        p: 3, 
+                        border: '1px solid',
+                        borderColor: 'divider',
+                        borderRadius: '8px',
+                        bgcolor: integrations.calendly.connected ? 'success.light' : 'background.paper'
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                        <Box>
+                          <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 0.5 }}>
+                            Calendly
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: 'text.grey.100' }}>
+                            Schedule interviews and meetings seamlessly
+                          </Typography>
+                        </Box>
+                        <Button
+                          variant={integrations.calendly.connected ? "outlined" : "contained"}
+                          onClick={() => router.push('/dashboard/profile/calendly-setup')}
+                          disabled={saving}
+                        >
+                          {integrations.calendly.connected ? 'Connected' : 'Setup'}
+                        </Button>
+                      </Box>
                     </Paper>
                   </Grid>
 
