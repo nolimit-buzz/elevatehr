@@ -208,7 +208,7 @@ const Login = () => {
             px: { xs: 0.5, sm: 3, md: 4 },
             py: { xs: 1, sm: 6, md: 8 }
           }}>
-            <Stack spacing={1}>
+            <Stack spacing={1} mb={3}>
               <Typography
                 variant="h1"
                 align="center"
@@ -220,21 +220,19 @@ const Login = () => {
               >
                 Login to your Account
               </Typography>
+              <Typography
+                variant="subtitle1"
+                textAlign="center"
+                color="grey.100"
+                mb={{ xs: 1, md: '48px' }}
+                sx={{
+                  fontSize: { xs: '12px', sm: '16px' }
+                }}
+              >
+                Enter your login details
+              </Typography>
             </Stack>
             <AuthLogin
-              subtext={
-                <Typography
-                  variant="subtitle1"
-                  textAlign="center"
-                  color="grey.100"
-                  mb={{ xs: 1, md: '48px' }}
-                  sx={{
-                    fontSize: { xs: '12px', sm: '16px' }
-                  }}
-                >
-                  Enter your login details
-                </Typography>
-              }
               subtitle={
                 <Stack direction="row" spacing={0.5} justifyContent="center" mt={1}>
                   <Typography
@@ -245,7 +243,7 @@ const Login = () => {
                       fontSize: { xs: '12px', sm: '16px' }
                     }}
                   >
-                    New to Spike?
+                  Don't have an account?
                   </Typography>
                   <Typography
                     component={Link}
