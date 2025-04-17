@@ -65,6 +65,7 @@ import BlockRoundedIcon from '@mui/icons-material/BlockRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface JobPosting {
   id: string;
@@ -247,14 +248,14 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={onClose}
       maxWidth="xs"
       fullWidth
       TransitionProps={{ timeout: 0 }}
     >
-      <DialogTitle sx={{ 
+      <DialogTitle sx={{
         fontSize: '20px',
         fontWeight: 600,
         color: 'rgba(17, 17, 17, 0.92)',
@@ -264,8 +265,8 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
       </DialogTitle>
       <DialogContent>
         <List>
-          <ListItem 
-            button 
+          <ListItem
+            button
             onClick={() => handleShare('linkedin')}
             sx={{
               borderRadius: '8px',
@@ -278,7 +279,7 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
             <ListItemIcon>
               <LinkedInIcon sx={{ color: '#0077B5' }} />
             </ListItemIcon>
-            <ListItemText 
+            <ListItemText
               primary="Share on LinkedIn"
               primaryTypographyProps={{
                 color: 'rgba(17, 17, 17, 0.92)',
@@ -287,8 +288,8 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
               }}
             />
           </ListItem>
-          <ListItem 
-            button 
+          <ListItem
+            button
             onClick={() => handleShare('twitter')}
             sx={{
               borderRadius: '8px',
@@ -301,7 +302,7 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
             <ListItemIcon>
               <TwitterIcon sx={{ color: '#1DA1F2' }} />
             </ListItemIcon>
-            <ListItemText 
+            <ListItemText
               primary="Share on Twitter"
               primaryTypographyProps={{
                 color: 'rgba(17, 17, 17, 0.92)',
@@ -310,8 +311,8 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
               }}
             />
           </ListItem>
-          <ListItem 
-            button 
+          <ListItem
+            button
             onClick={() => handleShare('whatsapp')}
             sx={{
               borderRadius: '8px',
@@ -324,7 +325,7 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
             <ListItemIcon>
               <WhatsAppIcon sx={{ color: '#25D366' }} />
             </ListItemIcon>
-            <ListItemText 
+            <ListItemText
               primary="Share on WhatsApp"
               primaryTypographyProps={{
                 color: 'rgba(17, 17, 17, 0.92)',
@@ -334,8 +335,8 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
             />
           </ListItem>
           <Divider sx={{ my: 1 }} />
-          <ListItem 
-            button 
+          <ListItem
+            button
             onClick={() => handleShare('copy')}
             sx={{
               borderRadius: '8px',
@@ -347,7 +348,7 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
             <ListItemIcon>
               <ContentCopyIcon sx={{ color: theme.palette.primary.main }} />
             </ListItemIcon>
-            <ListItemText 
+            <ListItemText
               primary="Copy Link"
               primaryTypographyProps={{
                 color: 'rgba(17, 17, 17, 0.92)',
@@ -359,7 +360,7 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
         </List>
       </DialogContent>
       <DialogActions sx={{ p: 2 }}>
-        <Button 
+        <Button
           onClick={onClose}
           sx={{
             color: 'rgba(17, 17, 17, 0.72)',
@@ -405,6 +406,7 @@ const JobPostings = () => {
   const [selectedJob, setSelectedJob] = useState<JobPosting | null>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchJobPostings = async () => {
@@ -433,6 +435,24 @@ const JobPostings = () => {
 
     fetchJobPostings();
   }, [statusFilter]);
+
+  useEffect(() => {
+    // Set view mode based on screen size
+    const handleResize = () => {
+      if (window.innerWidth < 600) { // xs breakpoint
+        setViewMode('grid');
+      } else if (window.innerWidth >= 1200) { // lg breakpoint
+        setViewMode('list');
+      }
+    };
+
+    // Initial check
+    handleResize();
+
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleStatusChange = (
     _event: React.SyntheticEvent,
@@ -539,11 +559,11 @@ const JobPostings = () => {
 
   const handleToggleStatus = async () => {
     if (!selectedJob) return;
-    
+
     try {
       const token = localStorage.getItem("jwt");
       const newStatus = selectedJob.status === "active" ? "close" : "active";
-      
+
       await fetch(`https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${selectedJob.id}`, {
         method: 'PUT',
         headers: {
@@ -566,7 +586,7 @@ const JobPostings = () => {
     } catch (error) {
       console.error("Error updating job status:", error);
     }
-    
+
     handleQuickActionsClose();
   };
 
@@ -673,240 +693,236 @@ const JobPostings = () => {
       );
     }
 
-    return filteredJobPostings?.map((job) => (
-      <StyledTableBodyRow
-        key={job.id}
-      >
-        <StyledTableCell>
-          <Stack>
-            <Stack direction="row" alignItems="center" gap={1}>
-              <StyledTypography textTransform={"capitalize"}>
-                {job.title}
-              </StyledTypography>
-              <Tooltip 
-                title="Click to copy application page link" 
-                arrow
-                placement="top"
-                componentsProps={{
-                  tooltip: {
-                    sx: {
-                      bgcolor: theme.palette.primary.main,
-                      color: theme.palette.secondary.light,
-                      border: `1px solid ${theme.palette.primary.main}`,
-                      borderRadius: '12px',
-                      '& .MuiTooltip-arrow': {
-                        color: theme.palette.primary.main,
+    return filteredJobPostings?.map((job, index) => {
+      const colorIndex = index % 4;
+      const colors = [
+        { bg: 'rgba(114, 74, 59, 0.15)', color: '#724A3B' },
+        { bg: 'rgba(43, 101, 110, 0.15)', color: '#2B656E' },
+        { bg: 'rgba(118, 50, 95, 0.15)', color: '#76325F' },
+        { bg: 'rgba(59, 95, 158, 0.15)', color: '#3B5F9E' }
+      ];
+      const currentColor = colors[colorIndex];
+
+      return (
+        <StyledTableBodyRow
+          key={job.id}
+        >
+          <StyledTableCell>
+            <Stack>
+              <Stack direction="row" alignItems="center" gap={1}>
+                <StyledTypography textTransform={"capitalize"}>
+                  {job.title}
+                </StyledTypography>
+                <Tooltip
+                  title="Click to copy application page link"
+                  arrow
+                  placement="top"
+                  componentsProps={{
+                    tooltip: {
+                      sx: {
+                        bgcolor: theme.palette.primary.main,
+                        color: theme.palette.secondary.light,
+                        border: `1px solid ${theme.palette.primary.main}`,
+                        borderRadius: '12px',
+                        '& .MuiTooltip-arrow': {
+                          color: theme.palette.primary.main,
+                        }
                       }
-                    }
-                  }
-                }}
-              >
-                <IconButton 
-                  size="small" 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    copyToClipboard(job.id);
-                  }}
-                  sx={{
-                    color: 'rgba(17, 17, 17, 0.48)',
-                    padding: '3px',
-                    marginTop: '-10px',
-                    marginLeft: '-2px',
-                    '&:hover': {
-                      backgroundColor: 'rgba(68, 68, 226, 0.04)',
-                      color: theme.palette.primary.main,
                     }
                   }}
                 >
-                  <ContentCopyRoundedIcon sx={{ fontSize: '16px' }} />
-                </IconButton>
-              </Tooltip>
-            </Stack>
-            <Stack direction="row" gap={2}>
-              <Stack 
-                direction="row" 
-                alignItems="center" 
-                spacing={1}
-                sx={{
-                  backgroundColor: '#FCEBE3',
-                  padding: '6px 12px',
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      copyToClipboard(job.id);
+                    }}
+                    sx={{
+                      color: 'rgba(17, 17, 17, 0.48)',
+                      padding: '3px',
+                      marginTop: '-10px',
+                      marginLeft: '-2px',
+                      '&:hover': {
+                        backgroundColor: 'rgba(68, 68, 226, 0.04)',
+                        color: theme.palette.primary.main,
+                      }
+                    }}
+                  >
+                    <ContentCopyRoundedIcon sx={{ fontSize: '16px' }} />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
+              <Stack direction="row" spacing={2} sx={{ my: 2, flexWrap: 'wrap', gap: 1 }}>
+                <Box sx={{ 
+                  bgcolor: colors[0].bg,
+                  color: colors[0].color,
+                  px: 2,
+                  py: 0.75,
                   borderRadius: '20px',
-                }}
-              >
-                <Typography sx={{ 
                   fontSize: '14px',
-                  color: '#724A3B',
-                  fontWeight: 400
+                  fontWeight: 400,
+                  textTransform: 'capitalize',
+                  width: 'max-content'
                 }}>
                   {job.job_type}
-                </Typography>
-              </Stack>
-              <Stack 
-                direction="row" 
-                alignItems="center" 
-                spacing={1}
-                sx={{
-                  backgroundColor: '#D7EEF4',
-                  padding: '6px 12px',
+                </Box>
+                <Box sx={{ 
+                  bgcolor: colors[1].bg,
+                  color: colors[1].color,
+                  px: 2,
+                  py: 0.75,
                   borderRadius: '20px',
-                }}
-              >
-                <Typography sx={{ 
                   fontSize: '14px',
-                  color: '#2B656E',
-                  fontWeight: 400
+                  fontWeight: 400,
+                  textTransform: 'capitalize',
+                  width: 'max-content'
                 }}>
                   {job.location}
-                </Typography>
-              </Stack>
-              <Stack 
-                direction="row" 
-                alignItems="center" 
-                spacing={1}
-                sx={{
-                  backgroundColor: '#F9E8F3',
-                  padding: '6px 12px',
+                </Box>
+                <Box sx={{ 
+                  bgcolor: colors[2].bg,
+                  color: colors[2].color,
+                  px: 2,
+                  py: 0.75,
                   borderRadius: '20px',
-                }}
-              >
-                <Typography sx={{ 
                   fontSize: '14px',
-                  color: '#76325F',
-                  fontWeight: 400
+                  fontWeight: 400,
+                  textTransform: 'capitalize',
+                  width: 'max-content'
                 }}>
                   {job.work_model}
-                </Typography>
+                </Box>
               </Stack>
             </Stack>
-          </Stack>
-        </StyledTableCell>
-        <StyledTableCell>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Box>
-              <Typography
-                color="rgba(17, 17, 17, 0.84)"
-                fontWeight={500}
-                fontSize={"16px"}
-              >
-                {job.stage_counts.new}
-              </Typography>
-            </Box>
-          </Box>
-        </StyledTableCell>
-        <StyledTableCell>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Box>
-              <Typography
-                color="rgba(17, 17, 17, 0.84)"
-                fontWeight={500}
-                fontSize={"16px"}
-              >
-                {job.stage_counts.skill_assessment}
-              </Typography>
-            </Box>
-          </Box>
-        </StyledTableCell>
-        <StyledTableCell>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Box>
-              <Typography
-                color="rgba(17, 17, 17, 0.84)"
-                fontWeight={500}
-                fontSize={"16px"}
-              >
-                {job.stage_counts.interviews}
-              </Typography>
-            </Box>
-          </Box>
-        </StyledTableCell>
-        <StyledTableCell>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Box>
-              <Typography
-                color="rgba(17, 17, 17, 0.84)"
-                fontWeight={500}
-                fontSize={"16px"}
-              >
-                {job.stage_counts.acceptance}
-              </Typography>
-            </Box>
-          </Box>
-        </StyledTableCell>
-        <StyledTableCell>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Box>
-              <Typography
-                color="rgba(17, 17, 17, 0.84)"
-                fontWeight={500}
-                fontSize={"16px"}
-              >
-                {job.stage_counts.rejection}
-              </Typography>
-            </Box>
-          </Box>
-        </StyledTableCell>
-        <StyledTableCell>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={(e) => handleQuickActionsClick(e, job)}
-              endIcon={<KeyboardArrowDownIcon />}
+          </StyledTableCell>
+          <StyledTableCell>
+            <Box
               sx={{
-                color: 'rgba(17, 17, 17, 0.72)',
-                borderColor: 'rgba(17, 17, 17, 0.12)',
-                textTransform: 'none',
-                fontSize: '14px',
-                padding: '4px 12px',
-                '&:hover': {
-                  borderColor: theme.palette.primary.main,
-                  color: theme.palette.primary.main,
-                  backgroundColor: 'rgba(68, 68, 226, 0.04)',
-                }
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              Quick Actions
-            </Button>
-          </Box>
-        </StyledTableCell>
-      </StyledTableBodyRow>
-    ));
+              <Box>
+                <Typography
+                  color="rgba(17, 17, 17, 0.84)"
+                  fontWeight={500}
+                  fontSize={"16px"}
+                >
+                  {job.stage_counts.new}
+                </Typography>
+              </Box>
+            </Box>
+          </StyledTableCell>
+          <StyledTableCell>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Box>
+                <Typography
+                  color="rgba(17, 17, 17, 0.84)"
+                  fontWeight={500}
+                  fontSize={"16px"}
+                >
+                  {job.stage_counts.skill_assessment}
+                </Typography>
+              </Box>
+            </Box>
+          </StyledTableCell>
+          <StyledTableCell>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Box>
+                <Typography
+                  color="rgba(17, 17, 17, 0.84)"
+                  fontWeight={500}
+                  fontSize={"16px"}
+                >
+                  {job.stage_counts.interviews}
+                </Typography>
+              </Box>
+            </Box>
+          </StyledTableCell>
+          <StyledTableCell>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Box>
+                <Typography
+                  color="rgba(17, 17, 17, 0.84)"
+                  fontWeight={500}
+                  fontSize={"16px"}
+                >
+                  {job.stage_counts.acceptance}
+                </Typography>
+              </Box>
+            </Box>
+          </StyledTableCell>
+          <StyledTableCell>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Box>
+                <Typography
+                  color="rgba(17, 17, 17, 0.84)"
+                  fontWeight={500}
+                  fontSize={"16px"}
+                >
+                  {job.stage_counts.rejection}
+                </Typography>
+              </Box>
+            </Box>
+          </StyledTableCell>
+          <StyledTableCell>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={(e) => handleQuickActionsClick(e, job)}
+                endIcon={<KeyboardArrowDownIcon />}
+                sx={{
+                  color: 'rgba(17, 17, 17, 0.72)',
+                  borderColor: 'rgba(17, 17, 17, 0.12)',
+                  textTransform: 'none',
+                  fontSize: '14px',
+                  padding: '4px 12px',
+                  '&:hover': {
+                    borderColor: theme.palette.primary.main,
+                    color: theme.palette.primary.main,
+                    backgroundColor: 'rgba(68, 68, 226, 0.04)',
+                  }
+                }}
+              >
+                Quick Actions
+              </Button>
+            </Box>
+          </StyledTableCell>
+        </StyledTableBodyRow>
+      );
+    });
   };
 
   return (
@@ -944,7 +960,13 @@ const JobPostings = () => {
         </Box>
 
         <Stack direction="row" gap={3}>
-          <Box sx={{ width: 300, flexShrink: 0 }}>
+          <Box
+            sx={{
+              width: { xs: '100%', sm: 300 },
+              flexShrink: 0,
+              display: { xs: 'none', sm: 'none', md: 'none', lg: 'block' }
+            }}
+          >
             <Paper elevation={0} sx={{ p: 3, mb: 2, borderRadius: 2 }}>
               <Box
                 sx={{
@@ -1184,37 +1206,68 @@ const JobPostings = () => {
           </Box>
 
           <Box sx={{ flexGrow: 1 }}>
-    <DashboardCard customStyle={{ padding: "0px" }}>
-      <Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "16px",
-          }}
-        >
-          <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <Typography
-              variant="h2"
-              fontWeight={"semibold"}
-              fontSize={"24px"}
-              color={"rgba(17,17,17,0.92)"}
-              letterSpacing={"0.12px"}
-            >
-              Job Listings
-            </Typography>
-            <Typography
-              variant="h2"
-              fontWeight={"semibold"}
-              fontSize={"24px"}
-              color={"rgba(17,17,17,0.52)"}
-              letterSpacing={"0.12px"}
-            >
+            <DashboardCard customStyle={{ padding: "0px" }}>
+              <Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "16px",
+                  }}
+                >
+                  <Stack direction={"row"} alignItems={"center"} gap={1} sx={{ display: { xs: 'none', lg: 'block' } }}          >
+                    <Typography
+                      variant="h2"
+                      fontWeight={"semibold"}
+                      fontSize={"24px"}
+                      color={"rgba(17,17,17,0.92)"}
+                      letterSpacing={"0.12px"}
+                    >
+                      Job Listings
+                    </Typography>
+                    <Typography
+                      variant="h2"
+                      fontWeight={"semibold"}
+                      fontSize={"24px"}
+                      color={"rgba(17,17,17,0.52)"}
+                      letterSpacing={"0.12px"}
+                      sx={{ display: { xs: 'none', sm: 'none', md: 'none', lg: 'block' } }}
+                    >
                       {`(${filteredJobPostings.length})`}
-            </Typography>
-          </Stack>
-                  <Stack direction="row" spacing={2} alignItems="center">
+                    </Typography>
+                  </Stack>
+                  <TextField
+                    placeholder="Search job title"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    sx={{
+                      display: { xs: 'none',sm: 'block' },
+                      width: { xs: '100%', sm: '300px' },
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: '#fff',
+                        borderRadius: '12px',
+                        border: '1px solid rgba(17, 17, 17, 0.08)',
+                        '& fieldset': {
+                          border: 'none',
+                        },
+                        '&:hover fieldset': {
+                          border: 'none',
+                        },
+                        '&.Mui-focused fieldset': {
+                          border: 'none',
+                        }
+                      },
+                      '& .MuiInputBase-input': {
+                        padding: '12px 16px',
+                        color: 'rgba(17, 17, 17, 0.84)',
+                        '&::placeholder': {
+                          color: 'rgba(17, 17, 17, 0.48)',
+                        }
+                      }
+                    }}
+                  />
+                  <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
                     <FormControl sx={{ minWidth: 150 }}>
                       <Select
                         value={tempStatusFilter}
@@ -1245,43 +1298,22 @@ const JobPostings = () => {
                         <MenuItem value="close">Closed</MenuItem>
                       </Select>
                     </FormControl>
-                    <TextField
-                      placeholder="Search jobs..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      sx={{
-                        width: '300px',
-                        '& .MuiOutlinedInput-root': {
-                          backgroundColor: '#fff',
-                          borderRadius: '12px',
-                          border: '1px solid rgba(17, 17, 17, 0.08)',
-                          '& fieldset': {
-                            border: 'none',
-                          },
-                          '&:hover fieldset': {
-                            border: 'none',
-                          },
-                          '&.Mui-focused fieldset': {
-                            border: 'none',
+                    <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>
+                      <IconButton
+                        onClick={() => setSearchDialogOpen(true)}
+                        sx={{
+                          color: 'rgba(17, 17, 17, 0.48)',
+                          '&:hover': {
+                            backgroundColor: 'rgba(68, 68, 226, 0.04)',
+                            color: theme.palette.primary.main,
                           }
-                        },
-                        '& .MuiInputBase-input': {
-                          padding: '12px 16px',
-                          color: 'rgba(17, 17, 17, 0.84)',
-                          '&::placeholder': {
-                            color: 'rgba(17, 17, 17, 0.48)',
-                          }
-                        }
-                      }}
-                    />
-                    <Box sx={{ 
-                      display: 'flex',
-                      bgcolor: 'rgba(17, 17, 17, 0.04)',
-                      borderRadius: '12px',
-                      p: 0.5,
-                      minHeight: '40px',
-                      transition: 'all 0.3s ease-in-out'
-                    }}>
+                        }}
+                      >
+                        <Typography sx={{ mr: 1, fontSize: '14px', color: 'rgba(17, 17, 17, 0.48)' }}>Search</Typography>
+                        <SearchIcon />
+                      </IconButton>
+                    </Box>
+                    <Box sx={{ display: { xs: 'none', sm: 'flex' }, bgcolor: 'rgba(17, 17, 17, 0.04)', borderRadius: '12px', p: 0.5, minHeight: '40px', transition: 'all 0.3s ease-in-out', width: { xs: '100%', sm: 'auto' } }}>
                       <Tabs
                         value={viewMode}
                         onChange={(_, newValue) => setViewMode(newValue)}
@@ -1310,251 +1342,208 @@ const JobPostings = () => {
                           }
                         }}
                       >
-                        <Tab 
-                          value="list" 
+                        <Tab
+                          value="list"
                           icon={<ViewListIcon />}
                           aria-label="list view"
                         />
-                        <Tab 
-                          value="grid" 
+                        <Tab
+                          value="grid"
                           icon={<ViewModuleIcon />}
                           aria-label="grid view"
                         />
                       </Tabs>
                     </Box>
                   </Stack>
-        </Box>
-        <Box sx={{ overflow: "auto" }}>
+                </Box>
+                <Box sx={{ overflow: "auto" }}>
                   {viewMode === 'list' ? (
-          <Box sx={{ width: "100%", display: "table", tableLayout: "fixed" }}>
-            <Table>
-              <TableHead>
-                <StyledTableHeaderRow>
-                  <StyledTableHeaderCell>Role</StyledTableHeaderCell>
-                  <StyledTableHeaderCell>Applicants</StyledTableHeaderCell>
-                  <StyledTableHeaderCell>Assessment</StyledTableHeaderCell>
-                  <StyledTableHeaderCell>Interviews</StyledTableHeaderCell>
-                  <StyledTableHeaderCell>Accepted</StyledTableHeaderCell>
-                  <StyledTableHeaderCell>Rejected</StyledTableHeaderCell>
+                    <Box sx={{ width: "100%", display: "table", tableLayout: "fixed" }}>
+                      <Table>
+                        <TableHead>
+                          <StyledTableHeaderRow>
+                            <StyledTableHeaderCell>Role</StyledTableHeaderCell>
+                            <StyledTableHeaderCell>Applicants</StyledTableHeaderCell>
+                            <StyledTableHeaderCell>Assessment</StyledTableHeaderCell>
+                            <StyledTableHeaderCell>Interviews</StyledTableHeaderCell>
+                            <StyledTableHeaderCell>Accepted</StyledTableHeaderCell>
+                            <StyledTableHeaderCell>Rejected</StyledTableHeaderCell>
                             <StyledTableHeaderCell>Actions</StyledTableHeaderCell>
-                </StyledTableHeaderRow>
-              </TableHead>
-              <TableBody>{renderTableContent()}</TableBody>
-            </Table>
-          </Box>
+                          </StyledTableHeaderRow>
+                        </TableHead>
+                        <TableBody>{renderTableContent()}</TableBody>
+                      </Table>
+                    </Box>
                   ) : (
-                    <Box sx={{ 
-                      display: 'grid', 
+                    <Box sx={{
+                      display: 'grid',
                       gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
                       gap: 2,
                       p: 2
                     }}>
-                      {filteredJobPostings.map((job) => (
-                        <Paper 
-                          key={job.id}
-                          elevation={0}
-                          sx={{ 
-                            p: 2,
-                            borderRadius: 2,
-                            border: '1px solid rgba(17, 17, 17, 0.08)',
-                            '&:hover': {
-                              borderColor: theme.palette.primary.main,
-                              backgroundColor: 'rgba(68, 68, 226, 0.04)',
-                            }
-                          }}
-                        >
-                          <Stack spacing={2}>
-                            <Stack direction="row" alignItems="center" justifyContent="space-between">
-                              <Chip 
-                                label={job.status === 'active' ? 'Open' : 'Closed'} 
-                                size="small"
-                                sx={{
-                                  backgroundColor: job.status === 'active' ? 'rgba(68, 226, 139, 0.12)' : 'rgba(17, 17, 17, 0.12)',
-                                  color: job.status === 'active' ? '#1B8B4A' : 'rgba(17, 17, 17, 0.72)',
-                                  fontWeight: 500,
-                                  borderRadius: '16px',
-                                }}
-                              />
-                              <IconButton
-                                size="small"
-                                onClick={(e) => handleQuickActionsClick(e, job)}
-                                sx={{
-                                  color: 'rgba(17, 17, 17, 0.48)',
-                                  padding: '6px',
-                                  '&:hover': {
-                                    backgroundColor: 'rgba(68, 68, 226, 0.04)',
-                                    color: theme.palette.primary.main,
-                                  }
-                                }}
-                              >
-                                <MoreVertRoundedIcon sx={{ fontSize: '20px' }} />
-                              </IconButton>
-                            </Stack>
-                            
-                            <Box>
-                              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.5 }}>
-                                <Typography variant="h6" sx={{ 
+                      {filteredJobPostings.map((job, index) => {
+                        const colorIndex = index % 4;
+                        const colors = [
+                          { bg: 'rgba(114, 74, 59, 0.15)', color: '#724A3B' },
+                          { bg: 'rgba(43, 101, 110, 0.15)', color: '#2B656E' },
+                          { bg: 'rgba(118, 50, 95, 0.15)', color: '#76325F' },
+                          { bg: 'rgba(59, 95, 158, 0.15)', color: '#3B5F9E' }
+                        ];
+                        const currentColor = colors[colorIndex];
+
+                        return (
+                          <Paper
+                            key={job.id}
+                            elevation={0}
+                            onClick={() => {
+                              router.push(`/dashboard/job-posting/${job.id}/submissions`);
+                              setSearchDialogOpen(false);
+                            }}
+                            sx={{
+                              p: 2,
+                              mb: 2,
+                              borderRadius: 2,
+                              border: '1px solid rgba(17, 17, 17, 0.08)',
+                              cursor: 'pointer',
+                              transition: 'all 0.3s ease-in-out',
+                              '&:hover': {
+                                borderColor: 'rgba(17, 17, 17, 0.16)',
+                                backgroundColor: 'rgba(17, 17, 17, 0.02)',
+                                transform: 'translateY(-2px)',
+                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+                              }
+                            }}
+                          >
+                            <Stack spacing={2}>
+                              <Box>
+                                <Typography variant="h6" sx={{
                                   fontWeight: 600,
                                   fontSize: '18px',
-                                  color: 'rgba(17, 17, 17, 0.92)'
+                                  color: 'rgba(17, 17, 17, 0.92)',
+                                  mb: 1
                                 }}>
                                   {job.title}
                                 </Typography>
-                                <Tooltip 
-                                  title="Click to copy application page link" 
-                                  arrow
-                                  placement="top"
-                                  componentsProps={{
-                                    tooltip: {
-                                      sx: {
-                                        bgcolor: theme.palette.primary.main,
-                                        color: theme.palette.secondary.light,
-                                        border: `1px solid ${theme.palette.primary.main}`,
-                                        borderRadius: '12px',
-                                        '& .MuiTooltip-arrow': {
-                                          color: theme.palette.primary.main,
-                                        }
-                                      }
-                                    }
-                                  }}
-                                >
-                                  <IconButton 
-                                    size="small" 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      copyToClipboard(job.id);
-                                    }}
-                                    sx={{
-                                      color: 'rgba(17, 17, 17, 0.48)',
-                                      padding: '2px',
-                                      '&:hover': {
-                                        backgroundColor: 'rgba(68, 68, 226, 0.04)',
-                                        color: theme.palette.primary.main,
-                                      }
-                                    }}
-                                  >
-                                    <ContentCopyRoundedIcon sx={{ fontSize: '16px' }} />
-                                  </IconButton>
-                                </Tooltip>
-                              </Stack>
-
-                              <Stack spacing={1} sx={{ mb: 2 }}>
-                                <Stack direction="row" alignItems="center" spacing={1}>
-                                  <Typography sx={{ 
+                                <Stack direction="row" spacing={2} sx={{ my: 2, flexWrap: 'wrap', gap: 1 }}>
+                                  <Box sx={{ 
+                                    bgcolor: colors[0].bg,
+                                    color: colors[0].color,
+                                    px: 2,
+                                    py: 0.75,
+                                    borderRadius: '20px',
                                     fontSize: '14px',
-                                    color: 'rgba(17, 17, 17, 0.72)'
+                                    fontWeight: 400,
+                                    textTransform: 'capitalize',
+                                    width: 'max-content',
+                                    ml:0,
+                                    mr:20
                                   }}>
                                     {job.job_type}
-                                  </Typography>
-                                </Stack>
-                                <Stack direction="row" alignItems="center" spacing={1}>
-                                  <LocationOnIcon sx={{ fontSize: '16px', color: 'rgba(17, 17, 17, 0.48)' }} />
-                                  <Typography sx={{ 
+                                  </Box>
+                                  <Box sx={{ 
+                                    bgcolor: colors[1].bg,
+                                    color: colors[1].color,
+                                    px: 2,
+                                    py: 0.75,
+                                    borderRadius: '20px',
                                     fontSize: '14px',
-                                    color: 'rgba(17, 17, 17, 0.72)'
+                                    fontWeight: 400,
+                                    textTransform: 'capitalize',
+                                    width: 'max-content',
+                                    ml:0
                                   }}>
                                     {job.location}
-                                  </Typography>
-                                </Stack>
-                                <Stack direction="row" alignItems="center" spacing={1}>
-                                  <Typography sx={{ 
+                                  </Box>
+                                  <Box sx={{ 
+                                    bgcolor: colors[2].bg,
+                                    color: colors[2].color,
+                                    px: 2,
+                                    py: 0.75,
+                                    borderRadius: '20px',
                                     fontSize: '14px',
-                                    color: 'rgba(17, 17, 17, 0.72)'
+                                    fontWeight: 400,
+                                    textTransform: 'capitalize',
+                                    width: 'max-content',
+                                    ml:0
                                   }}>
                                     {job.work_model}
-                                  </Typography>
+                                  </Box>
                                 </Stack>
+                              </Box>
+                              <Stack direction="row" spacing={2}>
+                                <Box sx={{ 
+                                  bgcolor: 'rgba(17, 17, 17, 0.04)',
+                                  p: 1.5,
+                                  borderRadius: '8px',
+                                  flex: 1
+                                }}>
+                                  <Typography variant="body2" sx={{ 
+                                    color: 'rgba(17, 17, 17, 0.48)', 
+                                    fontSize: '12px',
+                                    mb: 0.5
+                                  }}>
+                                    Applied
+                                  </Typography>
+                                  <Typography sx={{ 
+                                    fontSize: '16px', 
+                                    fontWeight: 600, 
+                                    color: 'rgba(17, 17, 17, 0.92)'
+                                  }}>
+                                    {job.stage_counts.new}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ 
+                                  bgcolor: 'rgba(17, 17, 17, 0.04)',
+                                  p: 1.5,
+                                  borderRadius: '8px',
+                                  flex: 1
+                                }}>
+                                  <Typography variant="body2" sx={{ 
+                                    color: 'rgba(17, 17, 17, 0.48)', 
+                                    fontSize: '12px',
+                                    mb: 0.5
+                                  }}>
+                                    Assessment
+                                  </Typography>
+                                  <Typography sx={{ 
+                                    fontSize: '16px', 
+                                    fontWeight: 600, 
+                                    color: 'rgba(17, 17, 17, 0.92)'
+                                  }}>
+                                    {job.stage_counts.skill_assessment}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ 
+                                  bgcolor: 'rgba(17, 17, 17, 0.04)',
+                                  p: 1.5,
+                                  borderRadius: '8px',
+                                  flex: 1
+                                }}>
+                                  <Typography variant="body2" sx={{ 
+                                    color: 'rgba(17, 17, 17, 0.48)', 
+                                    fontSize: '12px',
+                                    mb: 0.5
+                                  }}>
+                                    Interviews
+                                  </Typography>
+                                  <Typography sx={{ 
+                                    fontSize: '16px', 
+                                    fontWeight: 600, 
+                                    color: 'rgba(17, 17, 17, 0.92)'
+                                  }}>
+                                    {job.stage_counts.interviews}
+                                  </Typography>
+                                </Box>
                               </Stack>
-                            </Box>
-
-                            <Box sx={{ 
-                              p: 2, 
-                              bgcolor: 'rgba(17, 17, 17, 0.04)', 
-                              borderRadius: 2
-                            }}>
-                              <Grid container spacing={2}>
-                                <Grid item xs={6}>
-                                  <Box>
-                                    <Typography variant="body2" sx={{ 
-                                      color: 'rgba(17, 17, 17, 0.72)',
-                                      fontSize: '13px',
-                                      mb: 0.5
-                                    }}>
-                                      Applied
-                                    </Typography>
-                                    <Typography sx={{ 
-                                      fontSize: '24px',
-                                      fontWeight: 600,
-                                      color: 'rgba(17, 17, 17, 0.92)'
-                                    }}>
-                                      {job.stage_counts.new}
-                                    </Typography>
-                                  </Box>
-                                </Grid>
-                                <Grid item xs={6}>
-                                  <Box>
-                                    <Typography variant="body2" sx={{ 
-                                      color: 'rgba(17, 17, 17, 0.72)',
-                                      fontSize: '13px',
-                                      mb: 0.5
-                                    }}>
-                                      Assessment
-                                    </Typography>
-                                    <Typography sx={{ 
-                                      fontSize: '24px',
-                                      fontWeight: 600,
-                                      color: 'rgba(17, 17, 17, 0.92)'
-                                    }}>
-                                      {job.stage_counts.skill_assessment}
-                                    </Typography>
-                                  </Box>
-                                </Grid>
-                                <Grid item xs={6}>
-                                  <Box>
-                                    <Typography variant="body2" sx={{ 
-                                      color: 'rgba(17, 17, 17, 0.72)',
-                                      fontSize: '13px',
-                                      mb: 0.5
-                                    }}>
-                                      Interviewed
-                                    </Typography>
-                                    <Typography sx={{ 
-                                      fontSize: '24px',
-                                      fontWeight: 600,
-                                      color: 'rgba(17, 17, 17, 0.92)'
-                                    }}>
-                                      {job.stage_counts.interviews}
-                                    </Typography>
-                                  </Box>
-                                </Grid>
-                                <Grid item xs={6}>
-                                  <Box>
-                                    <Typography variant="body2" sx={{ 
-                                      color: 'rgba(17, 17, 17, 0.72)',
-                                      fontSize: '13px',
-                                      mb: 0.5
-                                    }}>
-                                      Accepted
-                                    </Typography>
-                                    <Typography sx={{ 
-                                      fontSize: '24px',
-                                      fontWeight: 600,
-                                      color: 'rgba(17, 17, 17, 0.92)'
-                                    }}>
-                                      {job.stage_counts.acceptance}
-                                    </Typography>
-                                  </Box>
-                                </Grid>
-                              </Grid>
-                            </Box>
-                          </Stack>
-                        </Paper>
-                      ))}
+                            </Stack>
+                          </Paper>
+                        );
+                      })}
                     </Box>
                   )}
-        </Box>
-      </Box>
-    </DashboardCard>
+                </Box>
+              </Box>
+            </DashboardCard>
           </Box>
         </Stack>
       </Container>
@@ -1573,7 +1562,7 @@ const JobPostings = () => {
           }
         }}
       >
-        <MenuItem 
+        <MenuItem
           onClick={handleViewSubmissions}
           sx={{
             py: 1.5,
@@ -1583,8 +1572,8 @@ const JobPostings = () => {
             }
           }}
         >
-          <VisibilityRoundedIcon sx={{ 
-            mr: 1.5, 
+          <VisibilityRoundedIcon sx={{
+            mr: 1.5,
             color: 'rgba(17, 17, 17, 0.48)',
             fontSize: '20px'
           }} />
@@ -1592,7 +1581,7 @@ const JobPostings = () => {
             View Submissions
           </Typography>
         </MenuItem>
-        <MenuItem 
+        <MenuItem
           onClick={handleEdit}
           sx={{
             py: 1.5,
@@ -1602,8 +1591,8 @@ const JobPostings = () => {
             }
           }}
         >
-          <EditRoundedIcon sx={{ 
-            mr: 1.5, 
+          <EditRoundedIcon sx={{
+            mr: 1.5,
             color: 'rgba(17, 17, 17, 0.48)',
             fontSize: '20px'
           }} />
@@ -1611,7 +1600,7 @@ const JobPostings = () => {
             Edit
           </Typography>
         </MenuItem>
-        <MenuItem 
+        <MenuItem
           onClick={handleToggleStatus}
           sx={{
             py: 1.5,
@@ -1623,8 +1612,8 @@ const JobPostings = () => {
         >
           {selectedJob?.status === "active" ? (
             <>
-              <BlockRoundedIcon sx={{ 
-                mr: 1.5, 
+              <BlockRoundedIcon sx={{
+                mr: 1.5,
                 color: 'rgba(17, 17, 17, 0.48)',
                 fontSize: '20px'
               }} />
@@ -1634,8 +1623,8 @@ const JobPostings = () => {
             </>
           ) : (
             <>
-              <CheckCircleRoundedIcon sx={{ 
-                mr: 1.5, 
+              <CheckCircleRoundedIcon sx={{
+                mr: 1.5,
                 color: 'rgba(17, 17, 17, 0.48)',
                 fontSize: '20px'
               }} />
@@ -1645,7 +1634,7 @@ const JobPostings = () => {
             </>
           )}
         </MenuItem>
-        <MenuItem 
+        <MenuItem
           onClick={handleShareClick}
           sx={{
             py: 1.5,
@@ -1655,8 +1644,8 @@ const JobPostings = () => {
             }
           }}
         >
-          <ShareRoundedIcon sx={{ 
-            mr: 1.5, 
+          <ShareRoundedIcon sx={{
+            mr: 1.5,
             color: 'rgba(17, 17, 17, 0.48)',
             fontSize: '20px'
           }} />
@@ -1674,6 +1663,245 @@ const JobPostings = () => {
           jobId={selectedJob.id}
         />
       )}
+
+      {/* Add Search Modal */}
+      <Dialog
+        open={searchDialogOpen}
+        onClose={() => setSearchDialogOpen(false)}
+        fullScreen
+        PaperProps={{
+          sx: {
+            bgcolor: '#F5F7FA',
+            p: 2
+          }
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <IconButton
+              onClick={() => setSearchDialogOpen(false)}
+              sx={{ mr: 2 }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>
+              Search Jobs
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+            <TextField
+              autoFocus
+              fullWidth
+              placeholder="Search job title"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  setSearchDialogOpen(false);
+                }
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#fff',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(17, 17, 17, 0.08)',
+                  '& fieldset': {
+                    border: 'none',
+                  },
+                  '&:hover fieldset': {
+                    border: 'none',
+                  },
+                  '&.Mui-focused fieldset': {
+                    border: 'none',
+                  }
+                },
+                '& .MuiInputBase-input': {
+                  padding: '16px',
+                  color: 'rgba(17, 17, 17, 0.84)',
+                  '&::placeholder': {
+                    color: 'rgba(17, 17, 17, 0.48)',
+                  }
+                }
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={() => setSearchDialogOpen(false)}
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                color: '#fff',
+                borderRadius: '12px',
+                px: 3,
+                py: 1.5,
+                textTransform: 'none',
+                fontSize: '16px',
+                fontWeight: 500,
+                '&:hover': {
+                  backgroundColor: theme.palette.primary.dark,
+                }
+              }}
+            >
+              Search
+            </Button>
+          </Box>
+          <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+            {filteredJobPostings.map((job, index) => {
+              const colorIndex = index % 4;
+              const colors = [
+                { bg: 'rgba(114, 74, 59, 0.15)', color: '#724A3B' },
+                { bg: 'rgba(43, 101, 110, 0.15)', color: '#2B656E' },
+                { bg: 'rgba(118, 50, 95, 0.15)', color: '#76325F' },
+                { bg: 'rgba(59, 95, 158, 0.15)', color: '#3B5F9E' }
+              ];
+              const currentColor = colors[colorIndex];
+
+              return (
+                <Paper
+                  key={job.id}
+                  elevation={0}
+                  onClick={() => {
+                    router.push(`/dashboard/job-posting/${job.id}/submissions`);
+                    setSearchDialogOpen(false);
+                  }}
+                  sx={{
+                    p: 2,
+                    mb: 2,
+                    borderRadius: 2,
+                    border: '1px solid rgba(17, 17, 17, 0.08)',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease-in-out',
+                    '&:hover': {
+                      borderColor: 'rgba(17, 17, 17, 0.16)',
+                      backgroundColor: 'rgba(17, 17, 17, 0.02)',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+                    }
+                  }}
+                >
+                  <Stack spacing={2}>
+                    <Box>
+                      <Typography variant="h6" sx={{
+                        fontWeight: 600,
+                        fontSize: '18px',
+                        color: 'rgba(17, 17, 17, 0.92)',
+                        mb: 1
+                      }}>
+                        {job.title}
+                      </Typography>
+                      <Stack direction="row" spacing={2} sx={{ my: 2, flexWrap: 'wrap', gap: 1 }}>
+                        <Box sx={{ 
+                          bgcolor: colors[0].bg,
+                          color: colors[0].color,
+                          px: 2,
+                          py: 0.75,
+                          borderRadius: '20px',
+                          fontSize: '14px',
+                          fontWeight: 400,
+                          textTransform: 'capitalize',
+                          width: 'max-content'
+                        }}>
+                          {job.job_type}
+                        </Box>
+                        <Box sx={{ 
+                          bgcolor: colors[1].bg,
+                          color: colors[1].color,
+                          px: 2,
+                          py: 0.75,
+                          borderRadius: '20px',
+                          fontSize: '14px',
+                          fontWeight: 400,
+                          textTransform: 'capitalize',
+                          width: 'max-content'
+                        }}>
+                          {job.location}
+                        </Box>
+                        <Box sx={{ 
+                          bgcolor: colors[2].bg,
+                          color: colors[2].color,
+                          px: 2,
+                          py: 0.75,
+                          borderRadius: '20px',
+                          fontSize: '14px',
+                          fontWeight: 400,
+                          textTransform: 'capitalize',
+                          width: 'max-content'
+                        }}>
+                          {job.work_model}
+                        </Box>
+                      </Stack>
+                    </Box>
+                    <Stack direction="row" spacing={2}>
+                      <Box sx={{ 
+                        bgcolor: 'rgba(17, 17, 17, 0.04)',
+                        p: 1.5,
+                        borderRadius: '8px',
+                        flex: 1
+                      }}>
+                        <Typography variant="body2" sx={{ 
+                          color: 'rgba(17, 17, 17, 0.48)', 
+                          fontSize: '12px',
+                          mb: 0.5
+                        }}>
+                          Applied
+                        </Typography>
+                        <Typography sx={{ 
+                          fontSize: '16px', 
+                          fontWeight: 600, 
+                          color: 'rgba(17, 17, 17, 0.92)'
+                        }}>
+                          {job.stage_counts.new}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ 
+                        bgcolor: 'rgba(17, 17, 17, 0.04)',
+                        p: 1.5,
+                        borderRadius: '8px',
+                        flex: 1
+                      }}>
+                        <Typography variant="body2" sx={{ 
+                          color: 'rgba(17, 17, 17, 0.48)', 
+                          fontSize: '12px',
+                          mb: 0.5
+                        }}>
+                          Assessment
+                        </Typography>
+                        <Typography sx={{ 
+                          fontSize: '16px', 
+                          fontWeight: 600, 
+                          color: 'rgba(17, 17, 17, 0.92)'
+                        }}>
+                          {job.stage_counts.skill_assessment}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ 
+                        bgcolor: 'rgba(17, 17, 17, 0.04)',
+                        p: 1.5,
+                        borderRadius: '8px',
+                        flex: 1
+                      }}>
+                        <Typography variant="body2" sx={{ 
+                          color: 'rgba(17, 17, 17, 0.48)', 
+                          fontSize: '12px',
+                          mb: 0.5
+                        }}>
+                          Interviews
+                        </Typography>
+                        <Typography sx={{ 
+                          fontSize: '16px', 
+                          fontWeight: 600, 
+                          color: 'rgba(17, 17, 17, 0.92)'
+                        }}>
+                          {job.stage_counts.interviews}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  </Stack>
+                </Paper>
+              );
+            })}
+          </Box>
+        </Box>
+      </Dialog>
     </Box>
   );
 };

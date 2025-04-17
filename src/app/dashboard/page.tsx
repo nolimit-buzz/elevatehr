@@ -209,12 +209,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     flexShrink: 0,
     borderRadius: '8px',
     background: '#FFF',
-    padding: '32px',
-    '&::-webkit-scrollbar': {
-      display: 'none'
-    },
-    msOverflowStyle: 'none',
-    scrollbarWidth: 'none'
+    padding: '32px'
   },
 }));
 
@@ -557,7 +552,7 @@ const Dashboard = () => {
                 />
               )}
             </Grid>
-            <Grid container item spacing={{ xs: 3, md: '12px' }} xs={12} lg={4} minHeight={'600px'} maxHeight={'700px'} direction={{ xs: 'column', md: 'row' }}>
+            <Grid container item spacing={'12px'} xs={12} lg={4} minHeight={'600px'} maxHeight={'700px'} direction={{ xs: 'column', md: 'row' }}>
               <Grid item xs={12} md={6} lg={12} flex={1} maxHeight={'50%'} overflow={'scroll'}>
                 <Notifications customStyle={{ height: '100%', overflow: 'scroll' }} />
               </Grid>
