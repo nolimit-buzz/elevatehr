@@ -273,7 +273,7 @@ export default function Typeform({
         PaperProps={{
           sx: {
             borderRadius: '16px',
-            padding: '32px',
+            padding: '32px 24px',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
             background: 'linear-gradient(145deg, #ffffff, #f5f5f5)',
           }
@@ -344,26 +344,27 @@ export default function Typeform({
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center', pt: 2 }}>
           <Button
-            variant="contained"
+            variant="outlined"
             onClick={() => window.location.href = '/'}
             sx={{
-              bgcolor: 'primary.main',
-              color: 'white',
-              fontWeight: 600,
+              borderColor: 'primary.main',
+              color: 'primary.main',
+              fontWeight: 500,
               px: 4,
               py: 1.5,
               borderRadius: '8px',
               textTransform: 'none',
               fontSize: '1rem',
               '&:hover': {
-                bgcolor: 'primary.dark',
+                borderColor: 'primary.dark',
+                backgroundColor: 'rgba(25, 118, 210, 0.04)',
                 transform: 'translateY(-2px)',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
               },
               transition: 'all 0.2s ease-in-out'
             }}
           >
-            Return to Home
+            View Other Jobs
           </Button>
         </DialogActions>
       </Dialog>
