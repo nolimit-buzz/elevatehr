@@ -23,6 +23,7 @@ import {
   DialogContent,
   DialogActions,
   Grow,
+  IconButton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Form, FormField } from "@/app/dashboard/components/ui/form";
@@ -33,7 +34,7 @@ import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
 import Progress from "@/app/dashboard/layout/progress";
 import axios from "axios";
-import { CheckCircle } from "@mui/icons-material";
+import { CheckCircle, Close } from "@mui/icons-material";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
@@ -105,7 +106,7 @@ export default function Typeform({
 
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
-  const [isSubmitted, setIsSubmitted] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<FormData | null>(null);
   const [fileInputs, setFileInputs] = useState<{ [key: string]: File | null }>({});
@@ -268,17 +269,35 @@ export default function Typeform({
     return (
       <Dialog
         open={true}
-        maxWidth="sm"
+        maxWidth="xs"
         fullWidth
         PaperProps={{
           sx: {
             borderRadius: '16px',
-            padding: '32px 24px',
+            padding: '32px 0px',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
             background: 'linear-gradient(145deg, #ffffff, #f5f5f5)',
+            position: 'relative',
+            maxWidth: '620px'
           }
         }}
       >
+        <IconButton
+          onClick={() => window.location.href = '/'}
+          sx={{
+            position: 'absolute',
+            right: 16,
+            top: 16,
+            color: 'grey.500',
+            '&:hover': {
+              color: 'grey.700',
+              backgroundColor: 'rgba(0, 0, 0, 0.04)',
+            },
+            transition: 'all 0.2s ease-in-out'
+          }}
+        >
+          <Close />
+        </IconButton>
         <DialogContent sx={{ textAlign: 'center', pt: 4 }}>
           <Box 
             sx={{ 
@@ -319,6 +338,9 @@ export default function Typeform({
               variant="h5" 
               component="h1" 
               sx={{ 
+                width: 'max-content',
+                mx: 'auto',
+                px: 0,
                 fontWeight: 600, 
                 color: 'grey.100',
                 fontSize: { xs: '1.5rem', sm: '1.75rem' },
@@ -342,7 +364,7 @@ export default function Typeform({
             Your application is in! We'll review it and get back to you via email.
           </Typography>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'center', pt: 2 }}>
+        <DialogActions sx={{ justifyContent: 'center', pt: 2, gap: 2 }}>
           <Button
             variant="outlined"
             onClick={() => window.location.href = '/'}
@@ -380,11 +402,11 @@ export default function Typeform({
       {/* Form Container */}
       <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{backgroundColor:"primary.main", height:"100vh", width:"100vw"}}>
         <Form {...form}>
-          <form>
+          <form style={{ width: '100%', maxWidth: '540px', margin: '0 auto', padding: '20px' }}>
             <motion.div
-              style={{height:"max-content", width:"800px", maxWidth:"600px"}}
+              style={{height:"max-content", width:"100%"}}
               key={currentStep}
-              className="w-full mx-auto px-"
+              className="w-full"
               initial={{ y: delta >= 0 ? "60%" : "-60%", opacity: 0 }}
               exit={{ y: delta >= 0 ? "-60%" : "100%", opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -408,7 +430,6 @@ export default function Typeform({
                           mb: 2, 
                           fontWeight: 600,
                           color: 'secondary.light',
-                          // backgroundColor: 'rgba(255, 255, 255, 0.1 )',
                           '&:hover': {
                             color: 'secondary.dark',
                           }
@@ -438,6 +459,12 @@ export default function Typeform({
                         <Select
                           {...field}
                           displayEmpty
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              next();
+                            }
+                          }}
                           sx={{
                             backgroundColor: '#F8F9FB',
                             borderRadius: '8px',
@@ -465,6 +492,12 @@ export default function Typeform({
                       ) : currentField.type === 'radio' ? (
                         <RadioGroup
                           {...field}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              next();
+                            }
+                          }}
                           sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
                         >
                           {currentField.options?.map((option) => (
@@ -531,6 +564,12 @@ export default function Typeform({
                           error={!!error}
                           helperText={error?.message}
                           autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              next();
+                            }
+                          }}
                         />
                       ) : currentField.type === 'url' ? (
                         <StyledTextField
@@ -540,6 +579,12 @@ export default function Typeform({
                           error={!!error}
                           helperText={error?.message}
                           autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              next();
+                            }
+                          }}
                         />
                       ) : (
                         <StyledTextField
@@ -548,11 +593,14 @@ export default function Typeform({
                           error={!!error}
                           helperText={error?.message}
                           autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              next();
+                            }
+                          }}
                         />
                       )}
-                      {/* {error && (
-                        <StyledFormHelperText>{error.message}</StyledFormHelperText>
-                      )} */}
                     </FormControl>
                   </Box>
                 )}
