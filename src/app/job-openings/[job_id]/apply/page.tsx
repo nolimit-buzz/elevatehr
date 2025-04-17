@@ -314,28 +314,6 @@ export default function Typeform({
           }
         }}
       >
-        <IconButton
-          onClick={() => router.push(`/job-openings/${params.job_id}`)}
-          sx={{
-            position: 'absolute',
-            right: { xs: 8, sm: 16 },
-            top: { xs: 8, sm: 16 },
-            color: 'grey.500',
-            border: '1px solid',
-            borderColor: 'grey.500',
-            borderRadius: '50%',
-            width: { xs: '32px', sm: '40px' },
-            height: { xs: '32px', sm: '40px' },
-            '&:hover': {
-              color: 'grey.700',
-              borderColor: 'grey.700',
-              backgroundColor: 'rgba(0, 0, 0, 0.04)',
-            },
-            transition: 'all 0.2s ease-in-out'
-          }}
-        >
-          <Close />
-        </IconButton>
         <DialogContent sx={{ 
           textAlign: 'center', 
           pt: { xs: 2, sm: 4 },
@@ -416,7 +394,36 @@ export default function Typeform({
             Your application is in! We'll review it and get back to you via email.
           </Typography>
         </DialogContent>
-       
+        <DialogActions sx={{ 
+          justifyContent: 'center', 
+          pt: { xs: 1, sm: 2 }, 
+          gap: 2,
+          px: { xs: 2, sm: 4 }
+        }}>
+          <Button
+            variant="outlined"
+            onClick={() => router.push(`/job-openings/${params.job_id}`)}
+            sx={{
+              borderColor: 'primary.main',
+              color: 'primary.main',
+              fontWeight: 500,
+              px: { xs: 2, sm: 4 },
+              py: { xs: 1, sm: 1.5 },
+              borderRadius: '8px',
+              textTransform: 'none',
+              fontSize: { xs: '0.9rem', sm: '1rem' },
+              '&:hover': {
+                borderColor: 'primary.dark',
+                backgroundColor: 'rgba(25, 118, 210, 0.04)',
+                transform: 'translateY(-2px)',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+              },
+              transition: 'all 0.2s ease-in-out'
+            }}
+          >
+            Back to Job Details
+          </Button>
+        </DialogActions>
       </Dialog>
     );
   }
