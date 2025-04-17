@@ -527,7 +527,7 @@ const JobPostings = () => {
     _event: React.SyntheticEvent,
     newValue: "all" | "active" | "close"
   ) => {
-    setTempStatusFilter(newValue);
+    setStatusFilter(newValue);
   };
 
   const handleFilterChange = (filterName: keyof FilterState, value: string) => {
@@ -779,9 +779,9 @@ const JobPostings = () => {
         <StyledTableCell>
           <Stack>
             <Stack direction="row" alignItems="center" gap={1}>
-              <StyledTypography textTransform={"capitalize"}>
-                {job.title}
-              </StyledTypography>
+            <StyledTypography textTransform={"capitalize"}>
+              {job.title}
+            </StyledTypography>
               <Tooltip 
                 title="Click to copy application page link" 
                 arrow
@@ -1351,7 +1351,7 @@ const JobPostings = () => {
                   <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
                     <FormControl sx={{ minWidth: 150 }}>
                       <Select
-                        value={tempStatusFilter}
+            value={statusFilter}
                         onChange={(e) => handleStatusChange(e as any, e.target.value as "all" | "active" | "close")}
                         displayEmpty
                         sx={{
