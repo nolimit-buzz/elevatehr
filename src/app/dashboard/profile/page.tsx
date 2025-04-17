@@ -27,7 +27,8 @@ import {
   DialogActions,
   IconButton as MuiIconButton,
   Tabs,
-  Tab
+  Tab,
+  Link
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ArrowBack from '@mui/icons-material/ArrowBack';
@@ -1243,12 +1244,63 @@ const ProfilePage = () => {
                         </Box>
                         <Button
                           variant={integrations.calendly.connected ? "outlined" : "contained"}
-                          onClick={handleCalendlyConnect}
+                          onClick={() => router.push('/dashboard/profile/calendly-setup')}
                           disabled={saving}
                         >
-                          {integrations.calendly.connected ? 'Connected' : 'Connect'}
+                          {integrations.calendly.connected ? 'Connected' : 'Setup'}
                         </Button>
                       </Box>
+                      {!integrations.calendly.connected && (
+                        <Box sx={{ mt: 2, p: 2, bgcolor: 'rgba(0, 0, 0, 0.02)', borderRadius: '8px' }}>
+                          <Typography variant="body2" sx={{ color: 'text.grey.100', mb: 1 }}>
+                            To connect Calendly, you'll need to:
+                          </Typography>
+                          <Box component="ol" sx={{ pl: 2, mb: 0 }}>
+                            <Typography component="li" variant="body2" sx={{ color: 'text.grey.100', mb: 1 }}>
+                              Create a Calendly developer account at{' '}
+                              <Link href="https://developer.calendly.com/" target="_blank" rel="noopener noreferrer" sx={{ color: 'primary.main' }}>
+                                developer.calendly.com
+                              </Link>
+                            </Typography>
+                            <Typography component="li" variant="body2" sx={{ color: 'text.grey.100', mb: 1 }}>
+                              Create an OAuth application in your Calendly developer dashboard
+                            </Typography>
+                            <Typography component="li" variant="body2" sx={{ color: 'text.grey.100', mb: 1 }}>
+                              Whitelist the following domain in your Calendly OAuth application settings:
+                              <Box component="code" sx={{ 
+                                display: 'block', 
+                                mt: 1, 
+                                p: 1, 
+                                bgcolor: 'rgba(0, 0, 0, 0.04)', 
+                                borderRadius: '4px',
+                                fontFamily: 'monospace'
+                              }}>
+                                {window.location.origin}
+                              </Box>
+                            </Typography>
+                            <Typography component="li" variant="body2" sx={{ color: 'text.grey.100', mb: 1 }}>
+                              Send us your Calendly OAuth application credentials:
+                              <Box component="ul" sx={{ pl: 2, mt: 1 }}>
+                                <Typography component="li" variant="body2" sx={{ color: 'text.grey.100' }}>
+                                  Client ID
+                                </Typography>
+                                <Typography component="li" variant="body2" sx={{ color: 'text.grey.100' }}>
+                                  Client Secret
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" sx={{ color: 'text.grey.100', mt: 1, fontStyle: 'italic' }}>
+                                Please send these credentials to{' '}
+                                <Link href="mailto:info@nolimitbuzz.net" sx={{ color: 'primary.main' }}>
+                                  info@nolimitbuzz.net
+                                </Link>
+                              </Typography>
+                            </Typography>
+                            <Typography component="li" variant="body2" sx={{ color: 'text.grey.100' }}>
+                              Set up your event types and scheduling preferences in Calendly
+                            </Typography>
+                          </Box>
+                        </Box>
+                      )}
                     </Paper>
                   </Grid>
 
