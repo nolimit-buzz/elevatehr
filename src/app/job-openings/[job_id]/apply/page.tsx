@@ -107,7 +107,7 @@ export default function Typeform({
 
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
-  const [isSubmitted, setIsSubmitted] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<FormData | null>(null);
@@ -667,7 +667,7 @@ export default function Typeform({
                     Next
                   </Button>
                 ) : (
-                  <Button
+                  <Button onClick={submitForm}
                     type="submit"
                     variant="contained"
                     disabled={isSubmitting}

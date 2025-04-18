@@ -318,7 +318,7 @@ export default function Home() {
       try {
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          `https://app.elevatehr.ai/wp-json/elevatehr/v1/all-job-applications`,
+          `https://app.elevatehr.ai/wp-json/elevatehr/v1/all-job-applications?stage=${getStageValue(primaryTabValue)}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -355,13 +355,15 @@ export default function Home() {
   const getStageValue = (tabValue: number): StageType => {
     switch (tabValue) {
       case 1:
-        return 'skill_assessment';
+        return 'new';
       case 2:
-        return 'interviews';
+        return 'skill_assessment';
       case 3:
-        return 'acceptance';
+        return 'interviews';
       case 4:
         return 'archived';
+      case 5:
+        return 'acceptance';
       default:
         return 'new';
     }
