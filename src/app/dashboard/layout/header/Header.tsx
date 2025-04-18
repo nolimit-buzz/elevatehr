@@ -159,7 +159,23 @@ const Header = () => {
                     height: 28,
                   }}
                 />
-                <Typography>Alimosho J.</Typography>
+                <Typography>
+                  {(() => {
+                    try {
+                      const userProfileStr =localStorage.getItem('userProfile');
+                      if(userProfileStr){
+                        const userProfile = JSON.parse(userProfileStr);
+                      const personalInfo = userProfile.personalInfo;
+
+                      const firstName = personalInfo.first_name;
+                      const lastName = personalInfo.last_name;
+                      return `${firstName} ${lastName.charAt(0)}.`;
+                      }
+                    } catch (error) {
+                      return 'User';
+                    }
+                  })()}
+                </Typography>
               </ProfileButtonStyled>
             </Box>
 
