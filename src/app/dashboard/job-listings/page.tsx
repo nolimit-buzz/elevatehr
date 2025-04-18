@@ -1459,7 +1459,7 @@ const JobPostings = () => {
                     <StyledTableCell>
                       <Stack>
                         <Stack direction="row" alignItems="center" gap={1}>
-                          <StyledTypography textTransform={"capitalize"}>
+                          <StyledTypography textTransform={"capitalize"} mb={2}>
                                   {job.title}
                           </StyledTypography>
                                 <Tooltip 
