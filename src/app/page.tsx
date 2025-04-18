@@ -71,14 +71,14 @@ const Login = () => {
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
               animation: 'wave 6s ease-in-out infinite, colorShift 8s ease-in-out infinite',
-              '@keyframes wave': {
-                '0%, 100%': {
-                  backgroundPosition: '-20% -20%',
-                },
-                '50%': {
-                  backgroundPosition: '120% 120%',
-                }
-              },
+              // '@keyframes wave': {
+              //   '0%, 100%': {
+              //     backgroundPosition: '-20% -20%',
+              //   },
+              //   '50%': {
+              //     backgroundPosition: '120% 120%',
+              //   }
+              // },
               '@keyframes colorShift': {
                 '0%, 100%': {
                   backgroundColor: 'secondary.light',
