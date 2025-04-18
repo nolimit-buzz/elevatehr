@@ -255,7 +255,7 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
       >
         <StyledTableCell>
           <Stack>
-            <StyledTypography textTransform={'capitalize'}>
+            <StyledTypography textTransform={'capitalize'} mb={3}>
               {job.title}
             </StyledTypography>
             <Stack direction='row' gap={1}>
@@ -329,9 +329,12 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
           justifyContent: 'space-between', 
           alignItems: 'center', 
           gap: 2,
-          padding: '16px' 
+          padding: '16px',
+          position: 'sticky',
+          top: 0,
+          backgroundColor: 'white',
         }}>
-          <Stack direction={'row'} alignItems={'center'} gap={1}>
+          <Stack direction={'row'} alignItems={'center'} gap={1} >
             <Typography 
               variant="h2" 
               fontWeight={'semibold'} 
