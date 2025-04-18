@@ -74,6 +74,7 @@ export default function AuthLogin({ subtext, subtitle, onSuccess }: AuthLoginPro
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
       }
+      
 
       if (onSuccess) {
         onSuccess(data);

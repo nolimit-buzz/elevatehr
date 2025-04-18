@@ -71,14 +71,14 @@ const Login = () => {
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
               animation: 'wave 6s ease-in-out infinite, colorShift 8s ease-in-out infinite',
-              // '@keyframes wave': {
-              //   '0%, 100%': {
-              //     backgroundPosition: '-20% -20%',
-              //   },
-              //   '50%': {
-              //     backgroundPosition: '120% 120%',
-              //   }
-              // },
+              '@keyframes wave': {
+                '0%, 100%': {
+                  backgroundPosition: '-2% -2%',
+                },
+                '50%': {
+                  backgroundPosition: '12% 12%',
+                }
+              },
               '@keyframes colorShift': {
                 '0%, 100%': {
                   backgroundColor: 'secondary.light',
@@ -262,7 +262,7 @@ const Login = () => {
               onSuccess={(response) => {
                 if (typeof window !== 'undefined') {
                   // Save token
-                  localStorage.setItem('token', response.token);
+                  localStorage.setItem('jwt', response.token);
                   
                   // Save user profile data
                   localStorage.setItem('userProfile', JSON.stringify({
