@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import { useState, useEffect, FormEvent, MouseEvent } from "react";
 import {
   Box,
   Typography,
@@ -28,7 +29,6 @@ import {
 import { styled } from "@mui/material/styles";
 import { Form, FormField } from "@/app/dashboard/components/ui/form";
 import { formSchema, type Inputs } from "@/app/lib/schema";
-import { useState, useEffect } from "react";
 import { FORM_SUBMIT_URL } from "@/app/lib/constants";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
@@ -107,9 +107,8 @@ export default function Typeform({
 
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<FormData | null>(null);
   const [fileInputs, setFileInputs] = useState<{ [key: string]: File | null }>({});
@@ -118,6 +117,9 @@ export default function Typeform({
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleFileChange = (fieldKey: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -231,7 +233,7 @@ export default function Typeform({
     }
   };
 
-  async function submitForm(e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) {
+  const submitForm = async (e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
@@ -247,10 +249,10 @@ export default function Typeform({
         }
       });
 
-      // Append all files
-      Object.entries(fileInputs).forEach(([key, file]) => {
-        if (file) {
-          formData.append(key, file);
+      // Append all file inputs
+      Object.entries(fileInputs).forEach(([key, value]) => {
+        if (value) {
+          formData.append(key, value);
         }
       });
 
@@ -263,17 +265,19 @@ export default function Typeform({
       );
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to submit application");
+        throw new Error("Failed to submit application");
       }
 
-      handleSuccess();
+      const data = await response.json();
+      setSuccessMessage("Application submitted successfully!");
+      setShowSuccess(true);
+      router.push("/job-openings");
     } catch (err) {
-      handleError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   const handleSuccess = () => {
     setShowSuccessModal(true);
