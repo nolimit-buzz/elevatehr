@@ -195,7 +195,7 @@ const ProfilePage = () => {
     const userProfile = localStorage.getItem('userProfile');
     if (userProfile) {
       const profile = JSON.parse(userProfile);
-      
+
       // Map localStorage data to our state structure
       setProfileData({
         personal: {
@@ -258,12 +258,12 @@ const ProfilePage = () => {
 
   const validateUrl = (url: string, allowWithoutHttp = false): boolean => {
     if (!url) return true;
-    
+
     if (allowWithoutHttp && !url.startsWith('http')) {
       // For website fields, we'll allow domains without http:// as we can add it later
       url = 'https://' + url;
     }
-    
+
     try {
       new URL(url);
       return true;
@@ -280,7 +280,7 @@ const ProfilePage = () => {
         [field]: value
       }
     }));
-    
+
     // Clear validation errors when the user types
     if (field === 'email') {
       setErrors(prev => ({ ...prev, email: undefined }));
@@ -307,48 +307,48 @@ const ProfilePage = () => {
   const validateForm = (section: ProfileSection): boolean => {
     let isValid = true;
     const newErrors: ErrorState = {};
-    
+
     if (section === 'personal') {
       if (!validateEmail(profileData.personal.email)) {
         newErrors.email = 'Please enter a valid email address';
         isValid = false;
       }
     }
-    
+
     if (section === 'company') {
       if (profileData.company.bookingLink && !validateUrl(profileData.company.bookingLink)) {
         newErrors.bookingLink = 'Please enter a valid URL';
         isValid = false;
       }
-      
+
       if (profileData.company.website && !validateUrl(profileData.company.website, true)) {
         newErrors.website = 'Please enter a valid URL';
         isValid = false;
       }
     }
-    
+
     if (section === 'password') {
       if (passwordData.newPassword !== passwordData.confirmPassword) {
         newErrors.password = 'Passwords do not match';
         isValid = false;
       }
-      
+
       if (passwordData.newPassword && passwordData.newPassword.length < 8) {
         newErrors.password = 'Password must be at least 8 characters';
         isValid = false;
       }
     }
-    
+
     setErrors(newErrors);
     return isValid;
   };
-  
+
   // Save profile data
   const handleSaveProfile = async () => {
     try {
       setSaving(true);
       const token = localStorage.getItem('jwt');
-      
+
       const formData = new FormData();
       formData.append('first_name', profileData.personal.firstName);
       formData.append('last_name', profileData.personal.lastName);
@@ -360,7 +360,7 @@ const ProfilePage = () => {
       formData.append('company_about', profileData.company.about);
       formData.append('booking_link', profileData.company.bookingLink);
       formData.append('website', profileData.company.website);
-      
+
       const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/company/profile', {
         method: 'POST',
         headers: {
@@ -368,14 +368,14 @@ const ProfilePage = () => {
         },
         body: formData
       });
-      
+
       if (response.ok) {
         setNotification({
           open: true,
           message: String('Profile updated successfully'),
           severity: 'success'
         });
-        
+
         // Update localStorage with the new data
         const userProfile = localStorage.getItem('userProfile');
         if (userProfile) {
@@ -406,7 +406,7 @@ const ProfilePage = () => {
         if (errorData.code === 'upload_error' && !errorData.message) {
           // Ignore upload error if not inside handleLogoUpload
           return;
-        } 
+        }
         setNotification({
           open: true,
           message: 'Successfully updated profile',
@@ -429,11 +429,11 @@ const ProfilePage = () => {
     if (!validateForm('password')) {
       return;
     }
-    
+
     try {
       setSaving(true);
       const token = localStorage.getItem('jwt');
-      
+
       const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/change-password', {
         method: 'POST',
         headers: {
@@ -442,7 +442,7 @@ const ProfilePage = () => {
         },
         body: JSON.stringify(passwordData)
       });
-      
+
       if (response.ok) {
         setNotification({
           open: true,
@@ -477,14 +477,14 @@ const ProfilePage = () => {
   const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    
+
     try {
       setLogoUploading(true);
       const token = localStorage.getItem('jwt');
-      
+
       const formData = new FormData();
       formData.append('company_logo', file);
-      
+
       const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/company/profile', {
         method: 'POST',
         headers: {
@@ -492,7 +492,7 @@ const ProfilePage = () => {
         },
         body: formData
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setProfileData(prev => ({
@@ -502,7 +502,7 @@ const ProfilePage = () => {
             logo: data.user.company_logo
           }
         }));
-        
+
         // Update localStorage with the new data
         const userProfile = localStorage.getItem('userProfile');
         if (userProfile) {
@@ -526,7 +526,7 @@ const ProfilePage = () => {
           };
           localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
         }
-        
+
         setNotification({
           open: true,
           message: 'Profile updated successfully',
@@ -560,11 +560,11 @@ const ProfilePage = () => {
     try {
       setSaving(true);
       const token = localStorage.getItem('jwt');
-      
+
       // Here you would typically handle OAuth flow or API connection
       // For now, we'll just simulate a connection
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       setIntegrations(prev => ({
         ...prev,
         [integration]: {
@@ -572,7 +572,7 @@ const ProfilePage = () => {
           connected: true
         }
       }));
-      
+
       setNotification({
         open: true,
         message: `${integration.charAt(0).toUpperCase() + integration.slice(1)} connected successfully`,
@@ -595,7 +595,7 @@ const ProfilePage = () => {
     const height = 700;
     const left = window.screenX + (window.outerWidth - width) / 2;
     const top = window.screenY + (window.outerHeight - height) / 2;
-    
+
     window.open(
       `https://auth.calendly.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_CALENDLY_CLIENT_ID}&response_type=code&redirect_uri=http://localhost:3000/auth/calendly`,
       'Calendly OAuth',
@@ -656,7 +656,7 @@ const ProfilePage = () => {
       setLoadingEvents(true);
       const accessToken = await getCalendlyAccessToken();
       console.log('accessToken', accessToken);
-      
+
       // First get the user profile
       const userResponse = await fetch('https://api.calendly.com/users/me', {
         headers: {
@@ -701,10 +701,10 @@ const ProfilePage = () => {
 
   // Fetch events when Calendly tab is active
   useEffect(() => {
-  console.log('activeSection', activeSection);
-  console.log('integrations.calendly.connected', integrations);
+    console.log('activeSection', activeSection);
+    console.log('integrations.calendly.connected', integrations);
     if (activeSection === 'calendly' && integrations.calendly.connected) {
-    console.log('fetching calendly events');
+      console.log('fetching calendly events');
       fetchCalendlyEvents();
     }
   }, [activeSection, integrations.calendly.connected]);
@@ -739,17 +739,17 @@ const ProfilePage = () => {
       </Box>
 
       {/* Profile Header */}
-      <Paper 
+      <Paper
         elevation={0}
-        sx={{ 
+        sx={{
           mt: 3,
           borderRadius: '10px',
           overflow: 'hidden',
         }}
       >
         {/* Header Background */}
-        <Box 
-          sx={{ 
+        <Box
+          sx={{
             height: '120px',
             bgcolor: theme.palette.primary.main,
             position: 'relative',
@@ -759,19 +759,19 @@ const ProfilePage = () => {
             backgroundSize: 'cover',
           }}
         />
-        
+
         {/* Profile Info Section */}
-        <Box sx={{ 
-          px: 4, 
-          pb: 3, 
-          pt: 3, 
+        <Box sx={{
+          px: 4,
+          pb: 3,
+          pt: 3,
           position: 'relative',
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'space-between',
         }}>
           {/* Logo and Company Info */}
-          <Box sx={{ 
+          <Box sx={{
             display: 'flex',
             alignItems: 'flex-start',
             gap: 3,
@@ -782,9 +782,9 @@ const ProfilePage = () => {
             <Avatar
               src={profileData.company.logo || '/images/logos/logo.svg'}
               alt={profileData.company.name}
-              sx={{ 
-                width: 130, 
-                height: 130, 
+              sx={{
+                width: 130,
+                height: 130,
                 border: '4px solid white',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
                 position: 'relative',
@@ -798,21 +798,21 @@ const ProfilePage = () => {
                 }
               }}
             />
-            
+
             {/* Company Name and Website */}
             <Box sx={{ pb: 0, mt: -1 }}>
               <Typography variant="h4" fontWeight={600} sx={{ color: 'rgba(17, 17, 17, 0.92)', fontSize: '28px' }}>
                 {profileData.company.name || 'ElevateHR'}
               </Typography>
-              
-              <Typography 
-                component="a" 
-                href={profileData.company.website ? 
-                  (profileData.company.website.startsWith('http') ? profileData.company.website : `https://${profileData.company.website}`) : 
+
+              <Typography
+                component="a"
+                href={profileData.company.website ?
+                  (profileData.company.website.startsWith('http') ? profileData.company.website : `https://${profileData.company.website}`) :
                   '#'}
                 target="_blank"
                 rel="noopener noreferrer"
-                sx={{ 
+                sx={{
                   display: 'flex',
                   alignItems: 'center',
                   color: 'rgba(17, 17, 17, 0.6)',
@@ -829,7 +829,7 @@ const ProfilePage = () => {
                 {profileData.company.website || 'www.elevatehr.ai'}
                 <Box component="span" sx={{ display: 'inline-block', ml: 0.5, transform: 'translateY(1px)' }}>
                   <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 10.5H1.5V2H5.25V0.75H0.75C0.335786 0.75 0 1.08579 0 1.5V11.25C0 11.6642 0.335786 12 0.75 12H10.75C11.1642 12 11.5 11.6642 11.5 11.25V6.75H10V10.5ZM6.75 0.75V2H9.4425L3.2175 8.2275L4.2725 9.2825L10.5 3.0575V5.75H11.75V0.75H6.75Z" fill="currentColor"/>
+                    <path d="M10 10.5H1.5V2H5.25V0.75H0.75C0.335786 0.75 0 1.08579 0 1.5V11.25C0 11.6642 0.335786 12 0.75 12H10.75C11.1642 12 11.5 11.6642 11.5 11.25V6.75H10V10.5ZM6.75 0.75V2H9.4425L3.2175 8.2275L4.2725 9.2825L10.5 3.0575V5.75H11.75V0.75H6.75Z" fill="currentColor" />
                   </svg>
                 </Box>
               </Typography>
@@ -840,63 +840,29 @@ const ProfilePage = () => {
 
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, mt: 3, gap: 3 }}>
         {/* Sidebar - Only visible on lg screens and up */}
-        <Box sx={{ 
+        <Box sx={{
           display: { xs: 'none', lg: 'block' },
-          width: '30%', 
-          minWidth: '250px', 
-          maxWidth: '300px' 
+          width: '30%',
+          minWidth: '250px',
+          maxWidth: '300px'
         }}>
           <Paper
             elevation={0}
-            sx={{ 
+            sx={{
               bgcolor: 'white',
               borderRadius: '10px',
               height: 'max-content',
               overflow: 'hidden'
             }}
           >
-            <Typography 
-              variant="h6" 
+            <Typography
+              variant="h6"
               sx={{ p: 2, borderBottom: '0.8px solid rgba(17, 17, 17, 0.08)', fontWeight: 500, fontSize: '18px' }}
             >
               Settings
             </Typography>
             <List>
-              <ListItem disablePadding>
-                <ListItemButton
-                  onClick={() => handleSectionChange('personal')}
-                  selected={activeSection === 'personal'}
-                  sx={{
-                    p: "12px 16px",
-                    bgcolor: '#FFF',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    '&:hover': {
-                      bgcolor: theme.palette.secondary.light,
-                    },
-                    '&.Mui-selected': {
-                      bgcolor: theme.palette.secondary.light,
-                      borderLeft: `3px solid ${theme.palette.primary.main}`,
-                      '&:hover': {
-                        bgcolor: theme.palette.secondary.light,
-                      }
-                    }
-                  }}
-                >
-                  <ListItemText 
-                    primary="Personal Information" 
-                    sx={{
-                      '& .MuiListItemText-primary': {
-                        color: activeSection === 'personal' ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)',
-                        fontWeight: activeSection === 'personal' ? 600 : 400,
-                        fontSize: '16px',
-                      }
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-              
-              <Divider />
-              
+
               <ListItem disablePadding>
                 <ListItemButton
                   onClick={() => handleSectionChange('company')}
@@ -917,7 +883,7 @@ const ProfilePage = () => {
                     }
                   }}
                 >
-                  <ListItemText 
+                  <ListItemText
                     primary="Company Information"
                     sx={{
                       '& .MuiListItemText-primary': {
@@ -929,9 +895,43 @@ const ProfilePage = () => {
                   />
                 </ListItemButton>
               </ListItem>
-              
               <Divider />
-              
+
+
+              <ListItem disablePadding>
+                <ListItemButton
+                  onClick={() => handleSectionChange('personal')}
+                  selected={activeSection === 'personal'}
+                  sx={{
+                    p: "12px 16px",
+                    bgcolor: '#FFF',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                      bgcolor: theme.palette.secondary.light,
+                    },
+                    '&.Mui-selected': {
+                      bgcolor: theme.palette.secondary.light,
+                      borderLeft: `3px solid ${theme.palette.primary.main}`,
+                      '&:hover': {
+                        bgcolor: theme.palette.secondary.light,
+                      }
+                    }
+                  }}
+                >
+                  <ListItemText
+                    primary="Personal Information"
+                    sx={{
+                      '& .MuiListItemText-primary': {
+                        color: activeSection === 'personal' ? theme.palette.primary.main : 'rgba(17, 17, 17, 0.84)',
+                        fontWeight: activeSection === 'personal' ? 600 : 400,
+                        fontSize: '16px',
+                      }
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+              <Divider />
+
               <ListItem disablePadding>
                 <ListItemButton
                   onClick={() => handleSectionChange('password')}
@@ -952,7 +952,7 @@ const ProfilePage = () => {
                     }
                   }}
                 >
-                  <ListItemText 
+                  <ListItemText
                     primary="Password"
                     sx={{
                       '& .MuiListItemText-primary': {
@@ -964,9 +964,9 @@ const ProfilePage = () => {
                   />
                 </ListItemButton>
               </ListItem>
-              
+
               <Divider />
-              
+
               <ListItem disablePadding>
                 <ListItemButton
                   onClick={() => handleSectionChange('integrations')}
@@ -987,7 +987,7 @@ const ProfilePage = () => {
                     }
                   }}
                 >
-                  <ListItemText 
+                  <ListItemText
                     primary="Integrations"
                     sx={{
                       '& .MuiListItemText-primary': {
@@ -1023,7 +1023,7 @@ const ProfilePage = () => {
                         }
                       }}
                     >
-                      <ListItemText 
+                      <ListItemText
                         primary="Calendly"
                         sx={{
                           '& .MuiListItemText-primary': {
@@ -1043,9 +1043,9 @@ const ProfilePage = () => {
 
         {/* Main Content */}
         <Box sx={{ flex: 1, width: { xs: '100%', lg: 'auto' } }}>
-          <Paper 
-            elevation={0} 
-            sx={{ 
+          <Paper
+            elevation={0}
+            sx={{
               p: { xs: 2, md: 4 },
               borderRadius: '10px',
               overflow: 'hidden',
@@ -1083,8 +1083,8 @@ const ProfilePage = () => {
                   }
                 }}
               >
-                <Tab value="personal" label="Personal Information" />
                 <Tab value="company" label="Company Information" />
+                <Tab value="personal" label="Personal Information" />
                 <Tab value="password" label="Password" />
                 <Tab value="integrations" label="Integrations" />
                 {process.env.NEXT_PUBLIC_CALENDLY_CLIENT_ID && process.env.NEXT_PUBLIC_CALENDLY_CLIENT_SECRET && (
@@ -1092,75 +1092,6 @@ const ProfilePage = () => {
                 )}
               </Tabs>
             </Box>
-
-            {activeSection === 'personal' && (
-              <>
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: { xs: '18px', md: '20px' } }}>
-                    Personal Information
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: { xs: '14px', md: '15px' }, lineHeight: 1.6 }}>
-                    Update your personal details and contact information.
-                  </Typography>
-                </Box>
-                
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
-                    <StyledTextField
-                      label="First Name"
-                      value={profileData.personal.firstName}
-                      onChange={(e) => handleProfileChange('personal', 'firstName', e.target.value)}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <StyledTextField
-                      label="Last Name"
-                      value={profileData.personal.lastName}
-                      onChange={(e) => handleProfileChange('personal', 'lastName', e.target.value)}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <StyledTextField
-                      label="Email"
-                      value={profileData.personal.email}
-                      onChange={(e) => handleProfileChange('personal', 'email', e.target.value)}
-                      fullWidth
-                      error={!!errors.email}
-                      helperText={errors.email}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <StyledTextField
-                      label="Phone Number"
-                      value={profileData.personal.phone}
-                      onChange={(e) => handleProfileChange('personal', 'phone', e.target.value)}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <StyledTextField
-                      label="Job Title"
-                      value={profileData.personal.jobTitle}
-                      onChange={(e) => handleProfileChange('personal', 'jobTitle', e.target.value)}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                    <PrimaryButton
-                      variant="contained"
-                      onClick={handleSaveProfile}
-                      disabled={saving}
-                      fullWidth={window.innerWidth < 600}
-                    >
-                      {saving ? <> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving changes</Typography></> : 'Save Changes'}
-                    </PrimaryButton>
-                  </Grid>
-                </Grid>
-              </>
-            )}
-
             {activeSection === 'company' && (
               <>
                 <Box sx={{ mb: 3 }}>
@@ -1171,13 +1102,13 @@ const ProfilePage = () => {
                     Update your company details, logo, and company description.
                   </Typography>
                 </Box>
-                
-                <Paper 
-                  elevation={0} 
-                  sx={{ 
-                    p: { xs: 2, md: 3 }, 
-                    mb: 4, 
-                    bgcolor: '#F8F9FA', 
+
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: { xs: 2, md: 3 },
+                    mb: 4,
+                    bgcolor: '#F8F9FA',
                     borderRadius: '8px',
                     border: '0.8px solid rgba(17, 17, 17, 0.08)'
                   }}
@@ -1189,9 +1120,9 @@ const ProfilePage = () => {
                     <Avatar
                       src={profileData.company.logo || '/images/logos/logo.svg'}
                       alt={profileData.company.name}
-                      sx={{ 
-                        width: { xs: 80, sm: 100 }, 
-                        height: { xs: 80, sm: 100 }, 
+                      sx={{
+                        width: { xs: 80, sm: 100 },
+                        height: { xs: 80, sm: 100 },
                         border: '1px solid rgba(17, 17, 17, 0.08)',
                         '& img': {
                           objectFit: 'cover',
@@ -1208,7 +1139,7 @@ const ProfilePage = () => {
                         component="label"
                         variant="outlined"
                         startIcon={logoUploading ? <CircularProgress size={20} /> : <CloudUploadIcon />}
-                        sx={{ 
+                        sx={{
                           textTransform: 'none',
                           borderRadius: '8px',
                           width: { xs: '100%', sm: 'auto' }
@@ -1226,11 +1157,11 @@ const ProfilePage = () => {
                     </Box>
                   </Box>
                 </Paper>
-                
+
                 <Typography variant="subtitle1" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 2, fontSize: { xs: '16px', md: '18px' } }}>
                   Company Details
                 </Typography>
-                
+
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
                     <StyledTextField
@@ -1290,6 +1221,75 @@ const ProfilePage = () => {
                 </Grid>
               </>
             )}
+            {activeSection === 'personal' && (
+              <>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ color: 'rgba(17, 17, 17, 0.92)', fontWeight: 500, mb: 1, fontSize: { xs: '18px', md: '20px' } }}>
+                    Personal Information
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.6)', fontSize: { xs: '14px', md: '15px' }, lineHeight: 1.6 }}>
+                    Update your personal details and contact information.
+                  </Typography>
+                </Box>
+
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <StyledTextField
+                      label="First Name"
+                      value={profileData.personal.firstName}
+                      onChange={(e) => handleProfileChange('personal', 'firstName', e.target.value)}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <StyledTextField
+                      label="Last Name"
+                      value={profileData.personal.lastName}
+                      onChange={(e) => handleProfileChange('personal', 'lastName', e.target.value)}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <StyledTextField
+                      label="Email"
+                      value={profileData.personal.email}
+                      onChange={(e) => handleProfileChange('personal', 'email', e.target.value)}
+                      fullWidth
+                      error={!!errors.email}
+                      helperText={errors.email}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <StyledTextField
+                      label="Phone Number"
+                      value={profileData.personal.phone}
+                      onChange={(e) => handleProfileChange('personal', 'phone', e.target.value)}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <StyledTextField
+                      label="Job Title"
+                      value={profileData.personal.jobTitle}
+                      onChange={(e) => handleProfileChange('personal', 'jobTitle', e.target.value)}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                    <PrimaryButton
+                      variant="contained"
+                      onClick={handleSaveProfile}
+                      disabled={saving}
+                      fullWidth={window.innerWidth < 600}
+                    >
+                      {saving ? <> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving changes</Typography></> : 'Save Changes'}
+                    </PrimaryButton>
+                  </Grid>
+                </Grid>
+              </>
+            )}
+
+
 
             {activeSection === 'password' && (
               <>
@@ -1301,7 +1301,7 @@ const ProfilePage = () => {
                     Update your password to keep your account secure.
                   </Typography>
                 </Box>
-                
+
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
                     <StyledTextField
@@ -1340,7 +1340,7 @@ const ProfilePage = () => {
                       disabled={saving}
                     >
                       {saving ? <> <Typography variant="body2" sx={{ fontSize: '16px', fontWeight: 600, color: 'secondary.light' }}>Saving</Typography>
-                      <CircularProgress size={24} color="inherit" /></> : 'Change Password'}
+                        <CircularProgress size={24} color="inherit" /></> : 'Change Password'}
                     </PrimaryButton>
                   </Grid>
                 </Grid>
@@ -1361,10 +1361,10 @@ const ProfilePage = () => {
                 <Grid container spacing={3}>
                   {/* Calendly Integration */}
                   <Grid item xs={12}>
-                    <Paper 
-                      elevation={0} 
-                      sx={{ 
-                        p: 3, 
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        p: 3,
                         border: '1px solid',
                         borderColor: 'divider',
                         borderRadius: '8px',
@@ -1402,11 +1402,11 @@ const ProfilePage = () => {
                             </Typography>
                             <Typography component="li" variant="body2" sx={{ color: 'text.grey.100', mb: 1 }}>
                               Create an OAuth application and whitelist this domain:
-                              <Box component="code" sx={{ 
-                                display: 'block', 
-                                mt: 1, 
-                                p: 1, 
-                                bgcolor: 'rgba(0, 0, 0, 0.04)', 
+                              <Box component="code" sx={{
+                                display: 'block',
+                                mt: 1,
+                                p: 1,
+                                bgcolor: 'rgba(0, 0, 0, 0.04)',
                                 borderRadius: '4px',
                                 fontFamily: 'monospace'
                               }}>
@@ -1439,10 +1439,10 @@ const ProfilePage = () => {
                   </Typography>
                 </Box>
 
-                <Paper 
-                  elevation={0} 
-                  sx={{ 
-                    p: 3, 
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 3,
                     border: '1px solid',
                     borderColor: 'divider',
                     borderRadius: '8px',
@@ -1471,10 +1471,10 @@ const ProfilePage = () => {
                       </Box>
                     ) : calendlyEvents.length > 0 ? (
                       calendlyEvents.map((event) => (
-                        <Paper 
+                        <Paper
                           key={event.uri}
                           elevation={0}
-                          sx={{ 
+                          sx={{
                             p: 2,
                             border: '1px solid',
                             borderColor: 'divider',
@@ -1494,11 +1494,11 @@ const ProfilePage = () => {
                                 Guest: {event.invitees_counter.active}
                               </Typography>
                             </Box>
-                            <Chip 
-                              label="Upcoming" 
-                              color="success" 
+                            <Chip
+                              label="Upcoming"
+                              color="success"
                               size="small"
-                              sx={{ 
+                              sx={{
                                 bgcolor: 'success.light',
                                 color: 'success.dark',
                                 fontWeight: 500
@@ -1514,8 +1514,8 @@ const ProfilePage = () => {
                         </Paper>
                       ))
                     ) : (
-                      <Box sx={{ 
-                        p: 4, 
+                      <Box sx={{
+                        p: 4,
                         textAlign: 'center',
                         border: '1px dashed',
                         borderColor: 'divider',

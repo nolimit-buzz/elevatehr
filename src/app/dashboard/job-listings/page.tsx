@@ -884,9 +884,9 @@ const JobPostings = () => {
         <StyledTableCell>
           <Stack>
             <Stack direction="row" alignItems="center" gap={1}>
-              <StyledTypography textTransform={"capitalize"}>
-                {job.title}
-              </StyledTypography>
+            <StyledTypography textTransform={"capitalize"}>
+              {job.title}
+            </StyledTypography>
               <Tooltip 
                 title="Click to copy application page link" 
                 arrow

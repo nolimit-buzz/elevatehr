@@ -12,14 +12,30 @@ interface RegisterProps {
   subtext?: ReactNode;
 }
 
+interface FormData {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+  job_title: string;
+  companyName: string;
+  numberOfEmployees: string;
+  phone_number: string;
+}
+
 const Register: React.FC<RegisterProps> = ({ title, subtitle, subtext }) => {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    companyName: "",
-    numberOfEmployees: "",
+  const [formData, setFormData] = useState<FormData>({
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    confirm_password: '',
+    job_title: '',
+    companyName: '',
+    numberOfEmployees: '',
+    phone_number: '',
   });
   const [errors, setErrors] = useState({
     name: "",
@@ -27,6 +43,8 @@ const Register: React.FC<RegisterProps> = ({ title, subtitle, subtext }) => {
     password: "",
     companyName: "",
     numberOfEmployees: "",
+    job_title: "",
+    phone_number: "",
   });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -47,11 +65,18 @@ const Register: React.FC<RegisterProps> = ({ title, subtitle, subtext }) => {
       password: "",
       companyName: "",
       numberOfEmployees: "",
+      job_title: "",
+      phone_number: "",
     };
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!formData.name) {
-      newErrors.name = "Name is required";
+    if (!formData.first_name) {
+      newErrors.name = "First name is required";
+      valid = false;
+    }
+
+    if (!formData.last_name) {
+      newErrors.name = "Last name is required";
       valid = false;
     }
 
@@ -81,6 +106,16 @@ const Register: React.FC<RegisterProps> = ({ title, subtitle, subtext }) => {
       valid = false;
     }
 
+    if (!formData.job_title) {
+      newErrors.job_title = "Job title is required";
+      valid = false;
+    }
+
+    if (!formData.phone_number) {
+      newErrors.phone_number = "Phone number is required";
+      valid = false;
+    }
+
     setErrors(newErrors);
     return valid;
   };
@@ -95,17 +130,19 @@ const Register: React.FC<RegisterProps> = ({ title, subtitle, subtext }) => {
     setLoading(true);
     try {
       // Split the name into first and last name
-      const nameParts = formData.name.trim().split(' ');
-      const firstName = nameParts[0];
-      const lastName = nameParts.slice(1).join(' ');
+      // const nameParts = formData.first_name.trim().split(' ');
+      // const firstName = nameParts[0];
+      // const lastName = nameParts.slice(1).join(' ');
 
       const response = await axios.post("https://app.elevatehr.ai/wp-json/elevatehr/v1/register", {
-        first_name: firstName,
-        last_name: lastName,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
         email: formData.email,
         password: formData.password,
         company_name: formData.companyName,
         number_of_employees: formData.numberOfEmployees,
+        job_title: formData.job_title,
+        phone_number: formData.phone_number,
         booking_link: "https://app.elevatehr.ai/booking",
       });
 
@@ -134,10 +171,19 @@ const Register: React.FC<RegisterProps> = ({ title, subtitle, subtext }) => {
 
       <Stack spacing={'12px'}>
         <CustomTextField
-          label="Your Name"
-          name="name"
-          placeholder="Enter your name"
-          value={formData.name}
+          label="First Name"
+          name="first_name"
+          placeholder="Enter your first name"
+          value={formData.first_name}
+          onChange={handleTextChange}
+          error={!!errors.name}
+          helperText={errors.name}
+        />
+        <CustomTextField
+          label="Last Name"
+          name="last_name"
+          placeholder="Enter your last name"
+          value={formData.last_name}
           onChange={handleTextChange}
           error={!!errors.name}
           helperText={errors.name}
@@ -180,6 +226,24 @@ const Register: React.FC<RegisterProps> = ({ title, subtitle, subtext }) => {
           error={!!errors.numberOfEmployees}
           helperText={errors.numberOfEmployees}
         />
+        <CustomTextField
+          label="Job Title"
+          name="job_title"
+          placeholder="Enter your job title"
+          value={formData.job_title}
+          onChange={handleTextChange}
+          error={!!errors.job_title}
+          helperText={errors.job_title}
+        />
+        <CustomTextField
+          label="Phone Number"
+          name="phone_number"
+          placeholder="Enter your phone number"
+          value={formData.phone_number}
+          onChange={handleTextChange}
+          error={!!errors.phone_number}
+          helperText={errors.phone_number}
+        />
 
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
@@ -196,7 +260,7 @@ const Register: React.FC<RegisterProps> = ({ title, subtitle, subtext }) => {
 
         <Typography sx={{ color: "rgba(17, 17, 17, 0.68)", textAlign: "center", fontSize: "18px", fontWeight: 400, lineHeight: "120%", mt: 2 }}>
           Already have an account?{" "}
-          <Typography component={Link} href="/authentication/login" sx={{ color: "primary.main", fontSize: "18px", fontWeight: 600, textDecoration: "underline" }}>
+          <Typography component={Link} href="/" sx={{ color: "primary.main", fontSize: "18px", fontWeight: 600, textDecoration: "underline" }}>
             Sign in
           </Typography>
         </Typography>

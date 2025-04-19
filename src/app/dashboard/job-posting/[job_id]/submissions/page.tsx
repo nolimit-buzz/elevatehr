@@ -114,6 +114,14 @@ interface Candidate {
   attachments?: {
     cv?: string;
   };
+  cv_analysis?: {
+    experience_years: number;
+    education_level: string;
+    match_score: number;
+    skills_match: string[];
+    missing_skills: string[];
+    recommendations: string;
+  };
 }
 
 interface CandidateResponse {
@@ -298,7 +306,7 @@ export default function Home() {
         const token = localStorage.getItem("jwt");
         const jobId = getJobId();
         const response = await fetch(
-          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}`,
+          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}?sort_by=match_score&sort_order=desc`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -332,43 +340,43 @@ export default function Home() {
 
     fetchJobDetails();
   }, [getJobId]);
-
-  useEffect(() => {
-    const fetchCandidates = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const token = localStorage.getItem("jwt");
-        const jobId = getJobId();
-        const stage = subTabValue === 0 ? "new" : getStageValue(subTabValue);
-        const response = await fetch(
-          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications?stage=${stage}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            cache: 'no-store'
+  const fetchCandidates = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem("jwt");
+      const jobId = getJobId();
+      const stage = subTabValue === 0 ? "new" : getStageValue(subTabValue);
+      const response = await fetch(
+        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications?stage=${stage}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
-        );
+          cache: 'no-store'
+        },
+      );
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch candidates: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setCandidates(data);
-        setFilteredCandidates(data);
-        setLoading(false);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('Failed to fetch candidates');
-        }
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch candidates: ${response.status}`);
       }
-    };
+
+      const data = await response.json();
+      setCandidates(data);
+      setFilteredCandidates(data);
+      setLoading(false);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Failed to fetch candidates');
+      }
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+   
 
     if (primaryTabValue === 0) {
       fetchCandidates();
@@ -424,9 +432,12 @@ export default function Home() {
       const queryParams = new URLSearchParams();
       if (filters.yearsOfExperience) {
         const [minYears, maxYears] = filters.yearsOfExperience.split("-").map(num => parseInt(num));
-        queryParams.append("min_experience", minYears.toString());
-        if (maxYears) {
-          queryParams.append("max_experience", maxYears.toString());
+        if(minYears && !maxYears){
+          queryParams.append("min_experience", minYears.toString());
+        }
+        if(minYears && maxYears){ queryParams.append("experience_range", minYears.toString() + "-" + maxYears.toString());
+
+         
         }
       }
       if (filters.salaryMin) queryParams.append("min_salary", filters.salaryMin);
@@ -477,7 +488,7 @@ export default function Home() {
       availability: "",
       trial: "",
     });
-    setFilteredCandidates({ applications: [] });
+    fetchCandidates();
   };
 
   const handlePrimaryTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -1124,7 +1135,7 @@ export default function Home() {
 
       const jobId = getJobId();
       const newStatus = jobDetails?.status === 'close' ? 'active' : 'close';
-
+      
       const response = await fetch(
         `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}`,
         {
@@ -1270,7 +1281,7 @@ export default function Home() {
               variant="h5"
               sx={{
                 fontSize: { xs: '18px', sm: '24px' },
-                fontWeight: 600,
+              fontWeight: 600,
                 color: 'rgba(17, 17, 17, 0.84)',
                 // mb: 1
               }}
@@ -1289,7 +1300,7 @@ export default function Home() {
             }}
           >
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-              {jobDetails?.status === 'close' ? 'Reopen Job Posting' : 'Close Responses for this Job'}
+            {jobDetails?.status === 'close' ? 'Reopen Job Posting' : 'Close Responses for this Job'}
             </Box>
             <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
               {jobDetails?.status === 'close' ? 'Reopen' : 'Close Responses'}
@@ -1655,172 +1666,172 @@ export default function Home() {
               >
                 {/* Tabs for large screens */}
                 <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
-                  <Tabs
-                    value={subTabValue}
+                <Tabs
+                  value={subTabValue}
                     onChange={(_event: React.SyntheticEvent, newValue: number) => {
                       handleSubTabChange(_event, newValue);
                     }}
-                    indicatorColor="secondary"
-                    variant="scrollable"
-                    scrollButtons="auto"
-                    aria-label="submission tabs"
+                  indicatorColor="secondary"
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  aria-label="submission tabs"
+                  sx={{ 
+                    width: "100%", 
+                    alignItems: "center",
+                    '& .MuiTab-root': {
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        color: theme.palette.secondary.main,
+                      }
+                    }
+                  }}
+                >
+                  <Tab
+                    label={
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <span>Application Review</span>
+                        <Chip
+                          label={stageTotals.new}
+                          size="small"
+                          sx={{
+                            bgcolor: theme.palette.secondary.main,
+                            color: 'white',
+                            height: '20px',
+                            '& .MuiChip-label': {
+                              px: 1,
+                              fontSize: '12px',
+                              fontWeight: 500
+                            }
+                          }}
+                        />
+                      </Box>
+                    }
                     sx={{
-                      width: "100%",
-                      alignItems: "center",
-                      '& .MuiTab-root': {
-                        transition: 'all 0.2s ease-in-out',
-                        '&:hover': {
-                          color: theme.palette.secondary.main,
-                        }
-                      }
+                      textTransform: "none",
+                      color:
+                        subTabValue === 0
+                          ? theme.palette.grey[100]
+                          : theme.palette.grey[200],
+                      flex: 1,
                     }}
-                  >
-                    <Tab
-                      label={
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <span>Application Review</span>
-                          <Chip
-                            label={stageTotals.new}
-                            size="small"
-                            sx={{
-                              bgcolor: theme.palette.secondary.main,
-                              color: 'white',
-                              height: '20px',
-                              '& .MuiChip-label': {
-                                px: 1,
-                                fontSize: '12px',
-                                fontWeight: 500
-                              }
-                            }}
-                          />
-                        </Box>
-                      }
-                      sx={{
-                        textTransform: "none",
-                        color:
-                          subTabValue === 0
-                            ? theme.palette.grey[100]
-                            : theme.palette.grey[200],
-                        flex: 1,
-                      }}
-                    />
-                    <Tab
-                      label={
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <span>Skill assessment</span>
-                          <Chip
-                            label={stageTotals.skill_assessment}
-                            size="small"
-                            sx={{
-                              bgcolor: theme.palette.secondary.main,
-                              color: 'white',
-                              height: '20px',
-                              '& .MuiChip-label': {
-                                px: 1,
-                                fontSize: '12px',
-                                fontWeight: 500
-                              }
-                            }}
-                          />
-                        </Box>
-                      }
-                      sx={{
-                        textTransform: "none",
-                        color:
-                          subTabValue === 1
-                            ? theme.palette.grey[100]
-                            : theme.palette.grey[200],
-                        flex: 1,
-                      }}
-                    />
-                    <Tab
-                      label={
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <span>Interviews</span>
-                          <Chip
-                            label={stageTotals.interviews}
-                            size="small"
-                            sx={{
-                              bgcolor: theme.palette.secondary.main,
-                              color: 'white',
-                              height: '20px',
-                              '& .MuiChip-label': {
-                                px: 1,
-                                fontSize: '12px',
-                                fontWeight: 500
-                              }
-                            }}
-                          />
-                        </Box>
-                      }
-                      sx={{
-                        textTransform: "none",
-                        color:
-                          subTabValue === 2
-                            ? theme.palette.grey[100]
-                            : theme.palette.grey[200],
-                        flex: 1,
-                      }}
-                    />
-                    <Tab
-                      label={
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <span>Acceptance</span>
-                          <Chip
-                            label={stageTotals.acceptance}
-                            size="small"
-                            sx={{
-                              bgcolor: theme.palette.secondary.main,
-                              color: 'white',
-                              height: '20px',
-                              '& .MuiChip-label': {
-                                px: 1,
-                                fontSize: '12px',
-                                fontWeight: 500
-                              }
-                            }}
-                          />
-                        </Box>
-                      }
-                      sx={{
-                        textTransform: "none",
-                        color:
-                          subTabValue === 3
-                            ? theme.palette.grey[100]
-                            : theme.palette.grey[200],
-                        flex: 1,
-                      }}
-                    />
-                    <Tab
-                      label={
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <span>Archived</span>
-                          <Chip
-                            label={stageTotals.archived}
-                            size="small"
-                            sx={{
-                              bgcolor: theme.palette.secondary.main,
-                              color: 'white',
-                              height: '20px',
-                              '& .MuiChip-label': {
-                                px: 1,
-                                fontSize: '12px',
-                                fontWeight: 500
-                              }
-                            }}
-                          />
-                        </Box>
-                      }
-                      sx={{
-                        textTransform: "none",
-                        color:
-                          subTabValue === 4
-                            ? theme.palette.grey[100]
-                            : theme.palette.grey[200],
-                        flex: 1,
-                      }}
-                    />
-                  </Tabs>
+                  />
+                  <Tab
+                    label={
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <span>Skill assessment</span>
+                        <Chip
+                          label={stageTotals.skill_assessment}
+                          size="small"
+                          sx={{
+                            bgcolor: theme.palette.secondary.main,
+                            color: 'white',
+                            height: '20px',
+                            '& .MuiChip-label': {
+                              px: 1,
+                              fontSize: '12px',
+                              fontWeight: 500
+                            }
+                          }}
+                        />
+                      </Box>
+                    }
+                    sx={{
+                      textTransform: "none",
+                      color:
+                        subTabValue === 1
+                          ? theme.palette.grey[100]
+                          : theme.palette.grey[200],
+                      flex: 1,
+                    }}
+                  />
+                  <Tab
+                    label={
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <span>Interviews</span>
+                        <Chip
+                          label={stageTotals.interviews}
+                          size="small"
+                          sx={{
+                            bgcolor: theme.palette.secondary.main,
+                            color: 'white',
+                            height: '20px',
+                            '& .MuiChip-label': {
+                              px: 1,
+                              fontSize: '12px',
+                              fontWeight: 500
+                            }
+                          }}
+                        />
+                      </Box>
+                    }
+                    sx={{
+                      textTransform: "none",
+                      color:
+                        subTabValue === 2
+                          ? theme.palette.grey[100]
+                          : theme.palette.grey[200],
+                      flex: 1,
+                    }}
+                  />
+                  <Tab
+                    label={
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <span>Acceptance</span>
+                        <Chip
+                          label={stageTotals.acceptance}
+                          size="small"
+                          sx={{
+                            bgcolor: theme.palette.secondary.main,
+                            color: 'white',
+                            height: '20px',
+                            '& .MuiChip-label': {
+                              px: 1,
+                              fontSize: '12px',
+                              fontWeight: 500
+                            }
+                          }}
+                        />
+                      </Box>
+                    }
+                    sx={{
+                      textTransform: "none",
+                      color:
+                        subTabValue === 3
+                          ? theme.palette.grey[100]
+                          : theme.palette.grey[200],
+                      flex: 1,
+                    }}
+                  />
+                  <Tab
+                    label={
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <span>Archived</span>
+                        <Chip
+                          label={stageTotals.archived}
+                          size="small"
+                          sx={{
+                            bgcolor: theme.palette.secondary.main,
+                            color: 'white',
+                            height: '20px',
+                            '& .MuiChip-label': {
+                              px: 1,
+                              fontSize: '12px',
+                              fontWeight: 500
+                            }
+                          }}
+                        />
+                      </Box>
+                    }
+                    sx={{
+                      textTransform: "none",
+                      color:
+                        subTabValue === 4
+                          ? theme.palette.grey[100]
+                          : theme.palette.grey[200],
+                      flex: 1,
+                    }}
+                  />
+                </Tabs>
                 </Box>
 
                 {/* Dropdown for small screens */}
@@ -2496,40 +2507,41 @@ export default function Home() {
                           textAlign: 'center'
                         }}
                       >
-                        {subTabValue === 0 ? 'No applications to review' :
-                          subTabValue === 1 ? 'No candidates in skill assessment' :
-                            subTabValue === 2 ? 'No interviews scheduled' :
-                              subTabValue === 3 ? 'No accepted candidates' :
-                                'No archived candidates'}
+                        {subTabValue === 0 ? 'No applications to review' : 
+                         subTabValue === 1 ? 'No candidates in skill assessment' : 
+                         subTabValue === 2 ? 'No interviews scheduled' : 
+                         subTabValue === 3 ? 'No accepted candidates' : 
+                         'No archived candidates'}
                       </Typography>
                     </Box>
                   ) : (
                     <>
                       {/* Desktop View */}
                       <Box sx={{ pt: 0, pb: 2, display: { xs: 'none', lg: 'block' } }}>
-                        {filteredCandidates?.applications?.map((candidate) => (
-                          <Box
-                            key={candidate.id}
-                            sx={{
-                              borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-                              "&:last-child": {
-                                borderBottom: "none",
-                              },
-                              p: 2,
-                            }}
-                          >
-                            <CandidateListSection
-                              candidate={candidate}
-                              isSelected={selectedEntries?.includes(candidate.id)}
-                              onSelectCandidate={handleSelectCandidate}
-                              onUpdateStages={(stage: string, entries: number[]) => handleUpdateStages({ stage: stage as StageType, entries })}
-                              disableSelection={subTabValue === 3 || filteredCandidates?.applications?.length === 1}
-                              currentStage={getStageValue(subTabValue)}
-                              selectedEntries={selectedEntries}
-                              onNotification={handleNotification}
-                            />
-                          </Box>
-                        ))}
+                      {filteredCandidates?.applications?.map((candidate) => (
+                    <Box
+                      key={candidate.id}
+                      sx={{
+                              backgroundColor: 'white',
+                        borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+                        "&:last-child": {
+                          borderBottom: "none",
+                        },
+                              // p: 2,
+                      }}
+                    >
+                      <CandidateListSection
+                        candidate={candidate}
+                        isSelected={selectedEntries?.includes(candidate.id)}
+                        onSelectCandidate={handleSelectCandidate}
+                        onUpdateStages={(stage: string, entries: number[]) => handleUpdateStages({ stage: stage as StageType, entries })}
+                            disableSelection={subTabValue === 3 || filteredCandidates?.applications?.length === 1}
+                        currentStage={getStageValue(subTabValue)}
+                        selectedEntries={selectedEntries}
+                        onNotification={handleNotification}
+                      />
+                    </Box>
+                  ))}
                       </Box>
 
                       {/* Mobile View */}
@@ -2580,7 +2592,7 @@ export default function Home() {
                                         {candidate.personal_info.firstname} {candidate.personal_info.lastname}
                                       </Typography>
                                     </Box>
-                                  </Box>
+                    </Box>
                                 )}
                                 {(subTabValue === 3 || filteredCandidates?.applications?.length === 1) && (
                                   <Box>
@@ -2633,7 +2645,7 @@ export default function Home() {
                                       fontSize: '14px',
                                     }}
                                   >
-                                    {candidate.professional_info.experience} experience
+                                    {candidate?.cv_analysis?.experience_years} experience
                                   </Typography>
                                 </Box>
 

@@ -4,7 +4,7 @@ import { baselightTheme } from "@/utils/theme/DefaultColors";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import '@fontsource-variable/outfit';
-
+import Header from './dashboard/layout/header/Header';
 export default function RootLayout({
   children,
 }: {

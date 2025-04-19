@@ -1565,6 +1565,17 @@ export default function Home() {
                     overflow: 'auto'
                   }}>
                 {filteredCandidates?.applications?.map((candidate) => (
+                                      <Box
+                                      key={candidate.id}
+                                      sx={{
+                                              backgroundColor: 'white',
+                                        borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+                                        "&:last-child": {
+                                          borderBottom: "none",
+                                        },
+                                              // p: 2,
+                                      }}
+                                    >
                   <CandidateListSection
                     key={candidate.id}
                     candidate={candidate}
@@ -1579,6 +1590,7 @@ export default function Home() {
                       setIsOpen(true);
                     }}
                   />
+                  </Box>
                 ))}
                   </Box>
                 </Paper>

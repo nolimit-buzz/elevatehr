@@ -33,7 +33,7 @@ const Login = () => {
         direction="row" 
         sx={{ 
           width: '100%',
-          height: '100vh',
+          minHeight: '100vh',
           backgroundColor: 'white'
         }}
       >
@@ -118,7 +118,7 @@ const Login = () => {
         </Box>
 
         {/* Right Section */}
-        <Stack justifyContent="center" sx={{ flex: 1, height: "100vh", backgroundColor: "white" }}>
+        <Stack justifyContent="center" sx={{ flex: 1, minHeight: "100vh", height:"auto", backgroundColor: "white" }}>
           <Box sx={{ p: 4, width: "100%", maxWidth: 600, margin: "0 auto" }}>
             {/* <Stack>
               <Typography variant="h1" align="center" color="grey.100">Login to your Account</Typography>

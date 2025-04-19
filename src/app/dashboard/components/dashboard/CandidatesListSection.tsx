@@ -83,7 +83,7 @@ export default function CandidateListSection({
       <path d="M2.18333 9.3916C4.05833 10.6749 6.175 11.4499 8.33333 11.6916" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       ,
-      text: candidate?.professional_info?.experience + " experience",
+      text: candidate?.cv_analysis?.experience_years? candidate?.cv_analysis?.experience_years + " experience" : "Not available",
     },
     // {
     //   icon: <MoneyIcon fontSize="small" />,
@@ -160,6 +160,14 @@ export default function CandidateListSection({
     router.push(`/dashboard/job-posting/${jobId}/submissions/${candidate.id}`);
   };
 
+  const getMatchScoreColor = (score: number) => {
+    if (score >= 90) return '#4CAF50'; // Excellent - Green
+    if (score >= 75) return '#1CC47E'; // Good - Light Green
+    if (score >= 60) return '#FFA000'; // Fair - Orange
+    if (score >= 40) return '#FF6B6B'; // Poor - Light Red
+    return '#F44336'; // Very Poor - Dark Red
+  };
+
   return (
     <Paper
       elevation={0}
@@ -167,7 +175,7 @@ export default function CandidateListSection({
         display: "flex",
         alignItems: "flex-start",
         p: 2,
-        borderBottom: "0.8px solid rgba(17, 17, 17, 0.08)",
+        // borderBottom: "0.8px solid rgba(17, 17, 17, 0.08)",
         "&:hover": {
           backgroundColor: theme.palette.secondary.light,
           "& .quick-actions-button": {
@@ -224,7 +232,7 @@ export default function CandidateListSection({
         {/* Update Checkbox */}
 
         {/* Candidate name */}
-        <Box sx={{ ml: "12px" }}>
+        <Box sx={{ ml: "12px", display: 'flex', alignItems: 'center', gap: 1 , mb: 1}}>
           <Typography
             variant="h6"
             sx={{
@@ -236,29 +244,26 @@ export default function CandidateListSection({
               fontWeight: 600,
               lineHeight: '100%',
               letterSpacing: '0.27px',
+              textTransform: 'capitalize',
             }}
           >
             {candidate?.personal_info.firstname}{" "}
             {candidate?.personal_info.lastname}
-          </Typography>
-          <Box sx={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            backgroundColor: 'rgba(17, 17, 17, 0.05)',
-            borderRadius: '6px',
-            px: 1.5,
-            py: 0.5,
-            mt: 1,
-            width: 'fit-content'
-          }}>
-            <Typography variant="body2" sx={{ 
-              color: 'rgba(17, 17, 17, 0.48)', 
-              fontSize: '14px',
-              fontWeight: 500
-            }}>
-              {candidate.job_title}
-            </Typography>
-          </Box>
+          </Typography> 
+          <Chip 
+            size="small" 
+            label={candidate?.cv_analysis?  `${candidate.cv_analysis.match_score}%` : 'Not available'} 
+            sx={{
+              backgroundColor: candidate?.cv_analysis
+                ? getMatchScoreColor(candidate.cv_analysis.match_score)
+                : '#9E9E9E',
+              color: 'white',
+              fontWeight: 600,
+              '& .MuiChip-label': {
+                px: 1,
+              }
+            }}
+          />
         </Box>
 
         {/* Candidate info row */}

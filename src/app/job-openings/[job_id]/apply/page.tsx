@@ -28,7 +28,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { Form, FormField } from "@/app/dashboard/components/ui/form";
 import { formSchema, type Inputs } from "@/app/lib/schema";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent, MouseEvent } from "react";
 import { FORM_SUBMIT_URL } from "@/app/lib/constants";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
@@ -230,57 +230,56 @@ export default function Typeform({
     }
   };
 
-  async function submitForm(e: React.FormEvent<HTMLFormElement>) {
+  const submitForm = async (e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    if (currentStep === allFields.length - 1) {
-      try {
-        const formData = new FormData();
-        
-        // Add all form values
-        Object.entries(form.getValues()).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            formData.append(key, value);
-          }
-        });
+    setErrorMessage("");
 
-        // Add files
-        Object.entries(fileInputs).forEach(([key, file]) => {
-          if (file) {
-            formData.append(key, file);
-          }
-        });
-
-        const response = await fetch(
-          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${params.job_id}/applications`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          toast.error(errorData.message || "Error submitting the form. Please try again.");
-          throw new Error("Network response was not ok");
+    try {
+      const formData = new FormData();
+      
+      // Add all form values
+      Object.entries(form.getValues()).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value);
         }
+      });
 
-        const data = await response.json();
-        console.log("Application submitted successfully:", data);
-        toast.success("Application submitted successfully");
-        setIsSubmitted(true);
-        setIsSubmitting(false);
-        handleSuccess();
-      } catch (error) {
-        console.error("Error submitting application:", error);
-        toast.error("Error submitting the application. Please try again later.");
-        setIsSubmitting(false);
-        handleError("Error submitting the application. Please try again later.");
+      // Add files
+      Object.entries(fileInputs).forEach(([key, file]) => {
+        if (file) {
+          formData.append(key, file);
+        }
+      });
+
+      const response = await fetch(
+        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${params.job_id}/applications`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Error submitting the form. Please try again.");
+        throw new Error("Network response was not ok");
       }
-    } else {
-      next();
+
+      const data = await response.json();
+      console.log("Application submitted successfully:", data);
+      toast.success("Application submitted successfully");
+      setIsSubmitted(true);
+      setIsSubmitting(false);
+      handleSuccess();
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      toast.error("Error submitting the application. Please try again later.");
+      setIsSubmitting(false);
+      setErrorMessage(error instanceof Error ? error.message : "An error occurred");
+      handleError(error instanceof Error ? error.message : "An error occurred");
     }
-  }
+  };
 
   const handleSuccess = () => {
     setShowSuccessModal(true);
@@ -667,8 +666,7 @@ export default function Typeform({
                     Next
                   </Button>
                 ) : (
-                  <Button 
-                    component="button"
+                  <Button onClick={submitForm}
                     type="submit"
                     variant="contained"
                     disabled={isSubmitting}

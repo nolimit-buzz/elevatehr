@@ -134,7 +134,7 @@ const JobDetailsPage = () => {
         const response = await axios.get(
           `https://app.elevatehr.ai/wp-json/elevatehr/v1/active-jobs/${job_id}`,
           {
-            headers: {
+          headers: {
               "Content-Type": "application/json",
             },
           }
