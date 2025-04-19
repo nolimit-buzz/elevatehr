@@ -227,7 +227,7 @@ export default function ApplicantDetails() {
         if (typeof params.job_id !== "string") {
           throw new Error("Invalid job ID");
         }
-
+        console.log("params.job_id", params.job_id);
         const response = await fetch(
           `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${params.job_id}/applications`,
           {
@@ -238,6 +238,7 @@ export default function ApplicantDetails() {
             cache: "no-store",
           }
         );
+        console.log("response", response);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch applicants: ${response.statusText}`);
@@ -260,7 +261,7 @@ export default function ApplicantDetails() {
         setLoading(false);
       }
     };
-
+    console.log("params.job_id", params);
     if (params.job_id) {
       fetchApplicants();
     }
@@ -409,7 +410,7 @@ export default function ApplicantDetails() {
         {/* Sidebar */}
         <Box
           sx={{
-            width: 420,
+            minWidth: "30%",
             position: "sticky",
             top: "32px",
             height: "fit-content",
@@ -568,7 +569,7 @@ export default function ApplicantDetails() {
         </Box>
 
         {/* Main Content - Applicant Details */}
-        <Paper elevation={0} sx={{ flex: 1, p: 4, borderRadius: 2 }}>
+        <Paper elevation={0} sx={{ flex: 1, p: 4, borderRadius: 2, width: "70%" }}>
           <Paper elevation={0} sx={{ p: 2, borderRadius: 2 }}>
             {detailsLoading ? (
               <Box>
@@ -842,7 +843,7 @@ export default function ApplicantDetails() {
                   </Stack>
 
                   {/* Skills */}
-                  <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+                  <Stack direction="row" spacing={1} sx={{ mb: 1 , flexWrap: "wrap", gap: 1}}>
                     {applicant?.professional_info?.skills
                       ?.split(",")
                       .map((skill: string, index: number) => {

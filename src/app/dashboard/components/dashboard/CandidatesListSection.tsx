@@ -155,9 +155,9 @@ export default function CandidateListSection({
     // Get the job_id from the URL
     const pathParts = window.location.pathname.split('/');
     const jobId = pathParts[pathParts.length - 2];
-    
+    console.log("jobId", jobId);
     // Navigate to the applicant details page
-    router.push(`/dashboard/job-posting/${jobId}/submissions/${candidate.id}`);
+    // router.push(`/dashboard/job-posting/${jobId}/submissions/${candidate.id}`);
   };
 
   const getMatchScoreColor = (score: number) => {
@@ -376,7 +376,8 @@ export default function CandidateListSection({
           <MenuItem
             onClick={(e) => {
               e.stopPropagation();
-              handleCardClick(e as any);
+              // handleCardClick(e as any);
+              router.push(`/dashboard/job-posting/${candidate?.job_id}/submissions/${candidate.id}`);
               handleClose();
             }}
             disabled={loadingStage !== null}
