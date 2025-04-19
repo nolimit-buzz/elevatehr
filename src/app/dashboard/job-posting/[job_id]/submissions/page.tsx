@@ -114,14 +114,6 @@ interface Candidate {
   attachments?: {
     cv?: string;
   };
-  cv_analysis?: {
-    experience_years: number;
-    education_level: string;
-    match_score: number;
-    skills_match: string[];
-    missing_skills: string[];
-    recommendations: string;
-  };
 }
 
 interface CandidateResponse {
