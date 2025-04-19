@@ -37,6 +37,7 @@ import {
   TableContainer,
   Snackbar,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import DashboardCard from "@/app/dashboard/components/shared/DashboardCard";
 import zIndex from "@mui/material/styles/zIndex";
@@ -77,27 +78,27 @@ import CheckIcon from '@mui/icons-material/Check';
 
 const WorkTypeIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M16 22.75H7.99998C3.37998 22.75 2.51998 20.6 2.29998 18.51L1.54998 10.5C1.43998 9.45001 1.40998 7.90001 2.44998 6.74001C3.34998 5.74001 4.83998 5.26001 6.99998 5.26001H17C19.17 5.26001 20.66 5.75001 21.55 6.74001C22.59 7.90001 22.56 9.45001 22.45 10.51L21.7 18.5C21.48 20.6 20.62 22.75 16 22.75ZM6.99998 6.75001C5.30998 6.75001 4.14998 7.08001 3.55998 7.74001C3.06998 8.28001 2.90998 9.11001 3.03998 10.35L3.78998 18.36C3.95998 19.94 4.38998 21.25 7.99998 21.25H16C19.6 21.25 20.04 19.94 20.21 18.35L20.96 10.36C21.09 9.11001 20.93 8.28001 20.44 7.74001C19.85 7.08001 18.69 6.75001 17 6.75001H6.99998Z" fill="currentColor"/>
-    <path d="M16 6.75C15.59 6.75 15.25 6.41 15.25 6V5.2C15.25 3.42 15.25 2.75 12.8 2.75H11.2C8.75 2.75 8.75 3.42 8.75 5.2V6C8.75 6.41 8.41 6.75 8 6.75C7.59 6.75 7.25 6.41 7.25 6V5.2C7.25 3.44 7.25 1.25 11.2 1.25H12.8C16.75 1.25 16.75 3.44 16.75 5.2V6C16.75 6.41 16.41 6.75 16 6.75Z" fill="currentColor"/>
-    <path d="M12 16.75C9.25 16.75 9.25 15.05 9.25 14.03V13C9.25 11.59 9.59 11.25 11 11.25H13C14.41 11.25 14.75 11.59 14.75 13V14C14.75 15.04 14.75 16.75 12 16.75ZM10.75 12.75C10.75 12.83 10.75 12.92 10.75 13V14.03C10.75 15.06 10.75 15.25 12 15.25C13.25 15.25 13.25 15.09 13.25 14.02V13C13.25 12.92 13.25 12.83 13.25 12.75C13.17 12.75 13.08 12.75 13 12.75H11C10.92 12.75 10.83 12.75 10.75 12.75Z" fill="currentColor"/>
-    <path d="M14 14.77C13.63 14.77 13.3 14.49 13.26 14.11C13.21 13.7 13.5 13.32 13.91 13.27C16.55 12.94 19.08 11.94 21.21 10.39C21.54 10.14 22.01 10.22 22.26 10.56C22.5 10.89 22.43 11.36 22.09 11.61C19.75 13.31 16.99 14.4 14.09 14.77C14.06 14.77 14.03 14.77 14 14.77Z" fill="currentColor"/>
-    <path d="M9.99999 14.7799C9.96999 14.7799 9.93999 14.7799 9.90999 14.7799C7.16999 14.4699 4.49999 13.4699 2.18999 11.8899C1.84999 11.6599 1.75999 11.1899 1.98999 10.8499C2.21999 10.5099 2.68999 10.4199 3.02999 10.6499C5.13999 12.0899 7.56999 12.9999 10.07 13.2899C10.48 13.3399 10.78 13.7099 10.73 14.1199C10.7 14.4999 10.38 14.7799 9.99999 14.7799Z" fill="currentColor"/>
+    <path d="M16 22.75H7.99998C3.37998 22.75 2.51998 20.6 2.29998 18.51L1.54998 10.5C1.43998 9.45001 1.40998 7.90001 2.44998 6.74001C3.34998 5.74001 4.83998 5.26001 6.99998 5.26001H17C19.17 5.26001 20.66 5.75001 21.55 6.74001C22.59 7.90001 22.56 9.45001 22.45 10.51L21.7 18.5C21.48 20.6 20.62 22.75 16 22.75ZM6.99998 6.75001C5.30998 6.75001 4.14998 7.08001 3.55998 7.74001C3.06998 8.28001 2.90998 9.11001 3.03998 10.35L3.78998 18.36C3.95998 19.94 4.38998 21.25 7.99998 21.25H16C19.6 21.25 20.04 19.94 20.21 18.35L20.96 10.36C21.09 9.11001 20.93 8.28001 20.44 7.74001C19.85 7.08001 18.69 6.75001 17 6.75001H6.99998Z" fill="currentColor" />
+    <path d="M16 6.75C15.59 6.75 15.25 6.41 15.25 6V5.2C15.25 3.42 15.25 2.75 12.8 2.75H11.2C8.75 2.75 8.75 3.42 8.75 5.2V6C8.75 6.41 8.41 6.75 8 6.75C7.59 6.75 7.25 6.41 7.25 6V5.2C7.25 3.44 7.25 1.25 11.2 1.25H12.8C16.75 1.25 16.75 3.44 16.75 5.2V6C16.75 6.41 16.41 6.75 16 6.75Z" fill="currentColor" />
+    <path d="M12 16.75C9.25 16.75 9.25 15.05 9.25 14.03V13C9.25 11.59 9.59 11.25 11 11.25H13C14.41 11.25 14.75 11.59 14.75 13V14C14.75 15.04 14.75 16.75 12 16.75ZM10.75 12.75C10.75 12.83 10.75 12.92 10.75 13V14.03C10.75 15.06 10.75 15.25 12 15.25C13.25 15.25 13.25 15.09 13.25 14.02V13C13.25 12.92 13.25 12.83 13.25 12.75C13.17 12.75 13.08 12.75 13 12.75H11C10.92 12.75 10.83 12.75 10.75 12.75Z" fill="currentColor" />
+    <path d="M14 14.77C13.63 14.77 13.3 14.49 13.26 14.11C13.21 13.7 13.5 13.32 13.91 13.27C16.55 12.94 19.08 11.94 21.21 10.39C21.54 10.14 22.01 10.22 22.26 10.56C22.5 10.89 22.43 11.36 22.09 11.61C19.75 13.31 16.99 14.4 14.09 14.77C14.06 14.77 14.03 14.77 14 14.77Z" fill="currentColor" />
+    <path d="M9.99999 14.7799C9.96999 14.7799 9.93999 14.7799 9.90999 14.7799C7.16999 14.4699 4.49999 13.4699 2.18999 11.8899C1.84999 11.6599 1.75999 11.1899 1.98999 10.8499C2.21999 10.5099 2.68999 10.4199 3.02999 10.6499C5.13999 12.0899 7.56999 12.9999 10.07 13.2899C10.48 13.3399 10.78 13.7099 10.73 14.1199C10.7 14.4999 10.38 14.7799 9.99999 14.7799Z" fill="currentColor" />
   </svg>
 );
 
 const WorkModelIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z" fill="currentColor"/>
-    <path d="M8.99999 21.75H7.99999C7.58999 21.75 7.24999 21.41 7.24999 21C7.24999 20.59 7.56999 20.26 7.97999 20.25C6.40999 14.89 6.40999 9.11 7.97999 3.75C7.56999 3.74 7.24999 3.41 7.24999 3C7.24999 2.59 7.58999 2.25 7.99999 2.25H8.99999C9.23999 2.25 9.46999 2.37 9.60999 2.56C9.74999 2.76 9.78999 3.01 9.70999 3.24C7.82999 8.89 7.82999 15.11 9.70999 20.77C9.78999 21 9.74999 21.25 9.60999 21.45C9.46999 21.63 9.23999 21.75 8.99999 21.75Z" fill="currentColor"/>
-    <path d="M15 21.7501C14.92 21.7501 14.84 21.7401 14.76 21.7101C14.37 21.5801 14.15 21.1501 14.29 20.7601C16.17 15.1101 16.17 8.89006 14.29 3.23006C14.16 2.84006 14.37 2.41006 14.76 2.28006C15.16 2.15006 15.58 2.36006 15.71 2.75006C17.7 8.71006 17.7 15.2701 15.71 21.2201C15.61 21.5501 15.31 21.7501 15 21.7501Z" fill="currentColor"/>
-    <path d="M12 17.2C9.21 17.2 6.43 16.81 3.75 16.02C3.74 16.42 3.41 16.75 3 16.75C2.59 16.75 2.25 16.41 2.25 16V15C2.25 14.76 2.37 14.53 2.56 14.39C2.76 14.25 3.01 14.21 3.24 14.29C8.89 16.17 15.12 16.17 20.77 14.29C21 14.21 21.25 14.25 21.45 14.39C21.65 14.53 21.76 14.76 21.76 15V16C21.76 16.41 21.42 16.75 21.01 16.75C20.6 16.75 20.27 16.43 20.26 16.02C17.57 16.81 14.79 17.2 12 17.2Z" fill="currentColor"/>
-    <path d="M21 9.74999C20.92 9.74999 20.84 9.73999 20.76 9.70999C15.11 7.82999 8.88003 7.82999 3.23003 9.70999C2.83003 9.83999 2.41003 9.62999 2.28003 9.23999C2.16003 8.83999 2.37003 8.41999 2.76003 8.28999C8.72003 6.29999 15.28 6.29999 21.23 8.28999C21.62 8.41999 21.84 8.84999 21.7 9.23999C21.61 9.54999 21.31 9.74999 21 9.74999Z" fill="currentColor"/>
+    <path d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z" fill="currentColor" />
+    <path d="M8.99999 21.75H7.99999C7.58999 21.75 7.24999 21.41 7.24999 21C7.24999 20.59 7.56999 20.26 7.97999 20.25C6.40999 14.89 6.40999 9.11 7.97999 3.75C7.56999 3.74 7.24999 3.41 7.24999 3C7.24999 2.59 7.58999 2.25 7.99999 2.25H8.99999C9.23999 2.25 9.46999 2.37 9.60999 2.56C9.74999 2.76 9.78999 3.01 9.70999 3.24C7.82999 8.89 7.82999 15.11 9.70999 20.77C9.78999 21 9.74999 21.25 9.60999 21.45C9.46999 21.63 9.23999 21.75 8.99999 21.75Z" fill="currentColor" />
+    <path d="M15 21.7501C14.92 21.7501 14.84 21.7401 14.76 21.7101C14.37 21.5801 14.15 21.1501 14.29 20.7601C16.17 15.1101 16.17 8.89006 14.29 3.23006C14.16 2.84006 14.37 2.41006 14.76 2.28006C15.16 2.15006 15.58 2.36006 15.71 2.75006C17.7 8.71006 17.7 15.2701 15.71 21.2201C15.61 21.5501 15.31 21.7501 15 21.7501Z" fill="currentColor" />
+    <path d="M12 17.2C9.21 17.2 6.43 16.81 3.75 16.02C3.74 16.42 3.41 16.75 3 16.75C2.59 16.75 2.25 16.41 2.25 16V15C2.25 14.76 2.37 14.53 2.56 14.39C2.76 14.25 3.01 14.21 3.24 14.29C8.89 16.17 15.12 16.17 20.77 14.29C21 14.21 21.25 14.25 21.45 14.39C21.65 14.53 21.76 14.76 21.76 15V16C21.76 16.41 21.42 16.75 21.01 16.75C20.6 16.75 20.27 16.43 20.26 16.02C17.57 16.81 14.79 17.2 12 17.2Z" fill="currentColor" />
+    <path d="M21 9.74999C20.92 9.74999 20.84 9.73999 20.76 9.70999C15.11 7.82999 8.88003 7.82999 3.23003 9.70999C2.83003 9.83999 2.41003 9.62999 2.28003 9.23999C2.16003 8.83999 2.37003 8.41999 2.76003 8.28999C8.72003 6.29999 15.28 6.29999 21.23 8.28999C21.62 8.41999 21.84 8.84999 21.7 9.23999C21.61 9.54999 21.31 9.74999 21 9.74999Z" fill="currentColor" />
   </svg>
 );
 
 const ChevronDownIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 16.8C11.3 16.8 10.6 16.53 10.07 16L3.55002 9.48C3.26002 9.19 3.26002 8.71 3.55002 8.42C3.84002 8.13 4.32002 8.13 4.61002 8.42L11.13 14.94C11.61 15.42 12.39 15.42 12.87 14.94L19.39 8.42C19.68 8.13 20.16 8.13 20.45 8.42C20.74 8.71 20.74 9.19 20.45 9.48L13.93 16C13.4 16.53 12.7 16.8 12 16.8Z" fill="currentColor"/>
+    <path d="M12 16.8C11.3 16.8 10.6 16.53 10.07 16L3.55002 9.48C3.26002 9.19 3.26002 8.71 3.55002 8.42C3.84002 8.13 4.32002 8.13 4.61002 8.42L11.13 14.94C11.61 15.42 12.39 15.42 12.87 14.94L19.39 8.42C19.68 8.13 20.16 8.13 20.45 8.42C20.74 8.71 20.74 9.19 20.45 9.48L13.93 16C13.4 16.53 12.7 16.8 12 16.8Z" fill="currentColor" />
   </svg>
 );
 
@@ -105,16 +106,16 @@ const ShareLinkIcon = () => {
   const theme = useTheme();
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M11.1 22.75H6.9C2.99 22.75 1.25 21.01 1.25 17.1V12.9C1.25 8.99 2.99 7.25 6.9 7.25H11.1C15.01 7.25 16.75 8.99 16.75 12.9V17.1C16.75 21.01 15.01 22.75 11.1 22.75ZM6.9 8.75C3.8 8.75 2.75 9.8 2.75 12.9V17.1C2.75 20.2 3.8 21.25 6.9 21.25H11.1C14.2 21.25 15.25 20.2 15.25 17.1V12.9C15.25 9.8 14.2 8.75 11.1 8.75H6.9Z" fill={theme.palette.grey[100]}/>
-      <path d="M17.1 16.75H16C15.59 16.75 15.25 16.41 15.25 16V12.9C15.25 9.8 14.2 8.75 11.1 8.75H8C7.59 8.75 7.25 8.41 7.25 8V6.9C7.25 2.99 8.99 1.25 12.9 1.25H17.1C21.01 1.25 22.75 2.99 22.75 6.9V11.1C22.75 15.01 21.01 16.75 17.1 16.75ZM16.75 15.25H17.1C20.2 15.25 21.25 14.2 21.25 11.1V6.9C21.25 3.8 20.2 2.75 17.1 2.75H12.9C9.8 2.75 8.75 3.8 8.75 6.9V7.25H11.1C15.01 7.25 16.75 8.99 16.75 12.9V15.25Z" fill={theme.palette.grey[100]}/>
+      <path d="M11.1 22.75H6.9C2.99 22.75 1.25 21.01 1.25 17.1V12.9C1.25 8.99 2.99 7.25 6.9 7.25H11.1C15.01 7.25 16.75 8.99 16.75 12.9V17.1C16.75 21.01 15.01 22.75 11.1 22.75ZM6.9 8.75C3.8 8.75 2.75 9.8 2.75 12.9V17.1C2.75 20.2 3.8 21.25 6.9 21.25H11.1C14.2 21.25 15.25 20.2 15.25 17.1V12.9C15.25 9.8 14.2 8.75 11.1 8.75H6.9Z" fill={theme.palette.grey[100]} />
+      <path d="M17.1 16.75H16C15.59 16.75 15.25 16.41 15.25 16V12.9C15.25 9.8 14.2 8.75 11.1 8.75H8C7.59 8.75 7.25 8.41 7.25 8V6.9C7.25 2.99 8.99 1.25 12.9 1.25H17.1C21.01 1.25 22.75 2.99 22.75 6.9V11.1C22.75 15.01 21.01 16.75 17.1 16.75ZM16.75 15.25H17.1C20.2 15.25 21.25 14.2 21.25 11.1V6.9C21.25 3.8 20.2 2.75 17.1 2.75H12.9C9.8 2.75 8.75 3.8 8.75 6.9V7.25H11.1C15.01 7.25 16.75 8.99 16.75 12.9V15.25Z" fill={theme.palette.grey[100]} />
     </svg>
   );
 };
 
 const SuccessIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z" fill="#292D32"/>
-    <path d="M10.58 15.58C10.38 15.58 10.19 15.5 10.05 15.36L7.22 12.53C6.93 12.24 6.93 11.76 7.22 11.47C7.51 11.18 7.99 11.18 8.28 11.47L10.58 13.77L15.72 8.63001C16.01 8.34001 16.49 8.34001 16.78 8.63001C17.07 8.92001 17.07 9.40001 16.78 9.69001L11.11 15.36C10.97 15.5 10.78 15.58 10.58 15.58Z" fill="#292D32"/>
+    <path d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z" fill="#292D32" />
+    <path d="M10.58 15.58C10.38 15.58 10.19 15.5 10.05 15.36L7.22 12.53C6.93 12.24 6.93 11.76 7.22 11.47C7.51 11.18 7.99 11.18 8.28 11.47L10.58 13.77L15.72 8.63001C16.01 8.34001 16.49 8.34001 16.78 8.63001C17.07 8.92001 17.07 9.40001 16.78 9.69001L11.11 15.36C10.97 15.5 10.78 15.58 10.58 15.58Z" fill="#292D32" />
   </svg>
 );
 
@@ -135,18 +136,18 @@ interface JobPosting {
 }
 
 interface JobPostingsProps {
-  statusFilter: "all" | "active" | "close";
-  setStatusFilter: (value: "all" | "active" | "close") => void;
+  statusFilter: "all" | "active" | "closed";
+  setStatusFilter: (value: "all" | "active" | "closed") => void;
   jobPostings: JobPosting[];
   customStyle?: React.CSSProperties;
   isLoading?: boolean;
 }
 
 interface FilterState {
-  jobTitle: string;
+  job_title: string;
   location: string;
-  workModel: string;
-  jobType: string;
+  work_model: string;
+  job_type: string;
 }
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -204,6 +205,7 @@ const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   letterSpacing: "0.14px",
   leadingTrim: "both",
   textEdge: "cap",
+  position: "sticky",
 }));
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -268,13 +270,57 @@ const StatusBadge = styled(Box)(({ theme }) => ({
   fontWeight: 500,
   textTransform: 'capitalize',
   gap: '4px',
+  transition: 'all 0.3s ease-in-out',
+  transform: 'scale(1)',
+  position: 'relative',
+  minWidth: '80px',
+  '&:hover': {
+    transform: 'scale(1.05)',
+  },
   '&.active': {
-    backgroundColor: 'rgba(68, 68, 226, 0.1)',
-    color: theme.palette.primary.main,
+    backgroundColor: 'rgba(0, 150, 136, 0.08)',
+    color: '#009688',
+    '&:hover': {
+      backgroundColor: 'rgba(0, 150, 136, 0.12)',
+    },
+    '&:active': {
+      transform: 'scale(0.95)',
+    }
   },
   '&.closed': {
     backgroundColor: 'rgba(235, 87, 87, 0.1)',
     color: '#EB5757',
+    '&:hover': {
+      backgroundColor: 'rgba(235, 87, 87, 0.14)',
+    },
+    '&:active': {
+      transform: 'scale(0.95)',
+    }
+  },
+  '&.loading': {
+    '& .status-text': {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px',
+    },
+    '& .MuiCircularProgress-root': {
+      width: '12px',
+      height: '12px',
+    }
+  },
+  '@keyframes pulse': {
+    '0%': {
+      transform: 'scale(1)',
+    },
+    '50%': {
+      transform: 'scale(1.05)',
+    },
+    '100%': {
+      transform: 'scale(1)',
+    }
+  },
+  '&.status-changing': {
+    animation: 'pulse 0.3s ease-in-out',
   }
 }));
 
@@ -429,7 +475,7 @@ const ShareModal = React.memo(({ open, onClose, jobTitle, jobId }: { open: boole
           </ListItem>
         </List>
       </DialogContent>
-     
+
     </Dialog>
   );
 });
@@ -438,43 +484,45 @@ ShareModal.displayName = 'ShareModal';
 
 const LocationIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 14.1699C9.87 14.1699 8.13 12.4399 8.13 10.2999C8.13 8.15994 9.87 6.43994 12 6.43994C14.13 6.43994 15.87 8.16994 15.87 10.3099C15.87 12.4499 14.13 14.1699 12 14.1699ZM12 7.93994C10.7 7.93994 9.63 8.99994 9.63 10.3099C9.63 11.6199 10.69 12.6799 12 12.6799C13.31 12.6799 14.37 11.6199 14.37 10.3099C14.37 8.99994 13.3 7.93994 12 7.93994Z" fill="currentColor"/>
-    <path d="M12.0001 22.76C10.5201 22.76 9.03005 22.2 7.87005 21.09C4.92005 18.25 1.66005 13.72 2.89005 8.33C4.00005 3.44 8.27005 1.25 12.0001 1.25C12.0001 1.25 12.0001 1.25 12.0101 1.25C15.7401 1.25 20.0101 3.44 21.1201 8.34C22.3401 13.73 19.0801 18.25 16.1301 21.09C14.9701 22.2 13.4801 22.76 12.0001 22.76ZM12.0001 2.75C9.09005 2.75 5.35005 4.3 4.36005 8.66C3.28005 13.37 6.24005 17.43 8.92005 20C10.6501 21.67 13.3601 21.67 15.0901 20C17.7601 17.43 20.7201 13.37 19.6601 8.66C18.6601 4.3 14.9101 2.75 12.0001 2.75Z" fill="currentColor"/>
+    <path d="M12 14.1699C9.87 14.1699 8.13 12.4399 8.13 10.2999C8.13 8.15994 9.87 6.43994 12 6.43994C14.13 6.43994 15.87 8.16994 15.87 10.3099C15.87 12.4499 14.13 14.1699 12 14.1699ZM12 7.93994C10.7 7.93994 9.63 8.99994 9.63 10.3099C9.63 11.6199 10.69 12.6799 12 12.6799C13.31 12.6799 14.37 11.6199 14.37 10.3099C14.37 8.99994 13.3 7.93994 12 7.93994Z" fill="currentColor" />
+    <path d="M12.0001 22.76C10.5201 22.76 9.03005 22.2 7.87005 21.09C4.92005 18.25 1.66005 13.72 2.89005 8.33C4.00005 3.44 8.27005 1.25 12.0001 1.25C12.0001 1.25 12.0001 1.25 12.0101 1.25C15.7401 1.25 20.0101 3.44 21.1201 8.34C22.3401 13.73 19.0801 18.25 16.1301 21.09C14.9701 22.2 13.4801 22.76 12.0001 22.76ZM12.0001 2.75C9.09005 2.75 5.35005 4.3 4.36005 8.66C3.28005 13.37 6.24005 17.43 8.92005 20C10.6501 21.67 13.3601 21.67 15.0901 20C17.7601 17.43 20.7201 13.37 19.6601 8.66C18.6601 4.3 14.9101 2.75 12.0001 2.75Z" fill="currentColor" />
   </svg>
 );
 
 const JobPostings = () => {
   const [jobPostings, setJobPostings] = useState<JobPosting[]>([]);
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "close">("active");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "closed">("active");
   const [isLoading, setIsLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const theme = useTheme();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterState>({
-    jobTitle: '',
+    job_title: '',
     location: '',
-    workModel: '',
-    jobType: '',
+    work_model: '',
+    job_type: '',
   });
   const [tempFilters, setTempFilters] = useState<FilterState>({
-    jobTitle: '',
+    job_title: '',
     location: '',
-    workModel: '',
-    jobType: '',
+    work_model: '',
+    job_type: '',
   });
-  const [tempStatusFilter, setTempStatusFilter] = useState<"all" | "active" | "close">("active");
+  const [tempStatusFilter, setTempStatusFilter] = useState<"all" | "active" | "closed">("active");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedJob, setSelectedJob] = useState<JobPosting | null>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
+  const [isStatusChanging, setIsStatusChanging] = useState(false);
+  const [updatingJobId, setUpdatingJobId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchJobPostings = async () => {
       setIsLoading(true);
       const token = localStorage.getItem("jwt");
-      let url = "https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs";
+      let url = `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs`;
       if (statusFilter !== "all") {
         url += `?status=${statusFilter}`;
       }
@@ -514,11 +562,36 @@ const JobPostings = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleStatusChange = (
+  const handleStatusChange = async (
     _event: React.SyntheticEvent,
-    newValue: "all" | "active" | "close"
+    newValue: "all" | "active" | "closed"
   ) => {
     setStatusFilter(newValue);
+    setIsLoading(true);
+    
+    try {
+      const token = localStorage.getItem("jwt");
+      const url = `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs${newValue !== "all" ? `?status=${newValue}` : ''}`;
+      
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch jobs');
+      }
+      
+      const data = await response.json();
+      setJobPostings(data.results || data); // Handle both response formats
+    } catch (error) {
+      console.error("Error fetching job postings:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleFilterChange = (filterName: keyof FilterState, value: string) => {
@@ -530,40 +603,78 @@ const JobPostings = () => {
 
   const clearFilters = () => {
     setTempFilters({
-      jobTitle: '',
+      job_title: '',
       location: '',
-      workModel: '',
-      jobType: '',
+      work_model: '',
+      job_type: '',
     });
     setTempStatusFilter("active");
   };
 
-  const applyFilters = () => {
+  const applyFilters = async () => {
     setFilters(tempFilters);
     setStatusFilter(tempStatusFilter);
+    
+    // Construct query parameters
+    const queryParams = new URLSearchParams();
+    if (tempStatusFilter !== "all") {
+      queryParams.append('status', tempStatusFilter);
+    }
+    if (tempFilters.job_title) {
+      queryParams.append('job_title', tempFilters.job_title);
+    }
+    if (tempFilters.location) {
+      queryParams.append('location', tempFilters.location);
+    }
+    if (tempFilters.work_model) {
+      queryParams.append('work_model', tempFilters.work_model);
+    }
+    if (tempFilters.job_type) {
+      queryParams.append('job_type', tempFilters.job_type);
+    }
+
+    // Fetch jobs with filters
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem("jwt");
+      const url = `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs?${queryParams.toString()}`;
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      });
+      const data = await response.json();
+      setJobPostings(data);
+    } catch (error) {
+      console.error("Error fetching filtered job postings:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const hasActiveFilters = () => {
     return (
       tempStatusFilter !== "active" ||
-      tempFilters.jobTitle !== "" ||
+      tempFilters.job_title !== "" ||
       tempFilters.location !== "" ||
-      tempFilters.workModel !== "" ||
-      tempFilters.jobType !== ""
+      tempFilters.work_model !== "" ||
+      tempFilters.job_type !== ""
     );
   };
 
   const filteredJobPostings = jobPostings.filter(job => {
-    if (filters.jobTitle && !job.title.toLowerCase().includes(filters.jobTitle.toLowerCase())) {
+    if (filters.job_title && !job.title.toLowerCase().includes(filters.job_title.toLowerCase())) {
       return false;
     }
     if (filters.location && !job.location.toLowerCase().includes(filters.location.toLowerCase())) {
       return false;
     }
-    if (filters.workModel && job.work_model !== filters.workModel) {
+    if (filters.work_model && job.work_model !== filters.work_model) {
       return false;
     }
-    if (filters.jobType && job.job_type !== filters.jobType) {
+    if (filters.job_type && job.job_type !== filters.job_type) {
       return false;
     }
 
@@ -617,37 +728,40 @@ const JobPostings = () => {
     handleQuickActionsClose();
   };
 
-  const handleToggleStatus = async () => {
-    if (!selectedJob) return;
-    
+  const handleStatusToggle = async (job: JobPosting) => {
     try {
       const token = localStorage.getItem("jwt");
-      const newStatus = selectedJob.status === "active" ? "close" : "active";
+      const updatedJob = {
+        ...job,
+        status: job.status === 'active' ? 'closed' : 'active'
+      };
       
-      await fetch(`https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${selectedJob.id}`, {
+      setUpdatingJobId(job.id);
+      const response = await fetch(`https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${job.id}`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify(updatedJob)
       });
 
-      // Refresh the job listings
-      const response = await fetch("https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      });
-      const data = await response.json();
-      setJobPostings(data);
+      if (!response.ok) {
+        throw new Error('Failed to update job status');
+      }
+
+      // Update the job in the state
+      setJobPostings(prevJobs => 
+        prevJobs.map(j => 
+          j.id === job.id ? { ...j, status: updatedJob.status } : j
+        )
+      );
     } catch (error) {
-      console.error("Error updating job status:", error);
+      console.error('Error updating job status:', error);
+      // You might want to show an error message here
+    } finally {
+      setUpdatingJobId(null);
     }
-    
-    handleQuickActionsClose();
   };
 
   const renderTableContent = () => {
@@ -808,62 +922,62 @@ const JobPostings = () => {
                     }
                   }}
                 >
-                  <ShareLinkIcon />
+                    <ShareLinkIcon />
                 </IconButton>
               </Tooltip>
             </Stack>
-            <Stack direction="row" spacing={2} sx={{ my: 1, mb: 1, flexWrap: 'wrap' }}>
-              <Box sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 0.5,
-                bgcolor: colors[0].bg,
-                color: colors[0].color,
-                px: 2,
-                py: 0.75,
+              <Stack direction="row" spacing={2} sx={{ my: 1, mb: 1, flexWrap: 'wrap' }}>
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  bgcolor: colors[0].bg,
+                  color: colors[0].color,
+                  px: 2,
+                  py: 0.75,
                   borderRadius: '20px',
                   fontSize: '14px',
-                fontWeight: 400,
-                textTransform: 'capitalize',
-                width: 'max-content'
+                  fontWeight: 400,
+                  textTransform: 'capitalize',
+                  width: 'max-content'
                 }}>
-                {/* <WorkTypeIcon /> */}
+                  {/* <WorkTypeIcon /> */}
                   {job.job_type}
-              </Box>
-              <Box sx={{ 
-                display: 'flex',
-                alignItems: 'center',
-                gap: 0.5,
-                bgcolor: colors[1].bg,
-                color: colors[1].color,
-                px: 2,
-                py: 0.75,
+                </Box>
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  bgcolor: colors[1].bg,
+                  color: colors[1].color,
+                  px: 2,
+                  py: 0.75,
                   borderRadius: '20px',
                   fontSize: '14px',
-                fontWeight: 400,
-                textTransform: 'capitalize',
-                width: 'max-content'
+                  fontWeight: 400,
+                  textTransform: 'capitalize',
+                  width: 'max-content'
                 }}>
-                {/* <LocationIcon /> */}
+                  {/* <LocationIcon /> */}
                   {job.location}
-              </Box>
-              <Box sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 0.5,
-                bgcolor: colors[2].bg,
-                color: colors[2].color,
-                px: 2,
-                py: 0.75,
+                </Box>
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  bgcolor: colors[2].bg,
+                  color: colors[2].color,
+                  px: 2,
+                  py: 0.75,
                   borderRadius: '20px',
                   fontSize: '14px',
-                fontWeight: 400,
-                textTransform: 'capitalize',
-                width: 'max-content'
+                  fontWeight: 400,
+                  textTransform: 'capitalize',
+                  width: 'max-content'
                 }}>
-                {/* <WorkModelIcon /> */}
+                  {/* <WorkModelIcon /> */}
                   {job.work_model}
-              </Box>
+                </Box>
             </Stack>
           </Stack>
         </StyledTableCell>
@@ -1091,8 +1205,8 @@ const JobPostings = () => {
                 <TextField
                   fullWidth
                   placeholder="Search by Job Title"
-                  value={tempFilters.jobTitle}
-                  onChange={(e) => handleFilterChange("jobTitle", e.target.value)}
+                  value={tempFilters.job_title}
+                  onChange={(e) => handleFilterChange("job_title", e.target.value)}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       backgroundColor: '#fff',
@@ -1174,8 +1288,8 @@ const JobPostings = () => {
                 </Typography>
                 <FormControl fullWidth>
                   <Select
-                    value={tempFilters.workModel}
-                    onChange={(e) => handleFilterChange("workModel", e.target.value)}
+                    value={tempFilters.work_model}
+                    onChange={(e) => handleFilterChange("work_model", e.target.value)}
                     displayEmpty
                     sx={{
                       backgroundColor: '#fff',
@@ -1217,8 +1331,8 @@ const JobPostings = () => {
                 </Typography>
                 <FormControl fullWidth>
                   <Select
-                    value={tempFilters.jobType}
-                    onChange={(e) => handleFilterChange("jobType", e.target.value)}
+                    value={tempFilters.job_type}
+                    onChange={(e) => handleFilterChange("job_type", e.target.value)}
                     displayEmpty
                     sx={{
                       backgroundColor: '#fff',
@@ -1313,21 +1427,21 @@ const JobPostings = () => {
                     placeholder="Search job title"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    sx={{
+                        sx={{
                       display: { xs: 'none', sm: 'block' },
                       width: { xs: '100%', sm: '300px' },
                       '& .MuiOutlinedInput-root': {
-                        backgroundColor: '#fff',
-                        borderRadius: '12px',
-                        border: '1px solid rgba(17, 17, 17, 0.08)',
-                        '& fieldset': {
-                          border: 'none',
-                        },
-                        '&:hover fieldset': {
-                          border: 'none',
-                        },
-                        '&.Mui-focused fieldset': {
-                          border: 'none',
+                          backgroundColor: '#fff',
+                          borderRadius: '12px',
+                          border: '1px solid rgba(17, 17, 17, 0.08)',
+                          '& fieldset': {
+                            border: 'none',
+                          },
+                          '&:hover fieldset': {
+                            border: 'none',
+                          },
+                          '&.Mui-focused fieldset': {
+                            border: 'none',
                         }
                       },
                       '& .MuiInputBase-input': {
@@ -1339,13 +1453,13 @@ const JobPostings = () => {
                       }
                     }}
                   />
-                  <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
+                  <Stack direction="row" spacing={2} alignItems="center" justifyContent={{xs: "space-between", sm: ""}}>
                     <FormControl sx={{ minWidth: 150 }}>
                       <Select
-            value={statusFilter}
-                        onChange={(e) => handleStatusChange(e as any, e.target.value as "all" | "active" | "close")}
+                        value={statusFilter}
+                        onChange={(e) => handleStatusChange(e as any, e.target.value as "all" | "active" | "closed")}
                         displayEmpty
-                        sx={{
+                      sx={{
                           backgroundColor: '#fff',
                           borderRadius: '12px',
                           border: '1px solid rgba(17, 17, 17, 0.08)',
@@ -1365,15 +1479,15 @@ const JobPostings = () => {
                           }
                         }}
                       >
-                        <MenuItem value="all">All Status</MenuItem>
+                        <MenuItem value="">All Status</MenuItem>
                         <MenuItem value="active">Active</MenuItem>
-                        <MenuItem value="close">Closed</MenuItem>
+                        <MenuItem value="closed">Closed</MenuItem>
                       </Select>
                     </FormControl>
                     <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>
                       <IconButton
                         onClick={() => setSearchDialogOpen(true)}
-                      sx={{
+                        sx={{
                             color: 'rgba(17, 17, 17, 0.48)',
                           '&:hover': {
                             backgroundColor: 'rgba(68, 68, 226, 0.04)',
@@ -1443,25 +1557,51 @@ const JobPostings = () => {
                             <StyledTableHeaderCell>Actions</StyledTableHeaderCell>
                 </StyledTableHeaderRow>
               </TableHead>
-            <TableBody>
-              {filteredJobPostings.map((job, index) => {
-                const colorIndex = index % 4;
-                const colors = [
-                  { bg: 'rgba(114, 74, 59, 0.15)', color: '#724A3B' },
-                  { bg: 'rgba(43, 101, 110, 0.15)', color: '#2B656E' },
-                  { bg: 'rgba(118, 50, 95, 0.15)', color: '#76325F' },
-                  { bg: 'rgba(59, 95, 158, 0.15)', color: '#3B5F9E' }
-                ];
-                const currentColor = colors[colorIndex];
+                        <TableBody>
+                          {filteredJobPostings.map((job, index) => {
+                            const colorIndex = index % 4;
+                            const colors = [
+                              { bg: 'rgba(114, 74, 59, 0.15)', color: '#724A3B' },
+                              { bg: 'rgba(43, 101, 110, 0.15)', color: '#2B656E' },
+                              { bg: 'rgba(118, 50, 95, 0.15)', color: '#76325F' },
+                              { bg: 'rgba(59, 95, 158, 0.15)', color: '#3B5F9E' }
+                            ];
+                            const currentColor = colors[colorIndex];
 
-                return (
-                  <StyledTableRow key={job.id}>
-                    <StyledTableCell>
-                      <Stack>
-                        <Stack direction="row" alignItems="center" gap={1}>
-                          <StyledTypography textTransform={"capitalize"}>
-                                  {job.title}
-                          </StyledTypography>
+                            return (
+                              <StyledTableRow key={job.id}>
+                                <StyledTableCell>
+                                  <Stack>
+                                    <Stack direction="row" alignItems="center" gap={1}>
+                                      <StyledTypography textTransform={"capitalize"}>
+                                        {job.title} {' '}  <StatusBadge 
+                                          className={`${job.status === 'active' ? 'active' : 'closed'} ${updatingJobId === job.id ? 'status-changing loading' : ''}`}
+                                          onClick={(e) => {
+                                            if (updatingJobId === job.id) return; // Prevent click when updating
+                                            e.stopPropagation();
+                                            handleStatusToggle(job);
+                                          }}
+                                sx={{
+                                            ml: 1,
+                                            cursor: 'pointer', 
+                                            display: 'inline-flex', 
+                                            alignItems: 'center',
+                                            pointerEvents: updatingJobId === job.id ? 'none' : 'auto' // Disable pointer events when updating
+                                          }}
+                                        >
+                                          <span className="status-text">
+                                            {updatingJobId === job.id ? (
+                                              <>
+                                                Updating...
+                                                <CircularProgress size={12} sx={{ color: job.status === 'active' ? '#2B656E' : '#EB5757' }} />
+                                              </>
+                                            ) : (
+                                              job.status
+                                            )}
+                                          </span>
+                                          {updatingJobId !== job.id && <ChevronDownIcon />}
+                                        </StatusBadge>
+                                      </StyledTypography>
                                 <Tooltip 
                                   title="Click to copy application page link" 
                                   arrow
@@ -1488,208 +1628,208 @@ const JobPostings = () => {
                                     }}
                                     sx={{
                                       color: 'rgba(17, 17, 17, 0.48)',
-                                padding: '3px',
-                                marginTop: '-10px',
-                                marginLeft: '-2px',
+                                            padding: '3px',
+                                            marginTop: '-10px',
+                                            marginLeft: '-2px',
                                       '&:hover': {
                                         backgroundColor: 'rgba(68, 68, 226, 0.04)',
                                         color: theme.palette.primary.main,
                                       }
                                     }}
                                   >
-                                    <ShareLinkIcon />
+                                          <ShareLinkIcon />
                                   </IconButton>
                                 </Tooltip>
                               </Stack>
-                        <Stack direction="row" spacing={2} sx={{ my: 1, mb: 1, flexWrap: 'wrap' }}>
-                          <Box sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 0.5,
-                            bgcolor: colors[0].bg,
-                            color: colors[0].color,
-                            px: 2,
-                            py: 0.75,
-                            borderRadius: '20px',
+                                    <Stack direction="row" spacing={1} sx={{ my: 1, mb: 1, flexWrap: 'wrap' }}>
+                                      <Box sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 0.5,
+                                        bgcolor: colors[0].bg,
+                                        color: colors[0].color,
+                                        px: 2,
+                                        py: 0.75,
+                                        borderRadius: '20px',
                                     fontSize: '14px',
-                            fontWeight: 400,
-                            textTransform: 'capitalize',
-                            width: 'max-content'
+                                        fontWeight: 400,
+                                        textTransform: 'capitalize',
+                                        width: 'max-content'
                                   }}>
-                            {/* <WorkTypeIcon /> */}
+                                        {/* <WorkTypeIcon /> */}
                                     {job.job_type}
-                          </Box>
-                          <Box sx={{ 
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 0.5,
-                            bgcolor: colors[1].bg,
-                            color: colors[1].color,
-                            px: 2,
-                            py: 0.75,
-                            borderRadius: '20px',
+                                      </Box>
+                                      <Box sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 0.5,
+                                        bgcolor: colors[1].bg,
+                                        color: colors[1].color,
+                                        px: 2,
+                                        py: 0.75,
+                                        borderRadius: '20px',
                                     fontSize: '14px',
-                            fontWeight: 400,
-                            textTransform: 'capitalize',
-                            width: 'max-content'
+                                        fontWeight: 400,
+                                        textTransform: 'capitalize',
+                                        width: 'max-content'
                                   }}>
-                            {/* <LocationIcon /> */}
+                                        {/* <LocationIcon /> */}
                                     {job.location}
-                          </Box>
-                          <Box sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 0.5,
-                            bgcolor: colors[2].bg,
-                            color: colors[2].color,
-                            px: 2,
-                            py: 0.75,
-                            borderRadius: '20px',
+                                      </Box>
+                                      <Box sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 0.5,
+                                        bgcolor: colors[2].bg,
+                                        color: colors[2].color,
+                                        px: 2,
+                                        py: 0.75,
+                                        borderRadius: '20px',
                                     fontSize: '14px',
-                            fontWeight: 400,
-                            textTransform: 'capitalize',
-                            width: 'max-content'
+                                        fontWeight: 400,
+                                        textTransform: 'capitalize',
+                                        width: 'max-content'
                                   }}>
-                            {/* <WorkModelIcon /> */}
+                                        {/* <WorkModelIcon /> */}
                                     {job.work_model}
-                          </Box>
+                                      </Box>
                                 </Stack>
                               </Stack>
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Box>
-                          <Typography
-                            color="rgba(17, 17, 17, 0.84)"
-                            fontWeight={500}
-                            fontSize={"16px"}
-                          >
-                            {job.stage_counts.new}
-                          </Typography>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <Box>
+                                      <Typography
+                                        color="rgba(17, 17, 17, 0.84)"
+                                        fontWeight={500}
+                                        fontSize={"16px"}
+                                      >
+                                        {job.stage_counts.new}
+                                      </Typography>
                             </Box>
-                      </Box>
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Box>
-                          <Typography
-                            color="rgba(17, 17, 17, 0.84)"
-                            fontWeight={500}
-                            fontSize={"16px"}
-                          >
-                            {job.stage_counts.skill_assessment}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Box>
-                          <Typography
-                            color="rgba(17, 17, 17, 0.84)"
-                            fontWeight={500}
-                            fontSize={"16px"}
-                          >
-                            {job.stage_counts.interviews}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Box>
-                          <Typography
-                            color="rgba(17, 17, 17, 0.84)"
-                            fontWeight={500}
-                            fontSize={"16px"}
-                          >
-                            {job.stage_counts.acceptance}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Box>
-                          <Typography
-                            color="rgba(17, 17, 17, 0.84)"
-                            fontWeight={500}
-                            fontSize={"16px"}
-                          >
-                            {job.stage_counts.rejection}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          onClick={(e) => handleQuickActionsClick(e, job)}
-                          endIcon={<KeyboardArrowDownIcon />}
-                          sx={{
-                            color: 'rgba(17, 17, 17, 0.72)',
-                            borderColor: 'rgba(17, 17, 17, 0.12)',
-                            textTransform: 'none',
-                            fontSize: '14px',
-                            padding: '4px 12px',
-                            '&:hover': {
-                              borderColor: theme.palette.primary.main,
-                              color: theme.palette.primary.main,
-                              backgroundColor: 'rgba(68, 68, 226, 0.04)',
-                            }
-                          }}
-                        >
-                          Quick Actions
-                        </Button>
-                      </Box>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </Box>
-      ) : (
-                    <Box sx={{ 
-                      display: 'grid', 
+                                  </Box>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                  <Box>
+                                      <Typography
+                                        color="rgba(17, 17, 17, 0.84)"
+                                        fontWeight={500}
+                                        fontSize={"16px"}
+                                      >
+                                        {job.stage_counts.skill_assessment}
+                                    </Typography>
+                                    </Box>
+                                  </Box>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <Box>
+                                      <Typography
+                                        color="rgba(17, 17, 17, 0.84)"
+                                        fontWeight={500}
+                                        fontSize={"16px"}
+                                      >
+                                        {job.stage_counts.interviews}
+                                    </Typography>
+                                  </Box>
+                                  </Box>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                  <Box>
+                                      <Typography
+                                        color="rgba(17, 17, 17, 0.84)"
+                                        fontWeight={500}
+                                        fontSize={"16px"}
+                                      >
+                                        {job.stage_counts.acceptance}
+                                      </Typography>
+                                    </Box>
+                                  </Box>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <Box>
+                                      <Typography
+                                        color="rgba(17, 17, 17, 0.84)"
+                                        fontWeight={500}
+                                        fontSize={"16px"}
+                                      >
+                                        {job.stage_counts.rejection}
+                                      </Typography>
+                                    </Box>
+                                  </Box>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <Button
+                                      variant="outlined"
+                                      size="small"
+                                      onClick={(e) => handleQuickActionsClick(e, job)}
+                                      endIcon={<KeyboardArrowDownIcon />}
+                                      sx={{
+                                      color: 'rgba(17, 17, 17, 0.72)',
+                                        borderColor: 'rgba(17, 17, 17, 0.12)',
+                                        textTransform: 'none',
+                                        fontSize: '14px',
+                                        padding: '4px 12px',
+                                        '&:hover': {
+                                          borderColor: theme.palette.primary.main,
+                                          color: theme.palette.primary.main,
+                                          backgroundColor: 'rgba(68, 68, 226, 0.04)',
+                                        }
+                                      }}
+                                    >
+                                      Quick Actions
+                                    </Button>
+                                  </Box>
+                                </StyledTableCell>
+                              </StyledTableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </Box>
+                  ) : (
+                    <Box sx={{
+                      display: 'grid',
                       gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
                       gap: 2,
                       p: 2
@@ -1705,63 +1845,85 @@ const JobPostings = () => {
                         const currentColor = colors[colorIndex];
 
                         return (
-                        <Paper 
-                          key={job.id}
-                          elevation={0}
+                          <Paper
+                            key={job.id}
+                            elevation={0}
                             onClick={() => {
                               router.push(`/dashboard/job-posting/${job.id}/submissions`);
                               setSearchDialogOpen(false);
                             }}
-                          sx={{ 
+                            sx={{
                               // p: 1,
                               mb: 2,
-                            borderRadius: 2,
-                            border: '1px solid rgba(17, 17, 17, 0.08)',
+                              borderRadius: 2,
+                              border: '1px solid rgba(17, 17, 17, 0.08)',
                               cursor: 'pointer',
                               transition: 'all 0.3s ease-in-out',
-                            '&:hover': {
+                              '&:hover': {
                                 borderColor: 'rgba(17, 17, 17, 0.16)',
                                 backgroundColor: 'rgba(17, 17, 17, 0.02)',
                                 transform: 'translateY(-2px)',
                                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-                            }
-                          }}
-                        >
-                          <Stack spacing={2}>
+                              }
+                            }}
+                          >
+                            <Stack spacing={2}>
                               <Box p={2}>
                                 <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-                                  <StatusBadge className={job.status === 'active' ? 'active' : 'closed'}>
-                                    {job.status}
-                                    <ChevronDownIcon />
+                                  <StatusBadge 
+                                    className={`${job.status === 'active' ? 'active' : 'closed'} ${updatingJobId === job.id ? 'status-changing loading' : ''}`}
+                                    onClick={(e) => {
+                                      if (updatingJobId === job.id) return; // Prevent click when updating
+                                      e.stopPropagation();
+                                      handleStatusToggle(job);
+                                    }}
+                                    sx={{ 
+                                      cursor: 'pointer', 
+                                      display: 'inline-flex', 
+                                      alignItems: 'center',
+                                      pointerEvents: updatingJobId === job.id ? 'none' : 'auto' // Disable pointer events when updating
+                                    }}
+                                  >
+                                    <span className="status-text">
+                                      {updatingJobId === job.id ? (
+                                        <>
+                                          Updating...
+                                          <CircularProgress size={12} sx={{ color: job.status === 'active' ? '#2B656E' : '#EB5757' }} />
+                                        </>
+                                      ) : (
+                                        job.status
+                                      )}
+                                    </span>
+                                    {updatingJobId !== job.id && <ChevronDownIcon />}
                                   </StatusBadge>
-                              <IconButton
-                                size="small"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  copyToClipboard(job.id);
-                                }}
-                                sx={{
-                                  color: 'rgba(17, 17, 17, 0.48)',
-                                  padding: '3px',
-                                  '&:hover': {
-                                    backgroundColor: 'rgba(68, 68, 226, 0.04)',
-                                    color: theme.palette.primary.main,
-                                  }
-                                }}
-                              >
-                                <ShareLinkIcon />
-                              </IconButton>
-                            </Stack>
-                                <Typography variant="h6" sx={{ 
-                                  fontWeight: 600,
+                                  <IconButton
+                                    size="small"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      copyToClipboard(job.id);
+                                    }}
+                                    sx={{
+                                      color: 'rgba(17, 17, 17, 0.48)',
+                                      padding: '3px',
+                                      '&:hover': {
+                                        backgroundColor: 'rgba(68, 68, 226, 0.04)',
+                                        color: theme.palette.primary.main,
+                                      }
+                                    }}
+                                  >
+                                    <ShareLinkIcon />
+                                  </IconButton>
+                                </Stack>
+                                <Typography variant="h6" sx={{
+                                      fontWeight: 600,
                                   fontSize: '18px',
                                   color: 'rgba(17, 17, 17, 0.92)',
                                   mb: 3
-                                }}>
+                                    }}>
                                   {job.title}
-                                </Typography>
+                                    </Typography>
                                 <Stack direction="row" spacing={2} sx={{ my: 1, mb: 1, flexWrap: 'wrap' }}>
-                            <Box sx={{ 
+                                  <Box sx={{
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: 0.5,
@@ -1773,7 +1935,7 @@ const JobPostings = () => {
                                     <WorkTypeIcon />
                                     {job.job_type}
                                   </Box>
-                                  <Box sx={{ 
+                                  <Box sx={{
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: 0.5,
@@ -1797,132 +1959,57 @@ const JobPostings = () => {
                                     <WorkModelIcon />
                                     {job.work_model}
                                   </Box>
-                              </Stack>
-                            </Box>
-                            <Box sx={{ 
-                              p: 2, 
-                              borderRadius: '8px',
-                            }}>
-                              <Grid container alignItems="center" spacing={2} sx={{
-                              // bgcolor: 'rgba(68, 68, 226, 0.04)', 
+                                </Stack>
+                              </Box>
+                              <Box sx={{
+                                p: 2,
                                 borderRadius: '8px',
-                                margin: 'auto',
-                                width: '100%',
-                                // flexWrap: 'nowrap',
                               }}>
-                                <Grid item xs={6} sx={{
-                                  p: 1.5,
+                                <Grid container alignItems="center" spacing={2} sx={{
                                   borderRadius: '8px',
-                                  flex: 1,
-                                  maxWidth: '100%',
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  alignItems: 'flex-start',
-                                  justifyContent: 'flex-start',
+                                  margin: 'auto',
+                                  width: '100%',
+                                  flexWrap: 'wrap',
+                                  gap: 1
                                 }}>
-                                    <Typography sx={{ 
-                                    fontSize: '16px',
-                                      fontWeight: 600,
-                                    color: 'rgba(17, 17, 17, 0.92)',
-                                    textAlign: 'left',
-                                    mb: 0.5
-                                    }}>
-                                      {job.stage_counts.new}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ 
-                                    color: 'rgba(17, 17, 17, 0.48)',          
-                                    fontSize: '12px',
-                                    textAlign: 'left',
-                                    textTransform: 'capitalize'
-                                  }}>
-                                    Candidates applied
-                                    </Typography>
+                                  <Chip label={`${job.stage_counts.new} Applicants`} size="medium" sx={{
+                                    borderRadius: '12px',
+                                    fontSize: '14px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'flex-start',
+                                    bgcolor: 'rgba(114, 74, 59, 0.15)',
+                                    color: '#724A3B',
+                                  }} />
+                                  <Chip label={`${job.stage_counts.skill_assessment} Completed Assessments`} size="medium" sx={{
+                                    borderRadius: '12px',
+                                    fontSize: '14px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'flex-start',
+                                    bgcolor: 'rgba(43, 101, 110, 0.15)',
+                                    color: '#2B656E',
+                                  }} />
+                                  <Chip label={`${job.stage_counts.interviews} In interviews`} size="medium" sx={{
+                                    borderRadius: '12px',
+                                    fontSize: '14px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'flex-start',
+                                    bgcolor: 'rgba(118, 50, 95, 0.15)',
+                                    color: '#76325F',
+                                  }} />
+                                  <Chip label={`${job.stage_counts.acceptance} Candidates accepted`} size="medium" sx={{
+                                    borderRadius: '12px',
+                                    fontSize: '14px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'flex-start',
+                                    bgcolor: 'rgba(59, 95, 158, 0.15)',
+                                    color: '#3B5F9E',
+                                  }} />
+                                  
                                 </Grid>
-                                <Grid item xs={6} sx={{
-                                  p: 1.5,
-                                  borderRadius: '8px',
-                                  flex: 1,
-                                  maxWidth: '100%',
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  alignItems: 'flex-start',
-                                  justifyContent: 'flex-start',
-                                }}>
-                                    <Typography sx={{ 
-                                    fontSize: '16px',
-                                      fontWeight: 600,
-                                    color: 'rgba(17, 17, 17, 0.92)',
-                                    textAlign: 'left',
-                                    mb: 0.5
-                                    }}>
-                                      {job.stage_counts.skill_assessment}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ 
-                                    color: 'rgba(17, 17, 17, 0.48)',
-                                    fontSize: '12px',
-                                    textAlign: 'left',
-                                    textTransform: 'capitalize'
-                                  }}>
-                                    In assessment
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={6} sx={{
-                                  p: 1.5,
-                                  borderRadius: '8px',
-                                  flex: 1,
-                                  maxWidth: '100%',
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  alignItems: 'flex-start',
-                                  justifyContent: 'flex-start',
-                                }}>
-                                    <Typography sx={{ 
-                                    fontSize: '16px',
-                                      fontWeight: 600,
-                                    color: 'rgba(17, 17, 17, 0.92)',
-                                    textAlign: 'left',
-                                    mb: 0.5
-                                    }}>
-                                      {job.stage_counts.interviews}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ 
-                                    color: 'rgba(17, 17, 17, 0.48)',
-                                    fontSize: '12px',
-                                    textAlign: 'left',
-                                    textTransform: 'capitalize'
-                                  }}>
-                                    In interviews
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={6} sx={{
-                                  p: 1.5,
-                                  borderRadius: '8px',
-                                  flex: 1,
-                                  maxWidth: '100%',
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  alignItems: 'flex-start',
-                                  justifyContent: 'flex-start',
-                                }}>
-                                    <Typography sx={{ 
-                                    fontSize: '16px',
-                                      fontWeight: 600,
-                                    color: 'rgba(17, 17, 17, 0.92)',
-                                    textAlign: 'left',
-                                    mb: 0.5
-                                    }}>
-                                      {job.stage_counts.acceptance}
-                                    </Typography>
-                                  <Typography variant="body2" sx={{ 
-                                    color: 'rgba(17, 17, 17, 0.48)',
-                                    fontSize: '12px',
-                                    textAlign: 'left',
-                                    textTransform: 'capitalize'
-                                  }}>
-                                    Candidates accepted
-                                  </Typography>
-                                </Grid>
-                              </Grid>
                               </Box>
                               <Divider sx={{ my: 2, borderColor: 'rgba(17, 17, 17, 0.08)' }} />
                               <Box sx={{
@@ -1931,7 +2018,7 @@ const JobPostings = () => {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                color: 'rgba(17, 17, 17, 0.72)',
+                                      color: 'rgba(17, 17, 17, 0.72)',
                                 transition: 'all 0.3s ease-in-out',
                                 '&:hover': {
                                   color: theme.palette.primary.main,
@@ -1945,8 +2032,8 @@ const JobPostings = () => {
                                   transition: 'all 0.3s ease-in-out'
                                 }}>
                                   View submissions
-                                </Typography>
-                                <ArrowForwardIcon sx={{ 
+                                    </Typography>
+                                <ArrowForwardIcon sx={{
                                   fontSize: '16px',
                                   transition: 'all 0.3s ease-in-out'
                                 }} />
@@ -2017,7 +2104,7 @@ const JobPostings = () => {
           </Typography>
         </MenuItem>
         <MenuItem 
-          onClick={handleToggleStatus}
+          onClick={() => selectedJob && handleStatusToggle(selectedJob)}
           sx={{
             py: 1.5,
             px: 2,
@@ -2219,7 +2306,7 @@ const JobPostings = () => {
                           <WorkTypeIcon />
                           {job.job_type}
                         </Box>
-                        <Box sx={{ 
+                        <Box sx={{
                           display: 'flex',
                           alignItems: 'center',
                           gap: 0.5,

@@ -184,6 +184,7 @@ export default function ApplicantDetails() {
           cache: 'no-store'
         }
       );
+      console.log(response);
 
       if (!response.ok) {
         throw new Error(`Failed to fetch applicant details: ${response.statusText}`);

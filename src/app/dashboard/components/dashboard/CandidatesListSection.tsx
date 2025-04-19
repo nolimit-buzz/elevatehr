@@ -241,6 +241,24 @@ export default function CandidateListSection({
             {candidate?.personal_info.firstname}{" "}
             {candidate?.personal_info.lastname}
           </Typography>
+          <Box sx={{ 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            backgroundColor: 'rgba(17, 17, 17, 0.05)',
+            borderRadius: '6px',
+            px: 1.5,
+            py: 0.5,
+            mt: 1,
+            width: 'fit-content'
+          }}>
+            <Typography variant="body2" sx={{ 
+              color: 'rgba(17, 17, 17, 0.48)', 
+              fontSize: '14px',
+              fontWeight: 500
+            }}>
+              {candidate.job_title}
+            </Typography>
+          </Box>
         </Box>
 
         {/* Candidate info row */}
@@ -323,9 +341,9 @@ export default function CandidateListSection({
             right: 16,
             top: 16,
             textTransform: "none",
-            borderColor: "grey[100]",
-            color: "grey[100]",
-            borderRadius: "8px",
+            borderColor: "rgba(17, 17, 17, 0.4)",
+            color: "rgba(17, 17, 17, 0.4)",
+            borderRadius: "24px",
             transition: "all 0.2s ease-in-out",
             "&.Mui-disabled": {
               backgroundColor: "transparent",

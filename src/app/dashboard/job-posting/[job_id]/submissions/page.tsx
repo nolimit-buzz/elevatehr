@@ -2344,6 +2344,7 @@ export default function Home() {
                       key={index}
                       elevation={0}
                       sx={{
+                        backgroundColor: "white",
                         display: "flex",
                         alignItems: "flex-start",
                         p: 2,

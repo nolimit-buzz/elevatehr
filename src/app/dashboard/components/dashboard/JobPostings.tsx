@@ -164,6 +164,7 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 const StyledTableHeaderRow = styled(TableRow)(({ theme }) => ({
   'th': {
     borderBottom: '1px solid rgba(17,17,17,0.082)',
+    
   }
 }));
 
