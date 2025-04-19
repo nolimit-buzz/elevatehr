@@ -114,6 +114,9 @@ interface Candidate {
   attachments?: {
     cv?: string;
   };
+  cv_analysis?: {
+    experience_years?: string;
+  };
 }
 
 interface CandidateResponse {

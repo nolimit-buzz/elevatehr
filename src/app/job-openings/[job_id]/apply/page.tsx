@@ -107,8 +107,9 @@ export default function Typeform({
 
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<FormData | null>(null);
   const [fileInputs, setFileInputs] = useState<{ [key: string]: File | null }>({});
@@ -230,55 +231,47 @@ export default function Typeform({
     }
   };
 
-  async function submitForm(e: React.FormEvent<HTMLFormElement>) {
+  async function submitForm(e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     setIsSubmitting(true);
-    if (currentStep === allFields.length - 1) {
-      try {
-        const formData = new FormData();
-        
-        // Add all form values
-        Object.entries(form.getValues()).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            formData.append(key, value);
-          }
-        });
+    setError(null);
 
-        // Add files
-        Object.entries(fileInputs).forEach(([key, file]) => {
-          if (file) {
-            formData.append(key, file);
-          }
-        });
+    try {
+      const formData = new FormData();
+      formData.append("start_date", new Date().toISOString().split('T')[0]);
 
-        const response = await fetch(
-          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${params.job_id}/applications`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          toast.error(errorData.message || "Error submitting the form. Please try again.");
-          throw new Error("Network response was not ok");
+      // Append all form values
+      Object.entries(form.getValues()).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          formData.append(key, value);
         }
+      });
 
-        const data = await response.json();
-        console.log("Application submitted successfully:", data);
-        toast.success("Application submitted successfully");
-        setIsSubmitted(true);
-        setIsSubmitting(false);
-        handleSuccess();
-      } catch (error) {
-        console.error("Error submitting application:", error);
-        toast.error("Error submitting the application. Please try again later.");
-        setIsSubmitting(false);
-        handleError("Error submitting the application. Please try again later.");
+      // Append all files
+      Object.entries(fileInputs).forEach(([key, file]) => {
+        if (file) {
+          formData.append(key, file);
+        }
+      });
+
+      const response = await fetch(
+        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${params.job_id}/applications`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to submit application");
       }
-    } else {
-      next();
+
+      handleSuccess();
+    } catch (err) {
+      handleError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
