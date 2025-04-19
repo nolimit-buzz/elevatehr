@@ -667,8 +667,7 @@ export default function Typeform({
                     Next
                   </Button>
                 ) : (
-                  <Button 
-                    component="button"
+                  <Button onClick={submitForm}
                     type="submit"
                     variant="contained"
                     disabled={isSubmitting}

@@ -770,9 +770,9 @@ const JobPostings = () => {
         <StyledTableCell>
           <Stack>
             <Stack direction="row" alignItems="center" gap={1}>
-              <StyledTypography textTransform={"capitalize"}>
-                {job.title}
-              </StyledTypography>
+            <StyledTypography textTransform={"capitalize"}>
+              {job.title}
+            </StyledTypography>
               <Tooltip 
                 title="Click to copy application page link" 
                 arrow
@@ -828,7 +828,7 @@ const JobPostings = () => {
                 width: 'max-content'
                 }}>
                 {/* <WorkTypeIcon /> */}
-                  {job.job_type}
+                {job.job_type}
               </Box>
               <Box sx={{ 
                 display: 'flex',
@@ -845,7 +845,7 @@ const JobPostings = () => {
                 width: 'max-content'
                 }}>
                 {/* <LocationIcon /> */}
-                  {job.location}
+                {job.location}
               </Box>
               <Box sx={{
                 display: 'flex',
@@ -1685,8 +1685,8 @@ const JobPostings = () => {
                 );
               })}
             </TableBody>
-          </Table>
-        </Box>
+            </Table>
+          </Box>
       ) : (
                     <Box sx={{ 
                       display: 'grid', 

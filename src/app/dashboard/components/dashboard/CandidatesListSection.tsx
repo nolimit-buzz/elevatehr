@@ -160,6 +160,14 @@ export default function CandidateListSection({
     router.push(`/dashboard/job-posting/${jobId}/submissions/${candidate.id}`);
   };
 
+  const getMatchScoreColor = (score: number) => {
+    if (score >= 90) return '#1CC47E'; // Excellent - Green
+    if (score >= 75) return '#4CAF50'; // Good - Light Green
+    if (score >= 60) return '#FFA000'; // Fair - Orange
+    if (score >= 40) return '#FF6B6B'; // Poor - Light Red
+    return '#F44336'; // Very Poor - Dark Red
+  };
+
   return (
     <Paper
       elevation={0}
@@ -167,7 +175,7 @@ export default function CandidateListSection({
         display: "flex",
         alignItems: "flex-start",
         p: 2,
-        borderBottom: "0.8px solid rgba(17, 17, 17, 0.08)",
+        // borderBottom: "0.8px solid rgba(17, 17, 17, 0.08)",
         "&:hover": {
           backgroundColor: theme.palette.secondary.light,
           "& .quick-actions-button": {
@@ -224,7 +232,7 @@ export default function CandidateListSection({
         {/* Update Checkbox */}
 
         {/* Candidate name */}
-        <Box sx={{ ml: "12px" }}>
+        <Box sx={{ ml: "12px", display: 'flex', alignItems: 'center', gap: 1 , mb: 1}}>
           <Typography
             variant="h6"
             sx={{
@@ -236,11 +244,26 @@ export default function CandidateListSection({
               fontWeight: 600,
               lineHeight: '100%',
               letterSpacing: '0.27px',
+              textTransform: 'capitalize',
             }}
           >
             {candidate?.personal_info.firstname}{" "}
             {candidate?.personal_info.lastname}
-          </Typography>
+          </Typography> 
+          <Chip 
+            size="small" 
+            label={candidate?.cv_analysis?  `${candidate.cv_analysis.match_score}%` : 'Not available'} 
+            sx={{
+              backgroundColor: candidate?.cv_analysis
+                ? getMatchScoreColor(candidate.cv_analysis.match_score)
+                : '#9E9E9E',
+              color: 'white',
+              fontWeight: 600,
+              '& .MuiChip-label': {
+                px: 1,
+              }
+            }}
+          />
         </Box>
 
         {/* Candidate info row */}
