@@ -748,7 +748,7 @@ export default function ApplicantDetails() {
                       <iframe
                         allowFullScreen
                         unselectable='on'
-                        src={applicant.attachments.cv.url}
+                        src={applicant.attachments.cv}
                         style={{
                           width: '100%',
                           height: '100%',
