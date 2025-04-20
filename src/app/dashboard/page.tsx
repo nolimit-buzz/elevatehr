@@ -33,7 +33,7 @@ import DashboardCard from './components/shared/DashboardCard';
 import Notifications from './components/dashboard/Notifications';
 import EmailTemplates from './components/dashboard/EmailTemplates';
 import { useRouter } from 'next/navigation';
-
+import Calendar from '@/components/Calendar';
 const statCards = [
   {
     icon: (
@@ -554,7 +554,8 @@ const Dashboard = () => {
             </Grid>
             <Grid container item spacing={'12px'} xs={12} lg={4} minHeight={'600px'} maxHeight={'700px'} direction={{ xs: 'column', md: 'row' }}>
               <Grid item xs={12} md={6} lg={12} flex={1} maxHeight={'50%'} overflow={'scroll'}>
-                <Notifications customStyle={{ height: '100%', overflow: 'scroll' }} />
+                
+                <Calendar customStyle={{ height: '100%', overflow: 'scroll' }} />
               </Grid>
               <Grid item xs={12} md={6} lg={12} flex={1} maxHeight={'50%'} overflow={'scroll'}>
                 <EmailTemplates customStyle={{ height: '100%', overflow: 'scroll' }} />

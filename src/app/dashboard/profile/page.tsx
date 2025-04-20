@@ -670,13 +670,16 @@ const ProfilePage = () => {
   const fetchCalendlyEvents = async () => {
     try {
       setLoadingEvents(true);
-      const accessToken = await getCalendlyAccessToken();
-      console.log('accessToken', accessToken);
+      const personalAccessToken = process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN;
+
+      if (!personalAccessToken) {
+        throw new Error('Personal access token is not configured');
+      }
 
       // First get the user profile
       const userResponse = await fetch('https://api.calendly.com/users/me', {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${personalAccessToken}`,
           'Content-Type': 'application/json',
         },
       });
@@ -690,9 +693,9 @@ const ProfilePage = () => {
       const userUuid = userUri.split('/').pop(); // Extract UUID from URI
 
       // Then fetch events using the user's UUID
-      const eventsResponse = await fetch(`https://api.calendly.com/scheduled_events?user=${userUuid}`, {
+      const eventsResponse = await fetch(`https://api.calendly.com/scheduled_events?user=${userUri}`, {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${personalAccessToken}`,
           'Content-Type': 'application/json',
         },
       });

@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
-import { useState, useEffect, FormEvent, MouseEvent } from "react";
 import {
   Box,
   Typography,
@@ -29,6 +28,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { Form, FormField } from "@/app/dashboard/components/ui/form";
 import { formSchema, type Inputs } from "@/app/lib/schema";
+import { useState, useEffect } from "react";
 import { FORM_SUBMIT_URL } from "@/app/lib/constants";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
@@ -118,8 +118,6 @@ export default function Typeform({
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
 
   const handleFileChange = (fieldKey: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -233,49 +231,56 @@ export default function Typeform({
     }
   };
 
-  const submitForm = async (e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>) => {
+  const submitForm = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
+    if (currentStep === allFields.length - 1) {
+      try {
+        const formData = new FormData();
+        
+        // Add all form values
+        Object.entries(form.getValues()).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            formData.append(key, value);
+          }
+        });
 
-    try {
-      const formData = new FormData();
-      formData.append("start_date", new Date().toISOString().split('T')[0]);
+        // Add files
+        Object.entries(fileInputs).forEach(([key, file]) => {
+          if (file) {
+            formData.append(key, file);
+          }
+        });
 
-      // Append all form values
-      Object.entries(form.getValues()).forEach(([key, value]) => {
-        if (value !== null && value !== undefined) {
-          formData.append(key, value);
+        const response = await fetch(
+          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${params.job_id}/applications`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          toast.error(errorData.message || "Error submitting the form. Please try again.");
+          throw new Error("Network response was not ok");
         }
-      });
 
-      // Append all file inputs
-      Object.entries(fileInputs).forEach(([key, value]) => {
-        if (value) {
-          formData.append(key, value);
-        }
-      });
-
-      const response = await fetch(
-        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${params.job_id}/applications`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to submit application");
+        const data = await response.json();
+        console.log("Application submitted successfully:", data);
+        toast.success("Application submitted successfully");
+        setIsSubmitted(true);
+        setIsSubmitting(false);
+        handleSuccess();
+      } catch (error) {
+        console.error("Error submitting application:", error);
+        toast.error("Error submitting the application. Please try again later.");
+        setIsSubmitting(false);
+        handleError("Error submitting the application. Please try again later.");
       }
-
-      const data = await response.json();
-      setSuccessMessage("Application submitted successfully!");
-      setShowSuccess(true);
-      router.push("/job-openings");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setIsSubmitting(false);
+    } else {
+      next();
     }
   };
 
@@ -664,7 +669,8 @@ export default function Typeform({
                     Next
                   </Button>
                 ) : (
-                  <Button onClick={submitForm}
+                  <Button 
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => submitForm(e)}
                     type="submit"
                     variant="contained"
                     disabled={isSubmitting}

@@ -101,22 +101,19 @@ interface FilterState {
 
 interface Candidate {
   id: number;
-  personal_info: {
-    firstname: string;
-    lastname: string;
-  };
-  professional_info: {
-    experience: string;
-    salary_range: string;
-    start_date: string;
-    skills?: string;
-  };
-  attachments?: {
-    cv?: string;
-  };
+  name: string;
+  email: string;
+  phone: string;
+  cv_url: string;
+  status: string;
+  created_at: string;
   cv_analysis?: {
-    experience_years?: string;
+    experience_years: number;
+    skills: string[];
+    education: string[];
+    [key: string]: any;
   };
+  [key: string]: any;
 }
 
 interface CandidateResponse {
@@ -2584,7 +2581,7 @@ export default function Home() {
                                           mb: 0.5
                                         }}
                                       >
-                                        {candidate.personal_info.firstname} {candidate.personal_info.lastname}
+                                        {candidate.name}
                                       </Typography>
                                     </Box>
                     </Box>
@@ -2600,7 +2597,7 @@ export default function Home() {
                                         mb: 0.5
                                       }}
                                     >
-                                      {candidate.personal_info.firstname} {candidate.personal_info.lastname}
+                                      {candidate.name}
                                     </Typography>
                                   </Box>
                                 )}
@@ -2662,7 +2659,7 @@ export default function Home() {
                               </Box>
 
                               <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                                {candidate.professional_info.skills?.split(',').map((skill, index) => (
+                                {candidate.professional_info.skills?.split(',').map((skill: string, index: number) => (
                                   <Chip
                                     key={index}
                                     label={skill.trim()}

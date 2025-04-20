@@ -410,7 +410,7 @@ export default function ApplicantDetails() {
         {/* Sidebar */}
         <Box
           sx={{
-            minWidth: "30%",
+            width: "30%",
             position: "sticky",
             top: "32px",
             height: "fit-content",
@@ -478,7 +478,37 @@ export default function ApplicantDetails() {
                     {item.personal_info.firstname} {item.personal_info.lastname}
                   </Typography>
 
-                  <Stack spacing={1} width="100%">
+                  <Stack spacing={1} width="100%" direction="row" flexWrap="wrap" gap={1}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
+                          fill="#292D32"
+                        />
+                        <path
+                          d="M15.7101 15.93C15.5801 15.93 15.4501 15.9 15.3301 15.82L12.2301 13.97C11.4601 13.51 10.8901 12.5 10.8901 11.61V7.51001C10.8901 7.10001 11.2301 6.76001 11.6401 6.76001C12.0501 6.76001 12.3901 7.10001 12.3901 7.51001V11.61C12.3901 11.97 12.6901 12.5 13.0001 12.68L16.1001 14.53C16.4601 14.74 16.5701 15.2 16.3601 15.56C16.2101 15.8 15.9601 15.93 15.7101 15.93Z"
+                          fill="#292D32"
+                        />
+                      </svg>
+                      <Typography
+                        sx={{
+                          color: "rgba(17, 17, 17, 0.68)",
+                          fontSize: "16px",
+                          fontWeight: 400,
+                          lineHeight: "100%",
+                          letterSpacing: "0.16px",
+                          width: "max-content",
+                        }}
+                      >
+                        Available {applicant?.professional_info?.start_date}
+                      </Typography>
+                    </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 14.1699C9.87 14.1699 8.13 12.4399 8.13 10.2999C8.13 8.15994 9.87 6.43994 12 6.43994C14.13 6.43994 15.87 8.16994 15.87 10.3099C15.87 12.4499 14.13 14.1699 12 14.1699ZM12 7.93994C10.7 7.93994 9.63 8.99994 9.63 10.3099C9.63 11.6199 10.69 12.6799 12 12.6799C13.31 12.6799 14.37 11.6199 14.37 10.3099C14.37 8.99994 13.3 7.93994 12 7.93994Z" fill="#292D32"/>
@@ -489,7 +519,8 @@ export default function ApplicantDetails() {
                         fontSize: '16px',
                         fontWeight: 400,
                         lineHeight: '100%',
-                        letterSpacing: '0.16px'
+                        letterSpacing: '0.16px',
+                        width: "max-content",
                       }}>
                         {item.personal_info.location}
                       </Typography>
@@ -556,6 +587,7 @@ export default function ApplicantDetails() {
                           fontWeight: 400,
                           lineHeight: "100%",
                           letterSpacing: "0.16px",
+                          width: "max-content",
                         }}
                       >
                         {item.professional_info.experience} experience
@@ -569,7 +601,7 @@ export default function ApplicantDetails() {
         </Box>
 
         {/* Main Content - Applicant Details */}
-        <Paper elevation={0} sx={{ flex: 1, p: 4, borderRadius: 2, width: "70%" }}>
+        <Paper elevation={0} sx={{ flex: 1, p: 4, borderRadius: 2, width: "80%" }}>
           <Paper elevation={0} sx={{ p: 2, borderRadius: 2 }}>
             {detailsLoading ? (
               <Box>
@@ -843,7 +875,7 @@ export default function ApplicantDetails() {
                   </Stack>
 
                   {/* Skills */}
-                  <Stack direction="row" spacing={1} sx={{ mb: 1 , flexWrap: "wrap", gap: 1}}>
+                  <Stack direction="row" spacing={1} sx={{ my: 3 , flexWrap: "wrap", gap: 1}}>
                     {applicant?.professional_info?.skills
                       ?.split(",")
                       .map((skill: string, index: number) => {
