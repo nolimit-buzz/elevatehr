@@ -22,6 +22,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import SchoolIcon from "@mui/icons-material/School";
 import WorkIcon from "@mui/icons-material/Work";
+import Image from 'next/image';
 
 export const dynamic = "force-dynamic";
 
@@ -317,7 +318,7 @@ const JobDetailsPage = () => {
                       marginBottom: "14px",
                     }}
                   >
-                    We're looking for a ...
+                    We&apos;re looking for a ...
                   </Typography>
                   <Typography
                     variant="h4"
@@ -536,9 +537,11 @@ const JobDetailsPage = () => {
               >
                 
                 <Box sx={{ display: 'flex', marginBottom: '24px' }}>
-                  <img
+                  <Image
                     src="/images/logos/logo.svg"
                     alt="Company Logo"
+                    width={200}
+                    height={200}
                     style={{
                       maxWidth: "200px",
                       height: "auto",

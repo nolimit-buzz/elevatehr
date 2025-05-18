@@ -24,6 +24,7 @@ import {
   CircularProgress,
   Skeleton
 } from '@mui/material';
+import { Avatar } from '@mui/material';
 import DashboardSkeleton from './components/DashboardSkeleton';
 import CloseIcon from "@mui/icons-material/Close";
 import PageContainer from '@/app/dashboard/components/container/PageContainer';
@@ -34,6 +35,8 @@ import Notifications from './components/dashboard/Notifications';
 import EmailTemplates from './components/dashboard/EmailTemplates';
 import { useRouter } from 'next/navigation';
 import Calendar from '@/components/Calendar';
+import { CalendlyEvent } from '@/types/calendly';
+
 const statCards = [
   {
     icon: (
@@ -46,9 +49,9 @@ const statCards = [
       </SvgIcon>
     ),
     color: '#1CC47E',
-    id: 'new',
-    title: "Applicants",
-    value: 0, // Will be updated with fetched data
+    id: 'active_jobs',
+    title: "Open Roles",
+    value: 0,
   },
   {
     icon: (
@@ -65,72 +68,27 @@ const statCards = [
       </SvgIcon>
     ),
     color: '#5656E6',
-    id: 'skill_assessment',
-    title: "Skill Assessment",
-    value: 0, // Will be updated with fetched data
+    id: 'total_applicants',
+    title: "Candidates",
+    value: 0,
   },
   {
     icon: (
       <SvgIcon>
         <svg width="120" height="120" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="60" height="60" rx="30" fill="#FD8535" />
-          <path d="M30.8281 43.1563H20.9533C16.0158 43.1563 14.375 39.875 14.375 36.5781V23.4219C14.375 18.4844 16.0158 16.8438 20.9533 16.8438H30.8281C35.7656 16.8438 37.4062 18.4844 37.4062 23.4219V36.5781C37.4062 41.5156 35.75 43.1563 30.8281 43.1563Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M41.75 37.9688L37.4062 34.9219V25.0625L41.75 22.0156C43.875 20.5313 45.625 21.4375 45.625 24.0469V35.9531C45.625 38.5625 43.875 39.4688 41.75 37.9688Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M29.2188 28.4375C30.5125 27.9063 31.5625 27.3881 31.5625 25.0938C31.5625 22.6875 30.5125 21.25 29.2188 21.25C27.925 21.25 26.875 22.6875 26.875 25.0938C26.875 27.3881 27.925 27.9063 29.2188 28.4375Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M28.4375 41.7188H44.0626" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M28.4375 30.7813H44.0626" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M28.4375 19.8438H44.0626" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M15.9375 19.8438L17.5 21.4063L22.1875 16.7188" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M15.9375 30.7813L17.5 32.3438L22.1875 27.6563" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M15.9375 41.7188L17.5 43.2813L22.1875 38.5938" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </SvgIcon>
     ),
     color: '#FD8535',
     id: 'interviews',
-    title: "Interviews",
-    value: 0, // Will be updated with fetched data
-  },
-  {
-    icon: (
-      <SvgIcon>
-        <svg width="120" height="120" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="60" height="60" rx="30" fill="#D834DE" />
-          <path d="M25.7031 25.3906C28.4844 26.4063 31.5156 26.4063 34.2969 25.3906" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M37.5312 14.375H22.4688C19.1406 14.375 17.4375 17.0938 17.4375 20.4062V42.4219C17.4375 45.2344 18.4531 46.4219 20.9219 45.0625L28.5469 40.8281C29.3594 40.375 30.6406 40.375 31.4688 40.8281L39.0938 45.0625C41.5625 46.4219 42.7031 45.2344 42.7031 42.4219V20.4062C42.7031 17.0938 41 14.375 37.5312 14.375Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </SvgIcon>
-    ),
-    color: '#D834DE',
-    id: 'archived',
-    title: "Archived",
-    value: 0, // Will be updated with fetched data
-  },
-  {
-    icon: (
-      <SvgIcon>
-        <svg width="120" height="120" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="60" height="60" rx="30" fill="#35B0FD" />
-          <path d="M33.8123 41.0156L36.1874 43.3906L40.9373 38.6406" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M30.25 28.2344C30.0938 28.2188 29.9062 28.2188 29.7344 28.2344C26.0156 28.1094 23.0625 25.125 23.0625 21.3125C23.0625 17.4844 26.0156 14.375 30 14.375C33.8125 14.375 36.9375 17.4844 36.9375 21.3125C36.9375 25.125 33.9531 28.1094 30.25 28.2344Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M30 45.3281C27.1406 45.3281 24.3125 44.6094 22.1562 43.1719C20.2656 42.0156 20.2656 40.75 22.1719 38.25L30 30.25C30.0156 30.125 31.5938 30.125 32.5938 30.25L39.0938 35.9531C43.5781 40.4375 45.625 41.5156 45.625 38.6719V20.4062C45.625 17.1094 43.5781 14.375 39.0938 14.375H20.9219C16.4375 14.375 14.375 17.1094 14.375 21.3125C14.375 25.125 16.4375 28.1094 20.9219 28.2344Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </SvgIcon>
-    ),
-    color: '#35B0FD',
-    id: 'acceptance',
-    title: "Acceptance",
-    value: 0, // Will be updated with fetched data
-  },
-  {
-    icon: (
-      <SvgIcon>
-        <svg width="120" height="120" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="60" height="60" rx="30" fill="#FDBD0D" />
-          <path d="M40.0156 39.5156L35.6094 43.9219" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M40.0156 43.9219L35.6094 39.5156" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M30.25 28.2344C30.125 28.2188 29.9062 28.2188 29.7344 28.2344C26.0156 28.1094 23.0625 25.125 23.0625 21.3125C23.0625 17.4844 26.0156 14.375 30 14.375C33.8125 14.375 36.9375 17.4844 36.9375 21.3125C36.9375 25.125 33.9688 28.1094 30.25 28.2344Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M30 45.3281C27.1406 45.3281 24.3125 44.6094 22.1562 43.1719C20.2656 42.0156 20.2656 40.75 22.1719 38.25L30 30.25C30.0156 30.125 31.5938 30.125 32.5938 30.25L37.5938 35.9531C43.5781 40.4375 45.625 41.5156 45.625 38.6719V20.4062C45.625 17.1094 43.5781 14.375 39.0938 14.375H20.9219C16.4375 14.375 14.375 17.1094 14.375 21.3125C14.375 25.125 16.4375 28.1094 20.9219 28.2344Z" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </SvgIcon>
-    ),
-    color: '#FDBD0D',
-    id: 'rejection',
-    title: "Rejected",
+    title: "Upcoming Interviews",
     value: 0, // Will be updated with fetched data
   },
 ];
@@ -270,17 +228,21 @@ interface StatCardProps {
 
 const StatCard = ({ card, index, length }: StatCardProps) => {
   return (
-    <Grid item xs={2} minWidth={{xs: '170px',md: '220px'}}>
-      <DashboardCard 
-        customStyle={{ 
-          borderRadius: index === 0 ? '10px 0 0 10px' : (index === length - 1 ? '0 10px 10px 0' : '0px'), 
-          borderRight: index < length - 1 ? '1px solid rgba(17,17,17,0.12)' : 'none', 
-          padding: {xs: '15px', md: '30px'},
+    // <Grid item xs={2} sx={{ flex: 1 }}>
+      <DashboardCard
+        customStyle={{
+          flex:1,
+          borderRadius: '10px',
+          // borderRadius: index === 0 ? '10px 0 0 10px' : (index === length - 1 ? '0 10px 10px 0' : '0px'), 
+          // borderRight: index < length - 1 ? '1px solid rgba(17,17,17,0.12)' : 'none', 
+          padding: { xs: '15px', md: '30px' },
           transition: 'all 0.3s ease-in-out',
           cursor: 'pointer',
+          backgroundColor: `${card.color}20`,
           '&:hover': {
             transform: 'translateY(-4px)',
             boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+            backgroundColor: `${card.color}20`,
             '& .stat-value': {
               color: card.color
             },
@@ -310,22 +272,22 @@ const StatCard = ({ card, index, length }: StatCardProps) => {
       >
         <Stack>
           {card.icon}
-          <Typography 
+          <Typography
             className="stat-value"
-            variant="h3" 
-            fontSize={'34px'} 
+            variant="h3"
+            fontSize={'34px'}
             color='rgba(17,17,17,0.92)'
-            marginTop={'20px'} 
-            marginBottom={'10px'} 
+            marginTop={'20px'}
+            marginBottom={'10px'}
             fontWeight="700"
             sx={{ transition: 'color 0.3s ease-in-out' }}
           >
             {card.value?.toLocaleString()}
           </Typography>
-          <Typography 
+          <Typography
             className="stat-title"
-            variant="subtitle2" 
-            fontSize="16px" 
+            variant="subtitle2"
+            fontSize="16px"
             color="rgba(17,17,17,0.62)"
             sx={{ transition: 'color 0.3s ease-in-out' }}
           >
@@ -333,9 +295,43 @@ const StatCard = ({ card, index, length }: StatCardProps) => {
           </Typography>
         </Stack>
       </DashboardCard>
-    </Grid>
+    // </Grid>
   );
 };
+
+interface ProfileData {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  personal: {
+    first_name: string;
+    last_name: string;
+  };
+  company: {
+    name: string;
+    logo: string;
+    website: string;
+  };
+}
+
+interface NotificationData {
+  id: string | number;
+  text: string;
+  timestamp: string;
+  read: boolean;
+  type: string;
+}
+
+interface Template {
+  id: string | number;
+  name: string;
+  title: string;
+}
+
+interface TemplatesResponse {
+  templates: Record<string, { title: string }>;
+}
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
@@ -345,7 +341,21 @@ const Dashboard = () => {
   const [jobPostings, setJobPostings] = useState([]);
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'close'>('all');
   const [isTabLoading, setIsTabLoading] = useState(false);
-
+  const [profileData, setProfileData] = useState<ProfileData>({
+    id: 0,
+    name: '',
+    email: '',
+    role: '',
+    personal: {
+      first_name: '',
+      last_name: '',
+    },
+    company: {
+      name: '',
+      logo: '',
+      website: '',
+    }
+  });
   const [formData, setFormData] = useState({
     title: '',
     level: 'junior',
@@ -354,6 +364,59 @@ const Dashboard = () => {
     location: '',
   });
   const [statistics, setStatistics] = useState(statCards);
+  const [calendlyEvents, setCalendlyEvents] = useState<CalendlyEvent[]>([]);
+  const [calendlyLoading, setCalendlyLoading] = useState(true);
+  const [calendlyError, setCalendlyError] = useState<string | null>(null);
+  const [notifications, setNotifications] = useState<NotificationData[]>([]);
+  const [notificationsLoading, setNotificationsLoading] = useState(true);
+  const [notificationsError, setNotificationsError] = useState<string | null>(null);
+  const [emailTemplates, setEmailTemplates] = useState<Template[]>([]);
+  const [emailTemplatesLoading, setEmailTemplatesLoading] = useState(true);
+  const [emailTemplatesError, setEmailTemplatesError] = useState<string | null>(null);
+
+  // Add a state to track if all data is loaded
+  const [isAllDataLoaded, setIsAllDataLoaded] = useState(false);
+
+  useEffect(() => {
+    // Get profile data from localStorage
+    const userProfile = localStorage.getItem('userProfile');
+    if (userProfile) {
+      const profile = JSON.parse(userProfile);
+
+      // Map localStorage data to our state structure
+      setProfileData({
+        id: profile.id || 0,
+        name: profile.name || '',
+        email: profile.email || '',
+        role: profile.role || '',
+        personal: {
+          first_name: profile.personalInfo.first_name || '',
+          last_name: profile.personalInfo.last_name || '',
+        },
+        company: {
+          name: profile.companyInfo.company_name || '',
+          logo: profile.companyInfo.company_logo || '',
+          website: profile.companyInfo.company_website || '',
+        }
+      });
+    }
+    setLoading(false);
+  }, []);
+
+  // Add an effect to check if all data is loaded
+  useEffect(() => {
+    const allDataLoaded = !calendlyLoading && 
+                         !notificationsLoading && 
+                         !isTabLoading && 
+                         !emailTemplatesLoading &&
+                         calendlyEvents.length > 0;
+
+    if (allDataLoaded) {
+      setIsAllDataLoaded(true);
+      setShowSkeleton(false);
+    }
+  }, [calendlyLoading, notificationsLoading, isTabLoading, emailTemplatesLoading, calendlyEvents]);
+
   useEffect(() => {
     const fetchJobPostings = async () => {
       setIsTabLoading(true);
@@ -376,20 +439,15 @@ const Dashboard = () => {
       } catch (error) {
         console.error('Error fetching job postings:', error);
       } finally {
-        setLoading(false);
         setIsTabLoading(false);
-        setTimeout(() => {
-          setShowSkeleton(false);
-        }, 2000);
       }
     };
 
     fetchJobPostings();
   }, [statusFilter]);
-  
+
   useEffect(() => {
     const fetchStatistics = async () => {
-      setLoading(true);
       try {
         const token = localStorage.getItem('jwt');
         const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/statistics', {
@@ -402,20 +460,123 @@ const Dashboard = () => {
         const data = await response.json();
         const updatedStats = statistics.map((card) => ({
           ...card,
-          value: data.by_stage[card.id]
+          value: data[card.id]
         }));
         setStatistics(updatedStats);
       } catch (error) {
         console.error('Error fetching statistics:', error);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchStatistics();
   }, []);
 
+  useEffect(() => {
+    const fetchCalendlyEvents = async () => {
+      try {
+        setCalendlyLoading(true);
+        const personalAccessToken = process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN;
 
+        if (!personalAccessToken) {
+          throw new Error('Personal access token is not configured');
+        }
+
+        // First get the user profile
+        const userResponse = await fetch('https://api.calendly.com/users/me', {
+          headers: {
+            'Authorization': `Bearer ${personalAccessToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!userResponse.ok) {
+          throw new Error('Failed to fetch user profile');
+        }
+
+        const userData = await userResponse.json();
+        const userUri = userData.resource.uri;
+
+        // Then fetch events using the user's URI
+        const eventsResponse = await fetch(`https://api.calendly.com/scheduled_events?user=${userUri}`, {
+          headers: {
+            'Authorization': `Bearer ${personalAccessToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!eventsResponse.ok) {
+          throw new Error('Failed to fetch events');
+        }
+
+        const eventsData = await eventsResponse.json();
+        setCalendlyEvents(eventsData.collection || []);
+      } catch (error) {
+        console.error('Error fetching Calendly events:', error);
+        setCalendlyError('Failed to fetch events. Please try again later.');
+      } finally {
+        setCalendlyLoading(false);
+      }
+    };
+
+    fetchCalendlyEvents();
+  }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const token = localStorage.getItem('jwt');
+        const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/notifications', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch notifications');
+        }
+
+        const data = await response.json();
+        setNotifications(data);
+      } catch (err) {
+        setNotificationsError(err instanceof Error ? err.message : 'Failed to fetch notifications');
+      } finally {
+        setNotificationsLoading(false);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+  useEffect(() => {
+    const fetchEmailTemplates = async () => {
+      try {
+        const token = localStorage.getItem('jwt');
+        const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/email-templates', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const data: TemplatesResponse = await response.json();
+        if (data?.templates) {
+          const formattedTemplates = Object.entries(data.templates).map(([key, value]) => ({
+            id: value.title.toLowerCase().replace(/\s+/g, '-'),
+            name: value.title,
+            title: value.title
+          }));
+          setEmailTemplates(formattedTemplates);
+        }
+      } catch (error) {
+        console.error('Error fetching email templates:', error);
+        setEmailTemplatesError('Failed to fetch email templates');
+      } finally {
+        setEmailTemplatesLoading(false);
+      }
+    };
+
+    fetchEmailTemplates();
+  }, []);
 
   const handleOpen = () => {
     setOpen(true);
@@ -461,12 +622,12 @@ const Dashboard = () => {
         console.error('Error creating job posting:', error);
       });
   };
-  if (showSkeleton) {
+  if (showSkeleton || !isAllDataLoaded) {
     return <DashboardSkeleton />;
   }
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
-      <ToolbarStyled direction='row' alignItems='center' justifyContent='space-between'>
+      {/* <ToolbarStyled direction='row' alignItems='center' justifyContent='space-between'>
         <Stack 
           spacing={2} 
           sx={{
@@ -518,47 +679,180 @@ const Dashboard = () => {
             Create new Position
           </Typography>
         </PrimaryButton>
-      </ToolbarStyled>
-      <Box>
-        <Grid container spacing={3}>
-          <Grid container item xs={12} marginBottom={3} sx={{
-            overflowX: 'scroll',
+      </ToolbarStyled> */}
+      <Paper
+        elevation={0}
+        sx={{
+          my: 4,
+          borderRadius: '10px',
+          overflow: 'hidden',
+          maxWidth: '1440px',
+        }}
+      >
+        {/* Header Background */}
+        <Box
+          sx={{
+            height: '120px',
+            bgcolor: 'primary.main',
+            position: 'relative',
+            backgroundImage: 'url("/images/backgrounds/banner-bg.svg")',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+          }}
+        />
+
+        {/* Profile Info Section */}
+        <Box sx={{
+          px: 4,
+          pb: 3,
+          pt: 3,
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+        }}>
+          {/* Logo and Company Info */}
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: 3,
             width: '100%',
-            '&::-webkit-scrollbar': {
-              display: 'none'
-            },
-            msOverflowStyle: 'none',
-            scrollbarWidth: 'none'
+            height: '50px',
           }}>
-            <Stack direction={'row'} flexWrap={'nowrap'} minWidth={'1300px'} maxWidth={'1440px'} width={'100%'} >
-              {statistics.map((card, index) => (
-                <StatCard key={index} card={card} index={index} length={statistics.length} />
-              ))}
-            </Stack>
-          </Grid>
-          <Grid container item xs={12} spacing={3} justifyContent={'space-between'} minHeight={'600px'} maxHeight={'700px'}>
-            <Grid item xs={12} lg={8} maxHeight={'100%'} overflow={'scroll'}>
-              {loading ? (
-                Array.from({ length: 5 }).map((_, index) => (
-                  <Skeleton key={index} variant="rectangular" width="100%" height={150} sx={{ mb: 2, borderRadius: 2 }} />
-                ))
-              ) : (
-                <JobPostings 
-                  customStyle={{ height: '100%', overflow: 'scroll' }} 
-                  jobPostings={jobPostings} 
-                  statusFilter={statusFilter} 
-                  setStatusFilter={setStatusFilter}
-                  isLoading={isTabLoading}
-                />
-              )}
+            {/* Logo */}
+            <Avatar
+              src={profileData.company.logo || '/images/logos/logo.svg'}
+              alt={profileData.company.name}
+              sx={{
+                width: 130,
+                height: 130,
+                border: '4px solid white',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+                position: 'relative',
+                top: -80,
+                bgcolor: 'white',
+                padding: 1.5,
+                '& img': {
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }
+              }}
+            />
+
+            {/* Company Name and Website */}
+            <Box sx={{ pb: 0, mt: -1 }}>
+              <Typography variant="h4" fontWeight={600} sx={{ color: 'rgba(17, 17, 17, 0.92)', fontSize: '28px' }}>
+                {profileData.company.name || 'ElevateHR'}
+              </Typography>
+
+              <Typography
+                component="a"
+                href={profileData.company.website ?
+                  (profileData.company.website.startsWith('http') ? profileData.company.website : `https://${profileData.company.website}`) :
+                  '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: 'rgba(17, 17, 17, 0.6)',
+                  textDecoration: 'none',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                  mt: 0.5,
+                  '&:hover': {
+                    color: theme.palette.primary.main,
+                    textDecoration: 'underline',
+                  }
+                }}
+              >
+                {profileData.company.website || 'www.elevatehr.ai'}
+                <Box component="span" sx={{ display: 'inline-block', ml: 0.5, transform: 'translateY(1px)' }}>
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 10.5H1.5V2H5.25V0.75H0.75C0.335786 0.75 0 1.08579 0 1.5V11.25C0 11.6642 0.335786 12 0.75 12H10.75C11.1642 12 11.5 11.6642 11.5 11.25V6.75H10V10.5ZM6.75 0.75V2H9.4425L3.2175 8.2275L4.2725 9.2825L10.5 3.0575V5.75H11.75V0.75H6.75Z" fill="currentColor" />
+                  </svg>
+                </Box>
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+      </Paper>
+
+      <Box>
+        <Grid spacing={3} sx={{ width: '100%', }}>
+          <Grid container xs={12} spacing={3} padding={0} sx={{ margin: 0, marginBottom: 3, alignItems: 'stretch' }}>
+            <Grid item xs={8} sx={{
+              margin: 0,
+              overflowX: 'scroll',
+              height: '300px',
+              '&::-webkit-scrollbar': {
+                display: 'none'
+              },
+              flexDirection: 'column',
+              msOverflowStyle: 'none',
+              scrollbarWidth: 'none',
+              backgroundColor: 'white',
+              borderRadius: '10px',
+              padding: '20px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+            }}>
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 600,
+                  color: "rgba(17, 17, 17, 0.92)",
+                  fontSize: 24,
+                  lineHeight: "24px",
+                  letterSpacing: "0.36px",
+                  mb: 2,
+                }}
+              >
+                Your Stats
+              </Typography>
+              <Stack direction={'row'} spacing={3} flexWrap={'nowrap'} sx={{ padding: 0, margin: 0 }}>
+                {statistics.map((card, index) => {
+                  if (card.id === 'interviews') {
+                    return <StatCard key={index} card={{ ...card, value: calendlyEvents.length }} index={index} length={statistics.length} />
+                  }
+                  return <StatCard key={index} card={card} index={index} length={statistics.length} />
+                })}
+              </Stack>
             </Grid>
-            <Grid container item spacing={'12px'} xs={12} lg={4} minHeight={'600px'} maxHeight={'700px'} direction={{ xs: 'column', md: 'row' }}>
-              <Grid item xs={12} md={6} lg={12} flex={1} maxHeight={'50%'} overflow={'scroll'}>
-                
-                <Calendar customStyle={{ height: '100%', overflow: 'scroll' }} />
+            <Grid item xs={4} paddingTop={0} sx={{ paddingTop: "0 !important" }}>
+              <Notifications 
+                notifications={notifications}
+                loading={false}
+                error={notificationsError}
+              />
+            </Grid>
+          </Grid>
+          <Grid container item xs={12} spacing={3} justifyContent={'space-between'} height={'600px'}>
+            <Grid item xs={12} lg={8} maxHeight={'100%'} sx={{ height: '600px', overflow: 'hidden' }}>
+              <JobPostings
+                jobPostings={jobPostings}
+                statusFilter={statusFilter}
+                setStatusFilter={setStatusFilter}
+                isLoading={false}
+              />
+            </Grid>
+            <Grid container item spacing={2.5} xs={12} lg={4} height={'612px'} direction={{ xs: 'column', md: 'row' }}>
+              <Grid item xs={12} md={6} lg={12} flex={1} height={'50%'}>
+                <Calendar
+                  customStyle={{ height: '100%' }}
+                  events={calendlyEvents}
+                  loading={false}
+                  error={calendlyError}
+                />
               </Grid>
-              <Grid item xs={12} md={6} lg={12} flex={1} maxHeight={'50%'} overflow={'scroll'}>
-                <EmailTemplates customStyle={{ height: '100%', overflow: 'scroll' }} />
+              <Grid item xs={12} md={6} lg={12} flex={1} height={'50%'}>
+                <EmailTemplates 
+                  customStyle={{ height: '100%' }}
+                  templates={emailTemplates}
+                  loading={false}
+                  error={emailTemplatesError}
+                />
               </Grid>
             </Grid>
           </Grid>

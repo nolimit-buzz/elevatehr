@@ -417,8 +417,34 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
             </StyledTabs>
           </Box>
         </Box>
-        <Box sx={{ overflow: "auto" }}>
-          <Box sx={{ width: "100%", display: "table", tableLayout: "fixed" }}>
+        <Box sx={{ 
+          overflow: "auto", 
+          height: 'calc(600px - 100px)',
+          // height: '600px',
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#032B4420 transparent',
+          '&::-webkit-scrollbar': {
+            height: '4px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: 'transparent',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: '#032B44',
+            width: '4px', 
+            borderRadius: '4px',
+            '&:hover': {
+              background: 'rgba(68, 68, 226, 0.3)',
+            },
+          },
+        }}>
+          <Box sx={{ 
+            width: "100%", 
+            display: "table", 
+            tableLayout: "fixed", 
+            height: 'max-content',
+            // overflowX: 'scroll'
+          }}>
             <Table>
               <TableHead>
                 <StyledTableHeaderRow>

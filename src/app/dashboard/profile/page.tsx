@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -667,7 +667,7 @@ const ProfilePage = () => {
   };
 
   // Function to fetch Calendly events
-  const fetchCalendlyEvents = async () => {
+  const fetchCalendlyEvents = useCallback(async () => {
     try {
       setLoadingEvents(true);
       const personalAccessToken = process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN;
@@ -716,7 +716,7 @@ const ProfilePage = () => {
     } finally {
       setLoadingEvents(false);
     }
-  };
+  }, [setCalendlyEvents, setNotification, setLoadingEvents]);
 
   // Fetch events when Calendly tab is active
   useEffect(() => {
@@ -726,7 +726,7 @@ const ProfilePage = () => {
       console.log('fetching calendly events');
       fetchCalendlyEvents();
     }
-  }, [activeSection, integrations.calendly.connected]);
+  }, [activeSection, integrations.calendly.connected, integrations, fetchCalendlyEvents]);
 
   const handleLogout = () => {
     localStorage.removeItem('userProfile');
@@ -1604,7 +1604,7 @@ const ProfilePage = () => {
                       {!integrations.calendly.connected && (
                         <Box sx={{ mt: 2, p: 2, bgcolor: 'rgba(0, 0, 0, 0.02)', borderRadius: '8px' }}>
                           <Typography variant="body2" sx={{ color: 'text.grey.100', mb: 1 }}>
-                            To connect Calendly, you'll need to:
+                            To connect Calendly, you&apos;ll need to:
                           </Typography>
                           <Box component="ol" sx={{ pl: 2, mb: 0 }}>
                             <Typography component="li" variant="body2" sx={{ color: 'text.grey.100', mb: 1 }}>

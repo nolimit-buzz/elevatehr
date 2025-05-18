@@ -243,7 +243,7 @@ const Login = () => {
                       fontSize: { xs: '12px', sm: '16px' }
                     }}
                   >
-                  Don't have an account?
+                  Don&apos;t have an account?
                   </Typography>
                   <Typography
                     component={Link}

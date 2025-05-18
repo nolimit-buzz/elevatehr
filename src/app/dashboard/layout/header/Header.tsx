@@ -180,7 +180,7 @@ const Header = () => {
     <>
       <AppBarStyled position="sticky" color="default">
         <ToolbarStyled direction='row' alignItems='center' justifyContent='space-between'>
-          <Box sx={{ cursor: 'pointer' }} onClick={() => router.push('/dashboard')}>
+          <Box sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', width: 'max-content', height: '56px' }} onClick={() => router.push('/dashboard')}>
             <Image
               src={(() => {
                 try {
@@ -199,6 +199,7 @@ const Header = () => {
               alt="elevatehr"
               width={120}
               height={56}
+              style={{ cursor: 'pointer', width: 'auto', height: '32px' }}
             />
           </Box>
 
@@ -272,7 +273,6 @@ const Header = () => {
                 </ListItem>
               </DropdownMenu>
             </Box>
-
             <Avatar
               src="/images/profile/user-1.jpg"
               alt="image"

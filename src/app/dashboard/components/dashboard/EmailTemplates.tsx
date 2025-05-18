@@ -17,6 +17,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from 'next/navigation';
+import { ArrowForwardOutlined } from "@mui/icons-material";
 
 interface Template {
   id: string | number;
@@ -26,46 +27,14 @@ interface Template {
 
 interface EmailTemplatesProps {
   customStyle?: React.CSSProperties;
+  templates: Template[];
+  loading: boolean;
+  error: string | null;
 }
 
-interface TemplatesResponse {
-  templates: Record<string, { title: string }>;
-}
-
-const EmailTemplates: React.FC<EmailTemplatesProps> = ({ customStyle }) => {
+const EmailTemplates: React.FC<EmailTemplatesProps> = ({ customStyle, templates, loading, error }) => {
   const theme = useTheme();
   const router = useRouter();
-  const [templates, setTemplates] = useState<Template[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      try {
-        const token = localStorage.getItem('jwt');
-        const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/email-templates', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        const data: TemplatesResponse = await response.json();
-        if (data?.templates) {
-          const formattedTemplates = Object.entries(data.templates).map(([key, value]) => ({
-            id: value.title.toLowerCase().replace(/\s+/g, '-'),
-            name: value.title,
-            title: value.title
-          }));
-          setTemplates(formattedTemplates);
-        }
-      } catch (error) {
-        console.error('Error fetching templates:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTemplates();
-  }, []);
   
   const handleTemplateClick = (template: Template) => {
     const templateType = template.id.toString().replace(/-/g, '_');
@@ -74,8 +43,11 @@ const EmailTemplates: React.FC<EmailTemplatesProps> = ({ customStyle }) => {
 
   return (
     <DashboardCard customStyle={{ padding: '0px', ...customStyle }}>
-      <Box>
-        <Box
+      <Box sx={{ 
+        overflow: 'auto',
+        position: 'relative'
+      }}>
+         <Box
           sx={{
             p: 2.5,
             display: "flex",
@@ -84,21 +56,60 @@ const EmailTemplates: React.FC<EmailTemplatesProps> = ({ customStyle }) => {
           }}
         >
           <Typography
-            variant="h3"
+            variant="h5"
             sx={{
               fontWeight: 600,
               color: "rgba(17, 17, 17, 0.92)",
-              letterSpacing: "0.36px",
+              fontSize: 24,
               lineHeight: "24px",
+              letterSpacing: "0.36px",
             }}
           >
             Email templates
           </Typography>
+
+         { templates.length > 0 && <Box onClick={() => router.push('/dashboard/email-templates')} sx={{ display: "flex", alignItems: "center" }}>
+            <Typography
+              variant="body2"
+              sx={{
+                cursor: 'pointer',
+                color: theme.palette.secondary.main,
+                fontSize: 14,
+                lineHeight: "14px",
+                letterSpacing: "0.14px",
+                mr: 0.5,
+              }}
+            >
+              See all
+            </Typography>
+            <ArrowForwardOutlined
+              sx={{ color: "secondary.main", width: 20, height: 20 }}
+            />
+          </Box>}
         </Box>
 
-        <List sx={{ px: 2 }}>
-          {loading ? (
-            <CircularProgress sx={{ m: 2 }} />
+        <List sx={{ px: 2,  overflow: "auto", 
+          height: 'calc(300px - 70px)',
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#032B4420 transparent',
+          '&::-webkit-scrollbar': {
+            height: '4px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: 'transparent',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: '#032B44',
+            width: '4px', 
+            borderRadius: '4px',
+            '&:hover': {
+              background: 'rgba(68, 68, 226, 0.3)',
+            },
+          }, }}>
+          {error ? (
+            <Typography color="error" sx={{ m: 2 }}>{error}</Typography>
+          ) : templates.length === 0 ? (
+            <Typography sx={{ m: 2, color: 'text.secondary' }}>No templates available</Typography>
           ) : (
             templates.map((template) => (
               <ListItem key={template.id} disablePadding sx={{ mb: 1 }}>

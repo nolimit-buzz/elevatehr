@@ -332,48 +332,46 @@ export default function Home() {
 
     fetchJobDetails();
   }, [getJobId]);
-  const fetchCandidates = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const token = localStorage.getItem("jwt");
-      const jobId = getJobId();
-      const stage = subTabValue === 0 ? "new" : getStageValue(subTabValue);
-      const response = await fetch(
-        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications?stage=${stage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+    const fetchCandidates = useCallback(async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const token = localStorage.getItem("jwt");
+        const jobId = getJobId();
+        const stage = subTabValue === 0 ? "new" : getStageValue(subTabValue);
+        const response = await fetch(
+          `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications?stage=${stage}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            cache: 'no-store'
           },
-          cache: 'no-store'
-        },
-      );
+        );
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch candidates: ${response.status}`);
-      }
+        if (!response.ok) {
+          throw new Error(`Failed to fetch candidates: ${response.status}`);
+        }
 
-      const data = await response.json();
-      setCandidates(data);
-      setFilteredCandidates(data);
-      setLoading(false);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError('Failed to fetch candidates');
+        const data = await response.json();
+        setCandidates(data);
+        setFilteredCandidates(data);
+        setLoading(false);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('Failed to fetch candidates');
+        }
+        setLoading(false);
       }
-      setLoading(false);
-    }
-  };
+    }, [getJobId, subTabValue, setCandidates, setFilteredCandidates, setLoading, setError]);
   useEffect(() => {
-   
-
     if (primaryTabValue === 0) {
       fetchCandidates();
     }
-  }, [getJobId, primaryTabValue, subTabValue]);
+  }, [getJobId, primaryTabValue, subTabValue, fetchCandidates]);
 
   useEffect(() => {
     console.log('Job details received:', jobDetails);
@@ -425,7 +423,7 @@ export default function Home() {
       if (filters.yearsOfExperience) {
         const [minYears, maxYears] = filters.yearsOfExperience.split("-").map(num => parseInt(num));
         if(minYears && !maxYears){
-          queryParams.append("min_experience", minYears.toString());
+        queryParams.append("min_experience", minYears.toString());
         }
         if(minYears && maxYears){ queryParams.append("experience_range", minYears.toString() + "-" + maxYears.toString());
 
@@ -2359,7 +2357,7 @@ export default function Home() {
                       {/* Checkbox skeleton */}
                       <Box sx={{ p: 0 }}>
                         <Skeleton
-                          variant="rectangular"
+                      variant="rectangular"
                           width={16}
                           height={16}
                           sx={{

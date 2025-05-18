@@ -95,12 +95,12 @@ interface Applicant {
   application_info: ApplicationInfo;
   attachments?: {
     cv?: string;
-  };
+    };
   cv_analysis?: CVAnalysis;
   custom_fields?: {
     [key: string]: {
       value: string;
-    };
+  };
   };
   job_title?: string;
 }
@@ -168,35 +168,35 @@ export default function ApplicantDetails() {
     setError(null);
     try {
       const token = localStorage.getItem("jwt");
-      if (!token) {
+        if (!token) {
         throw new Error("Authentication token not found");
-      }
-
-      const response = await fetch(
-        `https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/${applicantId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          cache: "no-store",
         }
-      );
-      console.log(response);
 
-      if (!response.ok) {
+        const response = await fetch(
+        `https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/${applicantId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            },
+          cache: "no-store",
+          }
+        );
+      console.log(response);
+        
+        if (!response.ok) {
         throw new Error(
           `Failed to fetch applicant details: ${response.statusText}`
         );
-      }
+        }
 
-      const data = await response.json();
+        const data = await response.json();
 
       console.log(data);
       setApplicant({
         ...data,
       });
-    } catch (error) {
+      } catch (error) {
       console.error("Error fetching applicant details:", error);
       setError(
         error instanceof Error
@@ -219,15 +219,10 @@ export default function ApplicantDetails() {
   useEffect(() => {
     const fetchApplicants = async () => {
       try {
+        setLoading(true);
         const token = localStorage.getItem("jwt");
-        if (!token) {
-          throw new Error("Authentication token not found");
-        }
+        if (!token) throw new Error("Authentication token not found");
 
-        if (typeof params.job_id !== "string") {
-          throw new Error("Invalid job ID");
-        }
-        console.log("params.job_id", params.job_id);
         const response = await fetch(
           `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${params.job_id}/applications`,
           {
@@ -238,10 +233,9 @@ export default function ApplicantDetails() {
             cache: "no-store",
           }
         );
-        console.log("response", response);
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch applicants: ${response.statusText}`);
+          throw new Error("Failed to fetch applicants");
         }
 
         const data = await response.json();
@@ -265,7 +259,7 @@ export default function ApplicantDetails() {
     if (params.job_id) {
       fetchApplicants();
     }
-  }, [params.job_id, applicant]);
+  }, [params, params.job_id, applicant]);
 
   const handleBack = () => {
     router.back();
@@ -394,8 +388,8 @@ export default function ApplicantDetails() {
       {/* Back button */}
       <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 3 }}>
         <IconButton onClick={handleBack}>
-          <ArrowBackIcon />
-        </IconButton>
+        <ArrowBackIcon />
+      </IconButton>
         <Typography variant="h6" sx={{ color: "grey.100" }}>
           {applicant?.job_title || "Job Title"}
         </Typography>
@@ -417,21 +411,21 @@ export default function ApplicantDetails() {
             alignSelf: "flex-start",
           }}
         >
-          <Paper
-            elevation={0}
-            sx={{
+        <Paper 
+          elevation={0} 
+          sx={{ 
               width: "100%",
               height: "70vh",
-              borderRadius: 2,
+            borderRadius: 2,
               bgcolor: "#fff",
               overflow: "auto",
-            }}
-          >
-            <List sx={{ p: 0 }}>
-              {applicants.map((item) => (
-                <ListItem
-                  key={item.id}
-                  sx={{
+          }}
+        >
+          <List sx={{ p: 0 }}>
+            {applicants.map((item) => (
+              <ListItem
+                key={item.id}
+                sx={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "flex-start",
@@ -461,11 +455,11 @@ export default function ApplicantDetails() {
                   onClick={() => {
                     fetchApplicantDetails(item.id);
                   }}
-                >
-                  <Typography
-                    variant="subtitle1"
-                    sx={{
-                      fontWeight: 600,
+              >
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontWeight: 600,
                       fontSize: "18px",
                       color:
                         item.id === applicant?.id
@@ -473,10 +467,10 @@ export default function ApplicantDetails() {
                           : "text.grey[100]",
                       mb: 1,
                       textTransform: "capitalize",
-                    }}
-                  >
-                    {item.personal_info.firstname} {item.personal_info.lastname}
-                  </Typography>
+                  }}
+                >
+                  {item.personal_info.firstname} {item.personal_info.lastname}
+                </Typography>
 
                   <Stack spacing={1} width="100%" direction="row" flexWrap="wrap" gap={1}>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -509,7 +503,7 @@ export default function ApplicantDetails() {
                         Available {applicant?.professional_info?.start_date}
                       </Typography>
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 14.1699C9.87 14.1699 8.13 12.4399 8.13 10.2999C8.13 8.15994 9.87 6.43994 12 6.43994C14.13 6.43994 15.87 8.16994 15.87 10.3099C15.87 12.4499 14.13 14.1699 12 14.1699ZM12 7.93994C10.7 7.93994 9.63 8.99994 9.63 10.3099C9.63 11.6199 10.69 12.6799 12 12.6799C13.31 12.6799 14.37 11.6199 14.37 10.3099C14.37 8.99994 13.3 7.93994 12 7.93994Z" fill="#292D32"/>
                         <path d="M12.0001 22.76C10.5201 22.76 9.03005 22.2 7.87005 21.09C4.92005 18.25 1.66005 13.72 2.89005 8.33C4.00005 3.44 8.27005 1.25 12.0001 1.25C12.0001 1.25 12.0001 1.25 12.0101 1.25C15.7401 1.25 20.0101 3.44 21.1201 8.34C22.3401 13.73 19.0801 18.25 16.1301 21.09C14.9701 22.2 13.4801 22.76 12.0001 22.76ZM12.0001 2.75C9.09005 2.75 5.35005 4.3 4.36005 8.66C3.28005 13.37 6.24005 17.43 8.92005 20C10.6501 21.67 13.3601 21.67 15.0901 20C17.7601 17.43 20.7201 13.37 19.6601 8.66C18.6601 4.3 14.9101 2.75 12.0001 2.75Z" fill="#292D32"/>
@@ -524,7 +518,7 @@ export default function ApplicantDetails() {
                       }}>
                         {item.personal_info.location}
                       </Typography>
-                    </Box>
+                  </Box>
 
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <svg
@@ -592,12 +586,12 @@ export default function ApplicantDetails() {
                       >
                         {item.professional_info.experience} experience
                       </Typography>
-                    </Box>
-                  </Stack>
-                </ListItem>
-              ))}
-            </List>
-          </Paper>
+                  </Box>
+                </Stack>
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
         </Box>
 
         {/* Main Content - Applicant Details */}
@@ -769,8 +763,8 @@ export default function ApplicantDetails() {
               </Box>
             ) : (
               <Fragment>
-                {/* Header Section */}
-                <Box sx={{ mb: 4 }}>
+            {/* Header Section */}
+            <Box sx={{ mb: 4 }}>
                   <Stack direction="row" gap={"16px"} sx={{ mb: 1 }}>
                     <Typography
                       variant="h4"
@@ -778,7 +772,7 @@ export default function ApplicantDetails() {
                     >
                       {applicant?.personal_info?.firstname}{" "}
                       {applicant?.personal_info?.lastname}
-                    </Typography>
+              </Typography>
                     <Stack direction="row" gap={"28px"}>
                       <Box
                         sx={{
@@ -805,8 +799,8 @@ export default function ApplicantDetails() {
                         </svg>
                         <Typography color="text.grey[100]">
                           {applicant?.personal_info?.location}
-                        </Typography>
-                      </Box>
+                  </Typography>
+                </Box>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}
                       >
@@ -827,12 +821,12 @@ export default function ApplicantDetails() {
                           />
                         </svg>
                         <Typography color="text.grey[100]">
-                          {applicant?.personal_info?.email}
-                        </Typography>
-                      </Box>
+                    {applicant?.personal_info?.email}
+                  </Typography>
+                </Box>
                       {cvAnalysis?.match_score && (
                         <Box
-                          sx={{
+                      sx={{
                             display: "flex",
                             alignItems: "center",
                             gap: 1,
@@ -869,12 +863,12 @@ export default function ApplicantDetails() {
                           >
                             {cvAnalysis?.match_score}% Match
                           </Typography>
-                        </Box>
-                      )}
+                  </Box>
+                )}
                     </Stack>
-                  </Stack>
+              </Stack>
 
-                  {/* Skills */}
+              {/* Skills */}
                   <Stack direction="row" spacing={1} sx={{ my: 3 , flexWrap: "wrap", gap: 1}}>
                     {applicant?.professional_info?.skills
                       ?.split(",")
@@ -887,10 +881,10 @@ export default function ApplicantDetails() {
                           { bg: "rgba(59, 95, 158, 0.15)", color: "#3B5F9E" },
                         ];
                         return (
-                          <Chip
-                            key={index}
-                            label={skill.trim()}
-                            sx={{
+                  <Chip
+                    key={index}
+                    label={skill.trim()}
+                    sx={{
                               bgcolor: colors[colorIndex].bg,
                               color: colors[colorIndex].color,
                               borderRadius: "16px",
@@ -902,11 +896,11 @@ export default function ApplicantDetails() {
                           />
                         );
                       })}
-                  </Stack>
+              </Stack>
 
-                  {/* Key Info */}
-                  <Stack direction="row" spacing={3}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {/* Key Info */}
+              <Stack direction="row" spacing={3}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 14.1699C9.87 14.1699 8.13 12.4399 8.13 10.2999C8.13 8.15994 9.87 6.43994 12 6.43994C14.13 6.43994 15.87 8.16994 15.87 10.3099C15.87 12.4499 14.13 14.1699 12 14.1699ZM12 7.93994C10.7 7.93994 9.63 8.99994 9.63 10.3099C9.63 11.6199 10.69 12.6799 12 12.6799C13.31 12.6799 14.37 11.6199 14.37 10.3099C14.37 8.99994 13.3 7.93994 12 7.93994Z" fill="#292D32"/>
                         <path d="M12.0001 22.76C10.5201 22.76 9.03005 22.2 7.87005 21.09C4.92005 18.25 1.66005 13.72 2.89005 8.33C4.00005 3.44 8.27005 1.25 12.0001 1.25C12.0001 1.25 12.0001 1.25 12.0101 1.25C15.7401 1.25 20.0101 3.44 21.1201 8.34C22.3401 13.73 19.0801 18.25 16.1301 21.09C14.9701 22.2 13.4801 22.76 12.0001 22.76ZM12.0001 2.75C9.09005 2.75 5.35005 4.3 4.36005 8.66C3.28005 13.37 6.24005 17.43 8.92005 20C10.6501 21.67 13.3601 21.67 15.0901 20C17.7601 17.43 20.7201 13.37 19.6601 8.66C18.6601 4.3 14.9101 2.75 12.0001 2.75Z" fill="#292D32"/>
@@ -920,7 +914,7 @@ export default function ApplicantDetails() {
                       }}>
                         {applicant?.personal_info.location}
                       </Typography>
-                    </Box>
+                </Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <svg
                         width="20"
@@ -949,7 +943,7 @@ export default function ApplicantDetails() {
                       >
                         Available {applicant?.professional_info?.start_date}
                       </Typography>
-                    </Box>
+                </Box>
                   </Stack>
                 </Box>
 
@@ -965,11 +959,11 @@ export default function ApplicantDetails() {
                           Experience & Education
                         </Typography>
                         <Stack direction="row" spacing={3}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <WorkOutlineIcon />
                             <Typography>{applicant.cv_analysis.experience_years} years experience</Typography>
-                          </Box>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <PersonOutlineIcon />
                             <Typography>{applicant.cv_analysis.education_level}</Typography>
                           </Box>the 
@@ -1008,10 +1002,10 @@ export default function ApplicantDetails() {
                                   )
                                 )}
                               </Stack>
-                            </Box>
+                </Box>
                           )}
-                        </Stack>
-                      </Box>
+              </Stack>
+            </Box>
                       <Box
                         sx={{
                           bgcolor: "rgba(17, 17, 17, 0.04)",
@@ -1024,22 +1018,22 @@ export default function ApplicantDetails() {
                           sx={{ fontWeight: 600 }}
                         >
                           Recommendations
-                        </Typography>
+              </Typography>
                         <Typography
                           color="text.grey[100]"
                           sx={{ whiteSpace: "pre-line" }}
                         >
                           {cvAnalysis.recommendations}
-                        </Typography>
-                      </Box>
+              </Typography>
+            </Box>
                     </Stack>
                   </Box>
                 )}
 
                 {/* <Divider sx={{ my: 3 }} /> */}
 
-                {/* Resume section */}
-                <Box>
+            {/* Resume section */}
+            <Box>
                   {/* CV Preview */}
                   {applicant?.attachments?.cv ? (
                     <Box
@@ -1076,20 +1070,20 @@ export default function ApplicantDetails() {
                               gap: 0.5,
                             }}
                           >
-                            <Typography
-                              variant="h6"
-                              sx={{
-                                fontWeight: 600,
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    fontWeight: 600, 
                                 color: "rgba(17, 17, 17, 0.92)",
                                 cursor: "pointer",
                                 "&:hover": {
                                   color: "primary.main",
                                   textDecoration: "underline",
                                 },
-                              }}
-                            >
-                              Resume
-                            </Typography>
+                  }}
+                >
+                  Resume
+                </Typography>
                             <LaunchIcon
                               sx={{
                                 fontSize: 16,
@@ -1105,26 +1099,26 @@ export default function ApplicantDetails() {
                             variant="outlined"
                             startIcon={<ArrowUpRightIcon />}
                             component="a"
-                            href={applicant.attachments.cv.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            sx={{
-                              borderRadius: 2,
+                    href={applicant.attachments.cv.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                      sx={{
+                        borderRadius: 2,
                               textTransform: "none",
-                              px: 3,
+                        px: 3,
                               py: 1.5,
                               textDecoration: "none",
-                            }}
-                          >
-                            Download CV
-                          </Button>
+                      }}
+                    >
+                      Download CV
+                    </Button>
                         ) : (
-                          <Box
-                            sx={{
-                              mb: 4,
-                              p: 3,
+                <Box 
+                  sx={{ 
+                    mb: 4,
+                    p: 3,
                               bgcolor: "rgba(17, 17, 17, 0.04)",
-                              borderRadius: 2,
+                    borderRadius: 2,
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -1137,57 +1131,57 @@ export default function ApplicantDetails() {
                         )} */}
                       </Box>
 
-                      <iframe
-                        allowFullScreen
+                  <iframe
+                    allowFullScreen
                         unselectable="on"
                         src={applicant.attachments?.cv || "#"}
-                        style={{
+                    style={{
                           width: "100%",
                           height: "100%",
                           border: "none",
-                        }}
-                        title="CV Preview"
-                      />
-                    </Box>
-                  ) : (
-                    <Box
-                      sx={{
-                        mb: 4,
-                        p: 3,
+                    }}
+                    title="CV Preview"
+                  />
+                </Box>
+              ) : (
+                <Box 
+                  sx={{ 
+                    mb: 4,
+                    p: 3,
                         bgcolor: "rgba(17, 17, 17, 0.04)",
-                        borderRadius: 2,
+                    borderRadius: 2,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                       }}
                     >
                       <Typography color="text.grey[100]">
-                        No CV available
-                      </Typography>
-                    </Box>
-                  )}
+                    No CV available
+                  </Typography>
                 </Box>
+              )}
+            </Box>
 
-                {/* Action Buttons */}
+            {/* Action Buttons */}
                 <Box
                   sx={{
                     display: "flex",
                     justifyContent: "flex-end",
-                    gap: 2,
-                    mt: 4,
+              gap: 2, 
+              mt: 4,
                     position: "sticky",
-                    bottom: 0,
+              bottom: 0,
                     bgcolor: "background.paper",
                     py: 2,
                   }}
                 >
-                  <Button
-                    variant="outlined"
-                    onClick={handleReject}
-                    sx={{
-                      borderRadius: 2,
+              <Button
+                variant="outlined"
+                onClick={handleReject}
+                sx={{
+                  borderRadius: 2,
                       textTransform: "none",
-                      px: 3,
+                  px: 3,
                       py: 1.5,
                       transition: "all 0.2s ease-in-out",
                       "&:hover": {
@@ -1195,18 +1189,18 @@ export default function ApplicantDetails() {
                         transform: "translateY(-1px)",
                         boxShadow: "0 4px 12px rgba(68, 68, 226, 0.1)",
                       },
-                    }}
-                  >
-                    Reject
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={handleMoveToAssessment}
-                    sx={{
-                      borderRadius: 2,
+                }}
+              >
+                Reject
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleMoveToAssessment}
+                sx={{
+                  borderRadius: 2,
                       textTransform: "none",
-                      px: 3,
-                      py: 1.5,
+                  px: 3,
+                  py: 1.5,
                       bgcolor: "primary.main",
                       transition: "all 0.2s ease-in-out",
                       "&:hover": {
@@ -1214,11 +1208,11 @@ export default function ApplicantDetails() {
                         transform: "translateY(-1px)",
                         boxShadow: "0 4px 12px rgba(68, 68, 226, 0.15)",
                       },
-                    }}
-                  >
-                    Move to Assessment
-                  </Button>
-                </Box>
+                }}
+              >
+                Move to Assessment
+              </Button>
+            </Box>
               </Fragment>
             )}
           </Paper>

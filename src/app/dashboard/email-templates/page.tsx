@@ -113,7 +113,7 @@ const EmailTemplatePage = () => {
     };
 
     fetchTemplates();
-  }, []);
+  }, [templateType]);
 
   useEffect(() => {
     if (templates && templates[templateType]) {
