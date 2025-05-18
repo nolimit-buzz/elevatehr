@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   AppBar,
@@ -73,6 +73,32 @@ const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [companyLogo, setCompanyLogo] = useState("/images/logos/logo.svg");
+  const [userName, setUserName] = useState("User");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    if (typeof window !== 'undefined') {
+      try {
+        const userProfileStr = localStorage.getItem('userProfile');
+        if (userProfileStr) {
+          const userProfile = JSON.parse(userProfileStr);
+          if (userProfile.companyInfo?.company_logo) {
+            setCompanyLogo(userProfile.companyInfo.company_logo);
+          }
+          const personalInfo = userProfile.personalInfo;
+          if (personalInfo?.first_name && personalInfo?.last_name) {
+            setUserName(`${personalInfo.first_name} ${personalInfo.last_name.charAt(0)}.`);
+          }
+        }
+      } catch (error) {
+        // fallback to defaults
+      }
+    }
+  }, []);
+
+  if (!mounted) return null;
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -84,11 +110,13 @@ const Header = () => {
 
   const handleLogout = () => {
     // Add your logout logic here
-    localStorage.removeItem('userProfile');
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('calendly_access_token');
-    localStorage.removeItem('calendly_refresh_token');
-    localStorage.removeItem('calendly_state');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('userProfile');
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('calendly_access_token');
+      localStorage.removeItem('calendly_refresh_token');
+      localStorage.removeItem('calendly_state');
+    }
     router.push('/');
     handleClose();
   };
@@ -172,6 +200,7 @@ const Header = () => {
 
   const links = [
     { href: "/dashboard", title: "Dashboard", icon: <DashboardRoundedIcon /> },
+    { href: "/dashboard/assessments", title: "Assessments", icon: <DescriptionRoundedIcon /> },
     { href: "/dashboard/applications", title: "Applications", icon: <DescriptionRoundedIcon /> },
     { href: "/dashboard/job-listings", title: "Job Listings", icon: <WorkHistoryRoundedIcon /> }
   ];
@@ -182,20 +211,7 @@ const Header = () => {
         <ToolbarStyled direction='row' alignItems='center' justifyContent='space-between'>
           <Box sx={{ cursor: 'pointer' }} onClick={() => router.push('/dashboard')}>
             <Image
-              src={(() => {
-                try {
-                  const userProfileStr = localStorage.getItem('userProfile');
-                  if (userProfileStr) {
-                    const userProfile = JSON.parse(userProfileStr);
-                    if (userProfile.companyInfo?.company_logo) {
-                      return userProfile.companyInfo.company_logo;
-                    }
-                  }
-                } catch (error) {
-                  console.error('Error parsing user profile:', error);
-                }
-                return "/images/logos/logo.svg";
-              })()}
+              src={companyLogo}
               alt="elevatehr"
               width={120}
               height={56}
@@ -226,21 +242,7 @@ const Header = () => {
                   }}
                 />
                 <Typography>
-                  {(() => {
-                    try {
-                      const userProfileStr = localStorage.getItem('userProfile');
-                      if (userProfileStr) {
-                        const userProfile = JSON.parse(userProfileStr);
-                        const personalInfo = userProfile.personalInfo;
-
-                        const firstName = personalInfo.first_name;
-                        const lastName = personalInfo.last_name;
-                        return `${firstName} ${lastName.charAt(0)}.`;
-                      }
-                    } catch (error) {
-                      return 'User';
-                    }
-                  })()}
+                  {userName}
                 </Typography>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 16.8C11.3 16.8 10.6 16.53 10.07 16L3.55002 9.48C3.26002 9.19 3.26002 8.71 3.55002 8.42C3.84002 8.13 4.32002 8.13 4.61002 8.42L11.13 14.94C11.61 15.42 12.39 15.42 12.87 14.94L19.39 8.42C19.68 8.13 20.16 8.13 20.45 8.42C20.74 8.71 20.74 9.19 20.45 9.48L13.93 16C13.4 16.53 12.7 16.8 12 16.8Z" fill="rgba(17, 17, 17, 0.68)" />

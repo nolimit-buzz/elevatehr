@@ -32,11 +32,13 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material";
+import { PhaseOption as CandidatePhaseOption } from '@/app/dashboard/types/candidate';
 
 interface PhaseOption {
   label: string;
   icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string };
   action: string;
+  id?: string;
 }
 
 // Define valid stage types
@@ -52,6 +54,7 @@ interface CandidateListSectionProps {
   disableSelection?: boolean;
   currentStage: StageType;
   onNotification?: (message: string, severity: 'success' | 'error') => void;
+  phaseOptions: Record<StageType, CandidatePhaseOption[]>;
 }
 
 // At the top of your file or in a types file
@@ -66,10 +69,12 @@ export default function CandidateListSection({
   disableSelection,
   currentStage,
   onNotification,
+  phaseOptions,
 }: CandidateListSectionProps) {
   const router = useRouter();
   const theme = useTheme();
-  console.log(candidate); // Skills data for mapping
+  console.log('Candidate data:', candidate); // Debug log
+  console.log('Assessment results:', candidate?.assessments_results); // Debug log for assessment results
   const skills: Skill[] = candidate?.professional_info?.skills?.split(",") || [];
 
   // Candidate info data for mapping
@@ -127,11 +132,48 @@ export default function CandidateListSection({
     e.stopPropagation();
     setLoadingStage(action);
     try {
-      await onUpdateStages(action, [candidate.id]);
-      onNotification?.(
-        `Applicant moved to '${action.replace('_', ' ')}'`,
-        'success'
-      );
+      if (action.startsWith('assessment_')) {
+        // Handle assessment action
+        const token = localStorage.getItem('jwt');
+        
+        // Find the assessment object that matches the action
+        const assessment = phaseOptions[currentStage]?.find(option => option.action === action) as CandidatePhaseOption;
+        
+        if (!assessment || !assessment.id) {
+          throw new Error('Assessment not found');
+        }
+
+        const response = await fetch(
+          'https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/send-job-assessment',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              application_ids: [candidate.id],
+              assessment_id: assessment.id
+            })
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to send assessment');
+        }
+
+        onNotification?.(
+          'Assessment sent successfully',
+          'success'
+        );
+      } else {
+        // Handle regular stage update
+        await onUpdateStages(action, [candidate.id]);
+        onNotification?.(
+          `Applicant moved to '${action.replace('_', ' ')}'`,
+          'success'
+        );
+      }
     } catch (error) {
       onNotification?.(
         error instanceof Error ? error.message : 'Failed to update stage',
@@ -167,6 +209,25 @@ export default function CandidateListSection({
     if (score >= 40) return '#FF6B6B'; // Poor - Light Red
     return '#F44336'; // Very Poor - Dark Red
   };
+
+  // Replace PHASE_OPTIONS with phaseOptions prop in the component
+  const options = phaseOptions[currentStage] || [];
+
+  // Filter out assessment options that have already been sent
+  const filteredOptions = options.filter(option => {
+    if (!option.action.startsWith('assessment_')) {
+      return true; // Keep non-assessment options
+    }
+    
+    // For assessment options, check if it's already been sent or submitted
+    const assessmentType = option.action.replace('assessment_', '');
+    const assessmentResult = candidate?.assessments_results?.[assessmentType];
+    
+    // Only keep the option if the assessment hasn't been sent or submitted
+    return !assessmentResult || 
+           (assessmentResult.assessment_submission_status !== 'submitted' && 
+            assessmentResult.assessment_status !== 'sent');
+  });
 
   return (
     <Paper
@@ -231,8 +292,8 @@ export default function CandidateListSection({
       >
         {/* Update Checkbox */}
 
-        {/* Candidate name */}
-        <Box sx={{ ml: "12px", display: 'flex', alignItems: 'center', gap: 1 , mb: 1}}>
+        {/* Candidate name and chips row */}
+        <Box sx={{ ml: "12px", display: 'flex', alignItems: 'center', gap: 1, mb: 1}}>
           <Typography
             variant="h6"
             sx={{
@@ -252,7 +313,7 @@ export default function CandidateListSection({
           </Typography> 
           <Chip 
             size="small" 
-            label={candidate?.cv_analysis?  `${candidate.cv_analysis.match_score}%` : 'Not available'} 
+            label={candidate?.cv_analysis ? `${candidate.cv_analysis.match_score}%` : 'Not available'} 
             sx={{
               backgroundColor: candidate?.cv_analysis
                 ? getMatchScoreColor(candidate.cv_analysis.match_score)
@@ -264,6 +325,29 @@ export default function CandidateListSection({
               }
             }}
           />
+          {/* Add assessment status chips */}
+          {candidate?.assessments_results && Object.entries(candidate.assessments_results).map(([type, result]: [string, any]) => {
+            if (result && result.assessment_submission_status) {
+              return (
+                <Chip
+                  key={type}
+                  size="small"
+                  label={`${type.split('_').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                  ).join(' ')} ${result.assessment_submission_status === 'submitted' ? '(Submitted)' : ''}`}
+                  sx={{
+                    backgroundColor: result.assessment_submission_status === 'submitted' ? '#E8F5E9' : '#E3F2FD',
+                    color: result.assessment_submission_status === 'submitted' ? '#2E7D32' : '#1976D2',
+                    fontWeight: 500,
+                    '& .MuiChip-label': {
+                      px: 1,
+                    }
+                  }}
+                />
+              );
+            }
+            return null;
+          })}
         </Box>
 
         {/* Candidate info row */}
@@ -399,7 +483,7 @@ export default function CandidateListSection({
           <Divider />
 
           {/* Phase-specific options */}
-          {PHASE_OPTIONS[currentStage]?.map((option: PhaseOption) => {
+          {filteredOptions.map((option: CandidatePhaseOption) => {
             const IconComponent = option.icon;
             return (
               <MenuItem
