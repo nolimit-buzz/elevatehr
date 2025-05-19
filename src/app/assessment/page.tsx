@@ -1,11 +1,28 @@
 'use client'
-import { Box, Typography, CircularProgress, Alert, Chip, TextField, Button, Snackbar, useTheme } from '@mui/material';
+import { Box, Typography, CircularProgress, Alert, Chip, TextField, Button, Snackbar, useTheme, Container, Grid, Stack, styled } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Banner } from '@/components/Banner';
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: "8px",
+  backgroundColor: theme.palette.primary.main,
+  padding: "16px 44px",
+  color: "#FFFFFF !important",
+  fontSize: "16px",
+  fontWeight: 500,
+  lineHeight: "100%",
+  letterSpacing: "0.16px",
+  transition: "all 0.2s ease-in-out",
+  "&:hover": {
+    backgroundColor: "#6666E6",
+    transform: "translateY(-1px)",
+    boxShadow: "0 4px 12px rgba(68, 68, 226, 0.15)",
+  },
+}));
 
 export default function AssessmentPage() {
   const theme = useTheme();
@@ -112,7 +129,7 @@ export default function AssessmentPage() {
 
   if (isSubmitted) {
     return (
-      <>
+      <Box sx={{ backgroundColor: "#fff", minHeight: "100vh" }}>
         <Banner
           sx={{
             display: "flex",
@@ -128,49 +145,53 @@ export default function AssessmentPage() {
           }}
           height={"304px"}
         />
-        <Box sx={{ 
-          maxWidth: 800, 
-          mx: 'auto', 
-          mt: 8, 
-          p: 4,
-          textAlign: 'center'
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 4 }}>
-            <CheckCircleIcon sx={{ 
-              fontSize: 48, 
-              color: theme.palette.primary.main,
-            }} />
+        <Container sx={{ maxWidth: "1063px !important", mt: 8, p: 4 }}>
+          <Box sx={{ 
+            maxWidth: 800, 
+            mx: 'auto', 
+            textAlign: 'center',
+            bgcolor: '#fff',
+            borderRadius: 2,
+            boxShadow: 1,
+            p: 4
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 4 }}>
+              <CheckCircleIcon sx={{ 
+                fontSize: 48, 
+                color: theme.palette.primary.main,
+              }} />
+              <Typography 
+                variant="h4" 
+                fontWeight={700}
+                sx={{
+                  background: 'linear-gradient(90deg, #4444E2 0%, #6B6BFF 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
+                Submission Received!
+              </Typography>
+            </Box>
+            
             <Typography 
-              variant="h4" 
-              fontWeight={700}
-              sx={{
-                background: 'linear-gradient(90deg, #4444E2 0%, #6B6BFF 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
+              variant="body1" 
+              color="grey.600" 
+              sx={{ 
+                maxWidth: 600, 
+                mx: 'auto',
+                fontSize: '17px'
               }}
             >
-              Submission Received!
+              Thank you for submitting your assessment. We will review your submission and get back to you soon.
             </Typography>
           </Box>
-          
-          <Typography 
-            variant="body1" 
-            color="grey.600" 
-            sx={{ 
-              maxWidth: 600, 
-              mx: 'auto',
-              fontSize: '17px'
-            }}
-          >
-            Thank you for submitting your assessment. We will review your submission and get back to you soon.
-          </Typography>
-        </Box>
-      </>
+        </Container>
+      </Box>
     );
   }
 
   return (
-    <>
+    <Box sx={{ backgroundColor: "#fff", minHeight: "100vh" }}>
       <Banner
         sx={{
           display: "flex",
@@ -186,145 +207,234 @@ export default function AssessmentPage() {
         }}
         height={"304px"}
       />
-      <Box sx={{ maxWidth: 800, mx: 'auto', mt: 8, p: 4, bgcolor: '#fff', borderRadius: 2, boxShadow: 1 }}>
-        <Typography variant="h4" fontWeight={700} mb={2}>Assessment</Typography>
-        <Typography variant="body1" mb={1}><b>Job ID:</b> {jobId || 'N/A'}</Typography>
-        <Typography variant="body1" mb={1}><b>Application ID:</b> {applicationId || 'N/A'}</Typography>
-        <Typography variant="body1" mb={2}><b>Assessment ID:</b> {assessmentId || 'N/A'}</Typography>
-        {loading && <CircularProgress />}
-        
-        {/* Success Alert */}
-        <Snackbar 
-          open={!!success} 
-          autoHideDuration={6000} 
-          onClose={handleCloseAlert}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <Alert
-            severity="success"
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={handleCloseAlert}
+      <Container sx={{ maxWidth: "1063px !important", mt: 8, p: 4 }}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={8}>
+            <Box sx={{ 
+              bgcolor: '#fff', 
+              borderRadius: 2, 
+              p: 4
+            }}>
+              <Typography 
+                variant="h5" 
+                fontWeight={600} 
+                mb={2}
+                sx={{
+                  color: "rgba(17, 17, 17, 0.92)",
+                  fontSize: "24px",
+                  textTransform: "capitalize",
+                }}
               >
-                <CloseIcon fontSize="inherit" />
-              </IconButton>
-            }
-            sx={{ 
-              width: '100%',
-              bgcolor: 'primary.main',
-              color: 'white',
-              borderRadius: '24px',
-              '& .MuiAlert-message': {
-                fontSize: '1rem',
-                fontWeight: 500,
-                color: 'white'
-              },
-              '& .MuiAlert-icon': {
-                color: 'white'
-              }
-            }}
-          >
-            {success}
-          </Alert>
-        </Snackbar>
+                {assessment?.level} {assessment?.title} Technical Assessment
+              </Typography>
+              
+              {loading && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                  <CircularProgress />
+                </Box>
+              )}
 
-        {/* Error Alert */}
-        <Snackbar 
-          open={!!error} 
-          autoHideDuration={6000} 
-          onClose={handleCloseAlert}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <Alert
-            severity="error"
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={handleCloseAlert}
-              >
-                <CloseIcon fontSize="inherit" />
-              </IconButton>
-            }
-            sx={{ 
-              width: '100%',
-              bgcolor: 'primary.main',
-              color: 'white',
-              borderRadius: '24px',
-              '& .MuiAlert-message': {
-                fontSize: '1rem',
-                fontWeight: 500,
-                color: 'white'
-              },
-              '& .MuiAlert-icon': {
-                color: 'white'
-              }
-            }}
-          >
-            {error}
-          </Alert>
-        </Snackbar>
+              {assessment && (
+                <Stack spacing={4}>
+                  <Box>
+                    <Typography 
+                      variant="subtitle1" 
+                      color="grey.200" 
+                      mb={2}
+                    >
+                      {assessment.description}
+                    </Typography>
+                    <Box mb={2} sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {assessment.skills && assessment.skills.split(',').map((skill: string, idx: number) => (
+                        <Chip 
+                          key={idx} 
+                          label={skill.trim()} 
+                          sx={{ 
+                            fontWeight: 500,
+                            bgcolor: '#F9E8F3',
+                            color: '#76325F',
+                          }} 
+                        />
+                      ))}
+                    </Box>
+                  </Box>
 
-        {assessment && (
-          <Box mt={3}>
-            <Typography variant="h5" fontWeight={600} mb={1}>{assessment.title}</Typography>
-            <Typography variant="subtitle1" color="grey.200" mb={2}>{assessment.description}</Typography>
-            <Box mb={2}>
-              <Chip label={assessment.level} sx={{ mr: 1, fontWeight: 500 }} />
-              {assessment.skills && assessment.skills.split(',').map((skill: string, idx: number) => (
-                <Chip key={idx} label={skill.trim()} sx={{ mr: 1, fontWeight: 500 }} />
-              ))}
+                  <Box>
+                    <Typography 
+                      variant="h5" 
+                      fontWeight={600} 
+                      mb={2}
+                      sx={{
+                        color: "rgba(17, 17, 17, 0.92)",
+                      }}
+                    >
+                      Assessment Details
+                    </Typography>
+                    <Box 
+                      sx={{ 
+                        bgcolor: '#f6f6f6', 
+                        p: 3, 
+                        borderRadius: 2,
+                        color: "rgba(17, 17, 17, 0.84)",
+                      }}
+                    >
+                      <div dangerouslySetInnerHTML={{ __html: assessment.content }} />
+                    </Box>
+                  </Box>
+                </Stack>
+              )}
             </Box>
-            <Box mb={2}>
-              <Typography variant="subtitle2" color="grey.200" mb={1}>Assessment Content:</Typography>
-              <Box sx={{ bgcolor: '#f6f6f6', p: 2, borderRadius: 2 }}>
-                <div dangerouslySetInnerHTML={{ __html: assessment.content }} />
-              </Box>
-            </Box>
+          </Grid>
 
-            {/* Submission Form */}
-            <Box mt={4}>
-              <Typography variant="h6" fontWeight={600} mb={2}>Submit Your Assessment</Typography>
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-                <TextField
-                  fullWidth
-                  label="Submission URL"
-                  variant="outlined"
-                  value={submissionUrl}
-                  onChange={(e) => setSubmissionUrl(e.target.value)}
-                  placeholder="Enter the URL where your assessment can be found"
-                  error={!!error}
-                  helperText={error}
-                  disabled={submitting}
-                  sx={{ flexGrow: 1 ,'&:placeholder': { color: 'secondary.main' },'& label': { color: 'grey.200' }}}
-                />
-                <Button
-                  variant="contained"
-                  onClick={handleSubmit}
-                  disabled={submitting || !submissionUrl.trim()}
+          <Grid item xs={12} md={4}>
+            <Box sx={{ 
+              bgcolor: '#fff', 
+              borderRadius: 2, 
+              p: 4,
+              border: "1px solid #E0E0E0",
+            }}>
+              <Stack spacing={3}>
+                <Typography 
+                  variant="h6" 
+                  fontWeight={600}
                   sx={{
-                    borderRadius: 2,
-                    fontSize: 16,
-                    fontWeight: 600,
-                    minWidth: 120,
-                    height: 56,
-                    bgcolor: '#4444E2',
-                    '&:hover': {
-                      bgcolor: '#3333D1',
-                    },
+                    color: "rgba(17, 17, 17, 0.92)",
+                    fontSize: "18px"
                   }}
                 >
-                  {submitting ? <CircularProgress size={24} color="inherit" /> : 'Submit'}
-                </Button>
-              </Box>
+                  Submit Your Assessment
+                </Typography>
+                <Stack spacing={2}>
+                  <Typography sx={{ color: "rgba(17, 17, 17, 0.84)" }}>
+                    • Please ensure your submission is complete and follows all requirements
+                  </Typography>
+                  <Typography sx={{ color: "rgba(17, 17, 17, 0.84)" }}>
+                    • Make sure your submission URL is accessible
+                  </Typography>
+                  <Typography sx={{ color: "rgba(17, 17, 17, 0.84)" }}>
+                    • You can only submit once
+                  </Typography>
+                  {assessment?.review_time && (
+                    <Typography sx={{ color: "rgba(17, 17, 17, 0.84)" }}>
+                      • We will review your submission within {assessment.review_time}
+                    </Typography>
+                  )}
+                </Stack>
+
+                <Box sx={{ mt: 2 }}>
+                  <Stack spacing={2}>
+                    <TextField
+                      fullWidth
+                      label="Submission URL"
+                      variant="outlined"
+                      value={submissionUrl}
+                      onChange={(e) => setSubmissionUrl(e.target.value)}
+                      placeholder="Enter the URL where your assessment can be found"
+                      error={!!error}
+                      helperText={error}
+                      disabled={submitting}
+                      sx={{ 
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 2,
+                        },
+                        '& label': { 
+                          color: 'grey.200' 
+                        }
+                      }}
+                    />
+                    <StyledButton
+                      onClick={handleSubmit}
+                      disabled={submitting || !submissionUrl.trim()}
+                      sx={{
+                        width: '100%',
+                        height: 56,
+                      }}
+                    >
+                      {submitting ? <CircularProgress size={24} color="inherit" /> : 'Submit'}
+                    </StyledButton>
+                  </Stack>
+                </Box>
+              </Stack>
             </Box>
-          </Box>
-        )}
-      </Box>
-    </>
+          </Grid>
+        </Grid>
+      </Container>
+
+      {/* Success Alert */}
+      <Snackbar 
+        open={!!success} 
+        autoHideDuration={6000} 
+        onClose={handleCloseAlert}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          severity="success"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={handleCloseAlert}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ 
+            width: '100%',
+            bgcolor: 'primary.main',
+            color: 'white',
+            borderRadius: '24px',
+            '& .MuiAlert-message': {
+              fontSize: '1rem',
+              fontWeight: 500,
+              color: 'white'
+            },
+            '& .MuiAlert-icon': {
+              color: 'white'
+            }
+          }}
+        >
+          {success}
+        </Alert>
+      </Snackbar>
+
+      {/* Error Alert */}
+      <Snackbar 
+        open={!!error} 
+        autoHideDuration={6000} 
+        onClose={handleCloseAlert}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          severity="error"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={handleCloseAlert}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ 
+            width: '100%',
+            bgcolor: 'primary.main',
+            color: 'white',
+            borderRadius: '24px',
+            '& .MuiAlert-message': {
+              fontSize: '1rem',
+              fontWeight: 500,
+              color: 'white'
+            },
+            '& .MuiAlert-icon': {
+              color: 'white'
+            }
+          }}
+        >
+          {error}
+        </Alert>
+      </Snackbar>
+    </Box>
   );
 } 

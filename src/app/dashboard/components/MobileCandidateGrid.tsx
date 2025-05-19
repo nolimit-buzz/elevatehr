@@ -146,7 +146,7 @@ const MobileCandidateGrid: React.FC<MobileCandidateGridProps> = ({
                   <path d="M13.0917 12.65L10.5083 11.1083C10.0583 10.8416 9.69168 10.2 9.69168 9.67497V6.2583" stroke="#111111" strokeOpacity="0.62" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 <Typography variant="body2" sx={{ color: 'rgba(17, 17, 17, 0.48)', fontSize: '14px' }}>
-                  Available {candidate.professional_info?.start_date?.toLowerCase() || 'Not specified'}
+                  Available {candidate.professional_info?.start_date ? new Date(candidate.professional_info.start_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Not specified'}
                 </Typography>
               </Box>
             </Box>

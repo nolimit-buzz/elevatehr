@@ -740,6 +740,12 @@ export default function Home() {
       }}
     >
       <Container maxWidth="xl" sx={{ flexGrow: 1, py: 3 }}>
+        <Notification
+          open={notification.open}
+          message={notification.message}
+          severity={notification.severity}
+          onClose={handleCloseNotification}
+        />
         <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
           <IconButton
             sx={{
@@ -1158,7 +1164,7 @@ export default function Home() {
                                 onClick={() => {
                                   console.log('Option clicked:', option);
                                   handleUpdateStages({
-                                    stage: "skill_assessment",
+                                    stage: option.action as StageType,
                                     assessmentType: option.action.startsWith('assessment_') 
                                       ? option.action.replace('assessment_', '')
                                       : undefined
@@ -1319,13 +1325,6 @@ export default function Home() {
           />
         )}
       </Container>
-      {/* Replace the old Snackbar with the new Notification component */}
-      <Notification
-        open={notification.open}
-        message={notification.message}
-        severity={notification.severity}
-        onClose={handleCloseNotification}
-      />
     </Box>
   );
 }

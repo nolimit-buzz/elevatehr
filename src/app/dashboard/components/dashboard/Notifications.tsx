@@ -24,7 +24,7 @@ interface NotificationData {
 
 interface NotificationItemProps {
   text: string;
-  timestamp: string;
+  date: string;
   type: string;
 }
 
@@ -35,7 +35,7 @@ interface NotificationsProps {
   customStyle?: React.CSSProperties;
 }
 
-const NotificationItem: React.FC<NotificationItemProps> = ({ text, timestamp, type }) => {
+const NotificationItem: React.FC<NotificationItemProps> = ({ text, date, type }) => {
   const theme = useTheme();
   return (
     <>
@@ -66,9 +66,8 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ text, timestamp, ty
                 lineHeight: "16px",
                 letterSpacing: "0.16px",
               }}
-            >
-              {text}
-            </Typography>
+              dangerouslySetInnerHTML={{ __html: text }}
+            />
             <Typography
               variant="caption"
               sx={{
@@ -80,12 +79,12 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ text, timestamp, ty
                 display: "block"
               }}
             >
-              {new Date(timestamp).toLocaleDateString('en-US', {
+              {date ? new Date(date).toLocaleDateString('en-US', {
                 month: 'short',
                 day: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit'
-              })}
+              }) : 'No date'}
             </Typography>
           </Box>
         </Box>
@@ -155,7 +154,7 @@ const Frame: React.FC<NotificationsProps> = ({ notifications, loading, error, cu
               <NotificationItem 
                 key={notification.id} 
                 text={notification.text}
-                timestamp={notification.timestamp}
+                date={notification.timestamp}
                 type={notification.type}
               />
             ))
