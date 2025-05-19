@@ -75,7 +75,9 @@ export default function CandidateListSection({
   const theme = useTheme();
   console.log('Candidate data:', candidate); // Debug log
   console.log('Assessment results:', candidate?.assessments_results); // Debug log for assessment results
-  const skills: Skill[] = candidate?.professional_info?.skills?.split(",") || [];
+  const skills: Skill[] = candidate?.professional_info?.skills?.split(",")
+    .map((skill: string) => skill.trim())
+    .filter((skill: string) => skill.length > 0) || [];
 
   // Candidate info data for mapping
   const candidateInfo = [

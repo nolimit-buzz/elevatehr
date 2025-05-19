@@ -234,7 +234,7 @@ export default function AssessmentPage() {
                 </Box>
               )}
 
-              {assessment && (
+      {assessment && (
                 <Stack spacing={4}>
                   <Box>
                     <Typography 
@@ -245,7 +245,7 @@ export default function AssessmentPage() {
                       {assessment.description}
                     </Typography>
                     <Box mb={2} sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {assessment.skills && assessment.skills.split(',').map((skill: string, idx: number) => (
+            {assessment.skills && assessment.skills.split(',').map((skill: string, idx: number) => (
                         <Chip 
                           key={idx} 
                           label={skill.trim()} 
@@ -255,8 +255,8 @@ export default function AssessmentPage() {
                             color: '#76325F',
                           }} 
                         />
-                      ))}
-                    </Box>
+            ))}
+          </Box>
                   </Box>
 
                   <Box>
@@ -278,12 +278,12 @@ export default function AssessmentPage() {
                         color: "rgba(17, 17, 17, 0.84)",
                       }}
                     >
-                      <div dangerouslySetInnerHTML={{ __html: assessment.content }} />
-                    </Box>
-                  </Box>
+              <div dangerouslySetInnerHTML={{ __html: assessment.content }} />
+            </Box>
+          </Box>
                 </Stack>
               )}
-            </Box>
+        </Box>
           </Grid>
 
           <Grid item xs={12} md={4}>

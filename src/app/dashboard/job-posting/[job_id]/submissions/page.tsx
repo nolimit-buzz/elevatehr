@@ -13,6 +13,7 @@ import {
   Chip,
   CircularProgress,
   Stack,
+  Pagination,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
@@ -107,6 +108,10 @@ export default function Home() {
     null
   );
   const [dynamicPhaseOptions, setDynamicPhaseOptions] = useState<Record<StageType, PhaseOption[]>>(PHASE_OPTIONS);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [perPage] = useState(10);
 
   const router = useRouter();
   const params = useParams();
@@ -167,6 +172,8 @@ export default function Home() {
       const stage = subTabValue === 0 ? "new" : getStageValue(subTabValue);
       const url = new URL(`https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications`);
       url.searchParams.append('stage', stage);
+      url.searchParams.append('page', page.toString());
+      url.searchParams.append('per_page', perPage.toString());
       
       // Add logging for debugging
       console.log('Selected Assessment Type:', selectedAssessmentType);
@@ -190,13 +197,15 @@ export default function Home() {
         cache: "no-store",
       });
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch candidates: ${response.status}`);
-        }
+      if (!response.ok) {
+        throw new Error(`Failed to fetch candidates: ${response.status}`);
+      }
 
       const data = await response.json();
       setCandidates(data);
       setFilteredCandidates(data);
+      setTotalPages(data.total_pages);
+      setTotalItems(data.total);
       setLoading(false);
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -208,11 +217,15 @@ export default function Home() {
     }
   };
 
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+
   useEffect(() => {
     if (primaryTabValue === 0) {
       fetchCandidates();
     }
-  }, [getJobId, primaryTabValue, subTabValue, selectedAssessmentType]);
+  }, [getJobId, primaryTabValue, subTabValue, selectedAssessmentType, page]);
 
   useEffect(() => {
     console.log("Job details received:", jobDetails);
@@ -1100,6 +1113,8 @@ export default function Home() {
               <Paper
                 elevation={0}
                 sx={{
+                  height: "100vh",
+                  overflow: "hidden",
                   width: "100%",
                   bgcolor: "transparent",
                   borderRadius: 2,
@@ -1254,6 +1269,8 @@ export default function Home() {
                     {/* Desktop View */}
                     <Box
                       sx={{
+                        height: "max-content",
+                        overflow: "auto",
                         pt: 0,
                         pb: 2,
                         display: { xs: "none", lg: "block" },
@@ -1324,6 +1341,40 @@ export default function Home() {
             setPrimaryTabValue={setPrimaryTabValue}
           />
         )}
+
+        {/* Add pagination controls */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 2 }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            size="large"
+            showFirstButton
+            showLastButton
+            sx={{
+              '& .MuiPaginationItem-root': {
+                fontSize: '16px',
+                fontWeight: 500,
+              },
+              '& .Mui-selected': {
+                backgroundColor: 'primary.main',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: 'primary.dark',
+                },
+              },
+            }}
+          />
+        </Box>
+        <Typography 
+          variant="body2" 
+          color="grey.200" 
+          align="center" 
+          sx={{ mb: 3 }}
+        >
+          Showing <span style={{ fontWeight: 600 }}>{((page - 1) * perPage) + 1}</span> to <span style={{ fontWeight: 600 }}>{Math.min(page * perPage, totalItems)}</span> of <span style={{ fontWeight: 600 }}>{totalItems}</span> entries
+        </Typography>
       </Container>
     </Box>
   );
