@@ -16,14 +16,16 @@ import DashboardCard from "../shared/DashboardCard";
 
 interface NotificationData {
   id: string | number;
-  text: string;
-  timestamp: string;
+  title: string;
+  content: string;
+  date: string;
   read: boolean;
   type: string;
 }
 
 interface NotificationItemProps {
-  text: string;
+  title: string;
+  content: string;
   date: string;
   type: string;
 }
@@ -35,13 +37,13 @@ interface NotificationsProps {
   customStyle?: React.CSSProperties;
 }
 
-const NotificationItem: React.FC<NotificationItemProps> = ({ text, date, type }) => {
+const NotificationItem: React.FC<NotificationItemProps> = ({ title, content, date, type }) => {
   const theme = useTheme();
   return (
     <>
-      <ListItem sx={{ height: 56, padding: 0 }}>
+      <ListItem sx={{ height: 'auto', minHeight: 56, padding: 0 }}>
         <Box
-          sx={{ display: "flex", alignItems: "center", width: "100%", px: 2.5 }}
+          sx={{ display: "flex", alignItems: "flex-start", width: "100%", px: 2.5, py: 1.5 }}
         >
           <Avatar
             sx={{
@@ -49,6 +51,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ text, date, type })
               height: 32,
               bgcolor: theme.palette.secondary.light,
               color: "#4343E1",
+              mt: 0.5
             }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -59,14 +62,30 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ text, date, type })
           </Avatar>
           <Box sx={{ ml: 2, flex: 1 }}>
             <Typography
-              variant="body1"
+              variant="subtitle2"
+              sx={{
+                color: "rgba(17, 17, 17, 0.92)",
+                fontSize: 14,
+                lineHeight: "20px",
+                letterSpacing: "0.14px",
+                fontWeight: 600,
+                mb: 0.5
+              }}
+            >
+              {title}
+            </Typography>
+            <Typography
+              variant="body2"
               sx={{
                 color: "rgba(17, 17, 17, 0.84)",
-                fontSize: 16,
-                lineHeight: "16px",
-                letterSpacing: "0.16px",
+                fontSize: 14,
+                lineHeight: "20px",
+                letterSpacing: "0.14px",
+                '& b': {
+                  fontWeight: 600
+                }
               }}
-              dangerouslySetInnerHTML={{ __html: text }}
+              dangerouslySetInnerHTML={{ __html: content }}
             />
             <Typography
               variant="caption"
@@ -75,7 +94,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ text, date, type })
                 fontSize: 12,
                 lineHeight: "12px",
                 letterSpacing: "0.12px",
-                mt: 0.5,
+                mt: 1,
                 display: "block"
               }}
             >
@@ -153,8 +172,9 @@ const Frame: React.FC<NotificationsProps> = ({ notifications, loading, error, cu
             notifications.map((notification) => (
               <NotificationItem 
                 key={notification.id} 
-                text={notification.text}
-                date={notification.timestamp}
+                title={notification.title}
+                content={notification.content}
+                date={notification.date}
                 type={notification.type}
               />
             ))

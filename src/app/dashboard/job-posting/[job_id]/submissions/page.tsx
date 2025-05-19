@@ -1113,14 +1113,11 @@ export default function Home() {
               <Paper
                 elevation={0}
                 sx={{
-                  height: "100vh",
-                  overflow: "hidden",
-                  width: "100%",
                   bgcolor: "transparent",
                   borderRadius: 2,
-                  overflow: "hidden",
                   position: "relative",
                   minHeight: "700px",
+                  overflow: "hidden"
                 }}
               >
                 {/* Actions bar inside Paper, before candidates list */}

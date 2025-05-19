@@ -318,8 +318,9 @@ interface ProfileData {
 
 interface NotificationData {
   id: string | number;
-  text: string;
-  timestamp: string;
+  title: string;
+  content: string;
+  date: string;
   read: boolean;
   type: string;
 }
@@ -538,7 +539,16 @@ const Dashboard = () => {
         }
 
         const data = await response.json();
-        setNotifications(data);
+        // Transform the data to match the NotificationData interface
+        const transformedData = data.map((notification: any) => ({
+          id: notification.id,
+          title: notification.title,
+          content: notification.content,
+          date: notification.date,
+          read: notification.read || false,
+          type: notification.type || 'default'
+        }));
+        setNotifications(transformedData);
       } catch (err) {
         setNotificationsError(err instanceof Error ? err.message : 'Failed to fetch notifications');
       } finally {
