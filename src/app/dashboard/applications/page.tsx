@@ -646,334 +646,334 @@ export default function Home() {
               lineHeight: "100%",
               letterSpacing: "0.12px"
             }}  >
-             Applications
+              Applications
             </Typography>
           </Box>
         </Box>
 
-          <Stack direction="row" gap={3}>
-          <Box sx={{ 
-            width: 300, 
+        <Stack direction="row" gap={3}>
+          <Box sx={{
+            width: 300,
             flexShrink: 0,
             display: { xs: 'none', lg: 'block' }
           }}>
-              <Paper elevation={0} sx={{ p: 3, mb: 2, borderRadius: 2 }}>
-                <Box
+            <Paper elevation={0} sx={{ p: 3, mb: 2, borderRadius: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 3
+                }}
+              >
+                <Typography
+                  variant="h6"
                   sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    mb: 3
+                    fontSize: '20px',
+                    fontWeight: 600,
+                    color: 'rgba(17, 17, 17, 0.92)'
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontSize: '20px',
-                      fontWeight: 600,
-                      color: 'rgba(17, 17, 17, 0.92)'
-                    }}
-                  >
-                    Filters:
-                  </Typography>
-                  <Button
-                    startIcon={<CloseIcon />}
-                    sx={{
-                      color: 'rgba(17, 17, 17, 0.72)',
-                      textTransform: 'none',
-                      fontSize: '14px',
-                      fontWeight: 400,
-                      transition: 'all 0.2s ease-in-out',
-                      '&:hover': {
-                        color: theme.palette.primary.main,
-                        backgroundColor: 'rgba(68, 68, 226, 0.04)',
-                      }
-                    }}
-                    onClick={clearFilters}
-                  >
-                    Clear filter
-                  </Button>
-                </Box>
-                <Box sx={{ mb: 3 }}>
-                  <Typography
-                    sx={{
-                      mb: 1.5,
-                      fontSize: '16px',
-                      fontWeight: 500,
-                      color: 'rgba(17, 17, 17, 0.92)'
-                    }}
-                  >
-                    Job Title
-                  </Typography>
-                  <FormControl fullWidth>
-                   <StyledTextField
+                  Filters:
+                </Typography>
+                <Button
+                  startIcon={<CloseIcon />}
+                  sx={{
+                    color: 'rgba(17, 17, 17, 0.72)',
+                    textTransform: 'none',
+                    fontSize: '14px',
+                    fontWeight: 400,
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': {
+                      color: theme.palette.primary.main,
+                      backgroundColor: 'rgba(68, 68, 226, 0.04)',
+                    }
+                  }}
+                  onClick={clearFilters}
+                >
+                  Clear filter
+                </Button>
+              </Box>
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  sx={{
+                    mb: 1.5,
+                    fontSize: '16px',
+                    fontWeight: 500,
+                    color: 'rgba(17, 17, 17, 0.92)'
+                  }}
+                >
+                  Job Title
+                </Typography>
+                <FormControl fullWidth>
+                  <StyledTextField
                     placeholder="Search by Job Title"
                     fullWidth
                     value={filters.jobTitle}
                     onChange={(e) => handleFilterChange("jobTitle", e.target.value)}
-                   />
-                  </FormControl>
-                </Box>
-                <Box sx={{ mb: 3 }}>
-                  <Typography
-                    sx={{
-                      mb: 1.5,
-                      fontSize: '16px',
-                      fontWeight: 500,
-                      color: 'rgba(17, 17, 17, 0.92)'
-                    }}
-                  >
-                    Years of experience
-                  </Typography>
-                  <FormControl fullWidth>
-                    <Select
-
-                      value={filters.yearsOfExperience}
-                      displayEmpty
-                      renderValue={(selected) => selected || "Select years"}
-                      sx={{
-                        boxShadow: 'none',
-                        backgroundColor: '#fff',
-                        borderRadius: '12px',
-                        // border: '1px solid rgba(17, 17, 17, 0.12)',
-                        '& .MuiSelect-select': {
-                          padding: '16px',
-                          border: 'none',
-                          boxShadow: 'none',
-                          color: filters.yearsOfExperience ? 'rgba(17, 17, 17, 0.84)' : 'rgba(17, 17, 17, 0.48)'
-                        }
-                      }}
-                      onChange={(e) => handleFilterChange("yearsOfExperience", e.target.value)}
-                    >
-                      <MenuItem value="">All years</MenuItem>
-                      <MenuItem value="1-3">1-3 years</MenuItem>
-                      <MenuItem value="4-6">4-6 years</MenuItem>
-                      <MenuItem value="7+">7+ years</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-
-                <Box sx={{ mb: 3 }}>
-                  <Typography
-                    sx={{
-                      mb: 1.5,
-                      fontSize: '16px',
-                      fontWeight: 500,
-                      color: 'rgba(17, 17, 17, 0.92)'
-                    }}
-                  >
-                    Salary expectation:
-                  </Typography>
-                  <Stack spacing={1.5}>
-                    <StyledTextField
-                      placeholder="Min: 000000"
-                      fullWidth
-                      value={filters.salaryMin}
-                      onChange={(e) => handleFilterChange("salaryMin", e.target.value)}
-                      type="number"
-                    />
-                    <StyledTextField
-                      placeholder="Max: 000000"
-                      fullWidth
-                      value={filters.salaryMax}
-                      onChange={(e) => handleFilterChange("salaryMax", e.target.value)}
-                      type="number"
-                    />
-                  </Stack>
-                </Box>
-
-                <Box sx={{ mb: 3 }}>
-                  <Typography
-                    sx={{
-                      mb: 1.5,
-                      fontSize: '16px',
-                      fontWeight: 500,
-                      color: 'rgba(17, 17, 17, 0.92)'
-                    }}
-                  >
-                    Required skills
-                  </Typography>
-                  <CreatableSelect
-                    isMulti
-                    options={availableSkills}
-                    value={filters.requiredSkills.map(skill => ({ value: skill, label: skill }))}
-                    onChange={(selectedOptions: any) => {
-                      const selectedSkills = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
-                      handleFilterChange("requiredSkills", selectedSkills);
-                    }}
-                    onCreateOption={(inputValue: string) => {
-                      const newSkill = { value: inputValue, label: inputValue };
-                      handleFilterChange("requiredSkills", [...filters.requiredSkills, inputValue]);
-                    }}
-                    placeholder="Select or create skills"
-                    formatCreateLabel={(inputValue: string) => `Create "${inputValue}"`}
-                    styles={{
-                      control: (base: any) => ({
-                        ...base,
-                        backgroundColor: '#fff',
-                        borderRadius: '12px',
-                        border: '1px solid rgba(17, 17, 17, 0.08)',
-                        minHeight: '52px',
-                        boxShadow: 'none',
-                        '&:hover': {
-                          borderColor: 'rgba(17, 17, 17, 0.08)'
-                        }
-                      }),
-                      menu: (base: any) => ({
-                        ...base,
-                        zIndex: 2
-                      }),
-                      option: (base: any, state: any) => ({
-                        ...base,
-                        backgroundColor: state.isFocused ? '#F8F9FB' : 'white',
-                        color: 'rgba(17, 17, 17, 0.84)',
-                        cursor: 'pointer',
-                        padding: '12px 16px'
-                      }),
-                      multiValue: (base: any) => ({
-                        ...base,
-                        backgroundColor: '#E8EAFD',
-                        borderRadius: '4px',
-                        padding: '2px 6px',
-                        margin: '2px',
-                      }),
-                      multiValueLabel: (base: any) => ({
-                        ...base,
-                        color: '#4444E2',
-                        fontSize: '14px'
-                      }),
-                      multiValueRemove: (base: any) => ({
-                        ...base,
-                        color: '#4444E2',
-                        cursor: 'pointer',
-                        '&:hover': {
-                          backgroundColor: '#D8DAFD',
-                          color: '#4444E2'
-                        }
-                      }),
-                      placeholder: (base: any) => ({
-                        ...base,
-                        color: 'rgba(17, 17, 17, 0.48)'
-                      })
-                    }}
                   />
-                </Box>
-
-                <Box sx={{ mb: 3 }}>
-                  <Typography
-                    sx={{
-                      mb: 1.5,
-                      fontSize: '16px',
-                      fontWeight: 500,
-                      color: 'rgba(17, 17, 17, 0.92)'
-                    }}
-                  >
-                    Availability:
-                  </Typography>
-                  <RadioGroup
-                    value={filters.availability}
-                    onChange={(e) => handleFilterChange("availability", e.target.value)}
-                  >
-                    <FormControlLabel
-                      value="immediately"
-                      control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g opacity="0.68">
-                          <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
-                        </g>
-                      </svg>
-                      } />}
-                      label="Immediately"
-                      sx={{
-                        '& .MuiTypography-root': {
-                          fontSize: '16px',
-                          color: 'rgba(17, 17, 17, 0.84)'
-                        }
-                      }}
-                    />
-                    <FormControlLabel
-                      value="in-a-week"
-                      control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g opacity="0.68">
-                          <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
-                        </g>
-                      </svg>
-                      } />}
-                      label="In a week"
-                      sx={{
-                        '& .MuiTypography-root': {
-                          fontSize: '16px',
-                          color: 'rgba(17, 17, 17, 0.84)'
-                        }
-                      }}
-                    />
-                    <FormControlLabel
-                      value="in-a-month"
-                      control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g opacity="0.68">
-                          <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
-                        </g>
-                      </svg>
-                      } />}
-                      label="In a month"
-                      sx={{
-                        '& .MuiTypography-root': {
-                          fontSize: '16px',
-                          color: 'rgba(17, 17, 17, 0.84)'
-                        }
-                      }}
-                    />
-                    <FormControlLabel
-                      value="in-two-months"
-                      control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g opacity="0.68">
-                          <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
-                        </g>
-                      </svg>
-                      } />}
-                      label="In two months"
-                      sx={{
-                        '& .MuiTypography-root': {
-                          fontSize: '16px',
-                          color: 'rgba(17, 17, 17, 0.84)'
-                        }
-                      }}
-                    />
-                  </RadioGroup>
-                </Box>
-
-                <Button
-                  variant="contained"
-                  fullWidth
-                  disabled={!hasActiveFilters()}
+                </FormControl>
+              </Box>
+              <Box sx={{ mb: 3 }}>
+                <Typography
                   sx={{
-                    bgcolor: theme.palette.primary.main,
-                    color: theme.palette.secondary.light,
-                    textTransform: 'none',
-                    borderRadius: '12px',
-                    padding: '16px',
+                    mb: 1.5,
                     fontSize: '16px',
                     fontWeight: 500,
-                    transition: 'all 0.2s ease-in-out',
-                    '&:hover': {
-                      bgcolor: theme.palette.primary.main,
-                      transform: "translateY(-1px)",
-                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                    },
-                    '&.Mui-disabled': {
-                      backgroundColor: 'rgba(0, 0, 0, 0.12)',
-                      color: 'rgba(0, 0, 0, 0.26)'
-                    }
+                    color: 'rgba(17, 17, 17, 0.92)'
                   }}
+                >
+                  Years of experience
+                </Typography>
+                <FormControl fullWidth>
+                  <Select
+
+                    value={filters.yearsOfExperience}
+                    displayEmpty
+                    renderValue={(selected) => selected || "Select years"}
+                    sx={{
+                      boxShadow: 'none',
+                      backgroundColor: '#fff',
+                      borderRadius: '12px',
+                      // border: '1px solid rgba(17, 17, 17, 0.12)',
+                      '& .MuiSelect-select': {
+                        padding: '16px',
+                        border: 'none',
+                        boxShadow: 'none',
+                        color: filters.yearsOfExperience ? 'rgba(17, 17, 17, 0.84)' : 'rgba(17, 17, 17, 0.48)'
+                      }
+                    }}
+                    onChange={(e) => handleFilterChange("yearsOfExperience", e.target.value)}
+                  >
+                    <MenuItem value="">All years</MenuItem>
+                    <MenuItem value="1-3">1-3 years</MenuItem>
+                    <MenuItem value="4-6">4-6 years</MenuItem>
+                    <MenuItem value="7+">7+ years</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  sx={{
+                    mb: 1.5,
+                    fontSize: '16px',
+                    fontWeight: 500,
+                    color: 'rgba(17, 17, 17, 0.92)'
+                  }}
+                >
+                  Salary expectation:
+                </Typography>
+                <Stack spacing={1.5}>
+                  <StyledTextField
+                    placeholder="Min: 000000"
+                    fullWidth
+                    value={filters.salaryMin}
+                    onChange={(e) => handleFilterChange("salaryMin", e.target.value)}
+                    type="number"
+                  />
+                  <StyledTextField
+                    placeholder="Max: 000000"
+                    fullWidth
+                    value={filters.salaryMax}
+                    onChange={(e) => handleFilterChange("salaryMax", e.target.value)}
+                    type="number"
+                  />
+                </Stack>
+              </Box>
+
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  sx={{
+                    mb: 1.5,
+                    fontSize: '16px',
+                    fontWeight: 500,
+                    color: 'rgba(17, 17, 17, 0.92)'
+                  }}
+                >
+                  Required skills
+                </Typography>
+                <CreatableSelect
+                  isMulti
+                  options={availableSkills}
+                  value={filters.requiredSkills.map(skill => ({ value: skill, label: skill }))}
+                  onChange={(selectedOptions: any) => {
+                    const selectedSkills = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
+                    handleFilterChange("requiredSkills", selectedSkills);
+                  }}
+                  onCreateOption={(inputValue: string) => {
+                    const newSkill = { value: inputValue, label: inputValue };
+                    handleFilterChange("requiredSkills", [...filters.requiredSkills, inputValue]);
+                  }}
+                  placeholder="Select or create skills"
+                  formatCreateLabel={(inputValue: string) => `Create "${inputValue}"`}
+                  styles={{
+                    control: (base: any) => ({
+                      ...base,
+                      backgroundColor: '#fff',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(17, 17, 17, 0.08)',
+                      minHeight: '52px',
+                      boxShadow: 'none',
+                      '&:hover': {
+                        borderColor: 'rgba(17, 17, 17, 0.08)'
+                      }
+                    }),
+                    menu: (base: any) => ({
+                      ...base,
+                      zIndex: 2
+                    }),
+                    option: (base: any, state: any) => ({
+                      ...base,
+                      backgroundColor: state.isFocused ? '#F8F9FB' : 'white',
+                      color: 'rgba(17, 17, 17, 0.84)',
+                      cursor: 'pointer',
+                      padding: '12px 16px'
+                    }),
+                    multiValue: (base: any) => ({
+                      ...base,
+                      backgroundColor: '#E8EAFD',
+                      borderRadius: '4px',
+                      padding: '2px 6px',
+                      margin: '2px',
+                    }),
+                    multiValueLabel: (base: any) => ({
+                      ...base,
+                      color: '#4444E2',
+                      fontSize: '14px'
+                    }),
+                    multiValueRemove: (base: any) => ({
+                      ...base,
+                      color: '#4444E2',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '#D8DAFD',
+                        color: '#4444E2'
+                      }
+                    }),
+                    placeholder: (base: any) => ({
+                      ...base,
+                      color: 'rgba(17, 17, 17, 0.48)'
+                    })
+                  }}
+                />
+              </Box>
+
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  sx={{
+                    mb: 1.5,
+                    fontSize: '16px',
+                    fontWeight: 500,
+                    color: 'rgba(17, 17, 17, 0.92)'
+                  }}
+                >
+                  Availability:
+                </Typography>
+                <RadioGroup
+                  value={filters.availability}
+                  onChange={(e) => handleFilterChange("availability", e.target.value)}
+                >
+                  <FormControlLabel
+                    value="immediately"
+                    control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g opacity="0.68">
+                        <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
+                      </g>
+                    </svg>
+                    } />}
+                    label="Immediately"
+                    sx={{
+                      '& .MuiTypography-root': {
+                        fontSize: '16px',
+                        color: 'rgba(17, 17, 17, 0.84)'
+                      }
+                    }}
+                  />
+                  <FormControlLabel
+                    value="in-a-week"
+                    control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g opacity="0.68">
+                        <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
+                      </g>
+                    </svg>
+                    } />}
+                    label="In a week"
+                    sx={{
+                      '& .MuiTypography-root': {
+                        fontSize: '16px',
+                        color: 'rgba(17, 17, 17, 0.84)'
+                      }
+                    }}
+                  />
+                  <FormControlLabel
+                    value="in-a-month"
+                    control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g opacity="0.68">
+                        <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
+                      </g>
+                    </svg>
+                    } />}
+                    label="In a month"
+                    sx={{
+                      '& .MuiTypography-root': {
+                        fontSize: '16px',
+                        color: 'rgba(17, 17, 17, 0.84)'
+                      }
+                    }}
+                  />
+                  <FormControlLabel
+                    value="in-two-months"
+                    control={<StyledRadio icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g opacity="0.68">
+                        <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#111111" stroke-opacity="0.84" />
+                      </g>
+                    </svg>
+                    } />}
+                    label="In two months"
+                    sx={{
+                      '& .MuiTypography-root': {
+                        fontSize: '16px',
+                        color: 'rgba(17, 17, 17, 0.84)'
+                      }
+                    }}
+                  />
+                </RadioGroup>
+              </Box>
+
+              <Button
+                variant="contained"
+                fullWidth
+                disabled={!hasActiveFilters()}
+                sx={{
+                  bgcolor: theme.palette.primary.main,
+                  color: theme.palette.secondary.light,
+                  textTransform: 'none',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    bgcolor: theme.palette.primary.main,
+                    transform: "translateY(-1px)",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                  },
+                  '&.Mui-disabled': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.12)',
+                    color: 'rgba(0, 0, 0, 0.26)'
+                  }
+                }}
                 onClick={() => {
                   applyFilters();
                   setShowFilterModal(false);
                 }}
-                >
-                  Apply Filter
-                </Button>
-              </Paper>
-            </Box>
-            <Box sx={{ flexGrow: 1 }}>
+              >
+                Apply Filter
+              </Button>
+            </Paper>
+          </Box>
+          <Box sx={{ flexGrow: 1 }}>
             {/* Dropdown for small screens */}
             <Box sx={{ display: { xs: 'block', lg: 'none' }, py: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -1094,7 +1094,7 @@ export default function Home() {
                       minHeight: '40px',
                       transition: 'all 0.3s ease-in-out'
                     }}>
-                <Tabs
+                      <Tabs
                         value={viewMode}
                         onChange={(_, newValue) => setViewMode(newValue)}
                         sx={{
@@ -1151,8 +1151,8 @@ export default function Home() {
                   variant="scrollable"
                   scrollButtons="auto"
                   aria-label="submission tabs"
-                  sx={{ 
-                    width: "100%", 
+                  sx={{
+                    width: "100%",
                     alignItems: "center",
                     '& .MuiButtonBase-root': {
                         padding: '0px !important',
@@ -1319,54 +1319,218 @@ export default function Home() {
                   />
                 </Tabs>
               </Box>
-              </Box>
-              <Paper
-                elevation={0}
-                sx={{
-                  width: "100%",
-                  borderRadius: 2,
-                  overflow: "hidden",
-                  position: "relative",
-                  minHeight: "700px",
+            </Box>
+            <Paper
+              elevation={0}
+              sx={{
+                width: "100%",
+                borderRadius: 2,
+                overflow: "hidden",
+                position: "relative",
+                minHeight: "700px",
                 backgroundColor: "transparent !important",
-                }}
-              >
-                {/* Actions bar inside Paper, before candidates list */}
-                {selectedEntries?.length > 0 &&
-                  subTabValue !== 3 && ( // Hide for acceptance phase
-                    <Box
-                      sx={{
+              }}
+            >
+              {/* Actions bar inside Paper, before candidates list */}
+              {selectedEntries?.length > 0 &&
+                subTabValue !== 3 && ( // Hide for acceptance phase
+                  <Box
+                    sx={{
                       backgroundColor: "white",
                       padding: 0,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                         p: 2,
-                        borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+                      borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
                       
-                      }}
-                    >
+                    }}
+                  >
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <Typography variant="body1" color={theme.palette.grey[100]}>
-                          {selectedEntries?.length} candidates selected
-                        </Typography>
-                        <IconButton
-                          size="small"
-                          onClick={() => setSelectedEntries([])}
-                          sx={{ ml: 1 }}
-                        >
-                          <CloseIcon fontSize="small" />
-                        </IconButton>
-                      </Box>
+                        {selectedEntries?.length} candidates selected
+                      </Typography>
+                      <IconButton
+                        size="small"
+                        onClick={() => setSelectedEntries([])}
+                        sx={{ ml: 1 }}
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
 
-                      <Box sx={{ display: "flex", gap: 2 }}>
+                    <Box sx={{ display: "flex", gap: 2 }}>
                       {PHASE_OPTIONS[getStageValue(subTabValue)]?.map((option) => (
+                        <Button
+                          key={option.action}
+                          variant="outlined"
+                          startIcon={isMovingStage === option.action ? <CircularProgress size={20} /> : <option.icon />}
+                          onClick={() => handleUpdateStagesWrapper(option.action, selectedEntries)}
+                          disabled={isMovingStage.length > 0}
+                          sx={{
+                            color: 'rgba(17, 17, 17, 0.84)',
+                            borderColor: 'rgba(17, 17, 17, 0.12)',
+                            '&:hover': {
+                              borderColor: 'rgba(17, 17, 17, 0.24)',
+                            },
+                            '&.Mui-disabled': {
+                              backgroundColor: 'rgba(0, 0, 0, 0.12)',
+                              color: 'rgba(0, 0, 0, 0.26)'
+                            }
+                          }}
+                        >
+                          {isMovingStage ? 'Moving...' : option.label}
+                        </Button>
+                      ))}
+                    </Box>
+                  </Box>
+                )}
+
+              {/* Grid View */}
+              <Box sx={{ 
+                display: { xs: 'block', md: viewMode === 'grid' ? 'block' : 'none' },
+                width: '100%',
+                height: '100%',
+                overflow: 'auto',
+                bgcolor: "transparent !important",
+              }}>
+                <Grid container spacing={3}>
+                  {filteredCandidates?.applications?.map((candidate) => (
+                    <Grid item xs={12} sm={6} lg={4} key={candidate.id}>
+                      <Paper
+                        elevation={0}
+                        sx={{
+                          height: '100%',
+                          p: { xs: 2, sm: 3 },
+                          backgroundColor: '#fff',
+                          borderRadius: 2,
+                          boxShadow: '1px 2px 10px 0px rgba(0, 0, 0, 0.051)',
+                          // border: '1px solid rgba(0, 0, 0, 0.12)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: { xs: 1.5, sm: 2 },
+                          minHeight: { xs: '380px', sm: '420px' }
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2, flexDirection: 'column' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, flexDirection: '' }}>
+                            <Checkbox
+                              checked={selectedEntries.includes(candidate.id)}
+                              onChange={() => handleSelectCandidate(candidate.id)}
+                              disabled={subTabValue === 3 || filteredCandidates?.applications?.length === 1}
+                              sx={{
+                                color: theme.palette.grey[100],
+                                '&.Mui-checked': {
+                                  color: theme.palette.grey[100],
+                                },
+                                padding: 0,
+                                '& .MuiSvgIcon-root': {
+                                  fontSize: 20
+                                }
+                              }}
+                            />
+                            <Box>
+                              <Typography variant="h6" sx={{ fontSize: '16px', fontWeight: 600, color: 'rgba(17, 17, 17, 0.92)',textTransform: 'capitalize'}}>
+                                {candidate.personal_info.firstname} {candidate.personal_info.lastname}
+                              </Typography>
+                             
+                            </Box>
+                              </Box>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, sm: 2.5 } }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.66662 18.3333H13.3333C16.6833 18.3333 17.2833 16.9917 17.4583 15.3583L18.0833 8.69167C18.3083 6.65833 17.725 5 14.1666 5H5.83329C2.27496 5 1.69162 6.65833 1.91662 8.69167L2.54162 15.3583C2.71662 16.9917 3.31662 18.3333 6.66662 18.3333Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M6.66667 5.00008V4.33341C6.66667 2.85841 6.66667 1.66675 9.33333 1.66675H10.6667C13.3333 1.66675 13.3333 2.85841 13.3333 4.33341V5.00008" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M11.6667 10.8333V11.6667C11.6667 11.675 11.6667 11.675 11.6667 11.6833C11.6667 12.5917 11.6583 13.3333 10 13.3333C8.35 13.3333 8.33333 12.6 8.33333 11.6917V10.8333C8.33333 10 8.33333 10 9.16667 10H10.8333C11.6667 10 11.6667 10 11.6667 10.8333Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M18.0417 9.16675C16.1167 10.5667 13.9167 11.4001 11.6667 11.6834" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M2.18333 9.3916C4.05833 10.6749 6.175 11.4499 8.33333 11.6916" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                              </svg>
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  color: 'rgba(17, 17, 17, 0.48)',
+                                  fontSize: '14px',
+                                }}
+                              >
+                                {candidate.professional_info.experience} experience
+                              </Typography>
+                            </Box>
+
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18.3333 10.0001C18.3333 14.6001 14.6 18.3334 9.99999 18.3334C5.39999 18.3334 1.66666 14.6001 1.66666 10.0001C1.66666 5.40008 5.39999 1.66675 9.99999 1.66675C14.6 1.66675 18.3333 5.40008 18.3333 10.0001Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M13.0917 12.65L10.5083 11.1083C10.0583 10.8416 9.69168 10.2 9.69168 9.67497V6.2583" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                              </svg>
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  color: 'rgba(17, 17, 17, 0.48)',
+                                  fontSize: '14px',
+                                }}
+                              >
+                                Available {candidate.professional_info.start_date.toLowerCase()}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </Box>
+
+                        <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                          {candidate.professional_info.skills?.split(',').map((skill, index) => (
+                            <Chip
+                              key={index}
+                              label={skill.trim()}
+                              size="small"
+                              sx={{
+                                bgcolor: getSkillChipColor(skill).bg,
+                                color: getSkillChipColor(skill).color,
+                                height: '28px',
+                                '& .MuiChip-label': {
+                                  px: 1.5,
+                                  fontSize: '13px',
+                                  fontWeight: 500,
+                                },
+                              }}
+                            />
+                          ))}
+                        </Box>
+
+                        <Link href={candidate.attachments?.cv || ''} target="_blank">
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "center",
+                              gap: 0.5,
+                              fontSize: '14px',
+                              lineHeight: "16px",
+                              textDecoration: "underline",
+                              textDecorationColor: theme.palette.grey[100],
+                              mt: 1
+                            }}
+                          >
+                            <Typography sx={{ color: "grey.100" }}>Resume</Typography> <OpenInNewIcon sx={{ fontSize: 16, color: theme.palette.grey[100] }} />
+                          </Stack>
+                        </Link>
+
+                        <Box sx={{
+                          mt: 2,
+                          display: 'flex',
+                          flexDirection: {
+                            xs: 'column',
+                            // sm: PHASE_OPTIONS[getStageValue(subTabValue)]?.length === 2 ? 'row' : 'column' 
+                          },
+                          gap: 1
+                        }}>
+                          {PHASE_OPTIONS[getStageValue(subTabValue)]?.map((option) => (
                             <Button
                               key={option.action}
                               variant="outlined"
                               startIcon={isMovingStage === option.action ? <CircularProgress size={20} /> : <option.icon />}
-                          onClick={() => handleUpdateStagesWrapper(option.action, selectedEntries)}
+                              onClick={() => handleUpdateStagesWrapper(option.action, selectedEntries)}
                               disabled={isMovingStage.length > 0}
+                              fullWidth
                               sx={{
                                 color: 'rgba(17, 17, 17, 0.84)',
                                 borderColor: 'rgba(17, 17, 17, 0.12)',
@@ -1376,194 +1540,30 @@ export default function Home() {
                                 '&.Mui-disabled': {
                                   backgroundColor: 'rgba(0, 0, 0, 0.12)',
                                   color: 'rgba(0, 0, 0, 0.26)'
+                                },
+                                height: { xs: '36px', sm: '40px' },
+                                '& .MuiButton-startIcon': {
+                                  marginRight: { xs: '4px', sm: '8px' }
                                 }
                               }}
                             >
                               {isMovingStage ? 'Moving...' : option.label}
                             </Button>
-                      ))}
-                      </Box>
-                    </Box>
-                  )}
-
-                {/* Grid View */}
-              <Box sx={{ 
-                display: { xs: 'block', md: viewMode === 'grid' ? 'block' : 'none' },
-                width: '100%',
-                height: '100%',
-                overflow: 'auto',
-                bgcolor: "transparent !important",
-              }}>
-                  <Grid container spacing={3}>
-                    {filteredCandidates?.applications?.map((candidate) => (
-                    <Grid item xs={12} sm={6} lg={4} key={candidate.id}>
-                        <Paper
-                          elevation={0}
-                          sx={{
-                            height: '100%',
-                            p: { xs: 2, sm: 3 },
-                            backgroundColor: '#fff',
-                            borderRadius: 2,
-                          boxShadow: '1px 2px 10px 0px rgba(0, 0, 0, 0.051)',
-                          // border: '1px solid rgba(0, 0, 0, 0.12)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: { xs: 1.5, sm: 2 },
-                            minHeight: { xs: '380px', sm: '420px' }
-                          }}
-                        >
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2, flexDirection: 'column' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, flexDirection: '' }}>
-                              <Checkbox
-                                checked={selectedEntries.includes(candidate.id)}
-                                onChange={() => handleSelectCandidate(candidate.id)}
-                                disabled={subTabValue === 3 || filteredCandidates?.applications?.length === 1}
-                                sx={{
-                                  color: theme.palette.grey[100],
-                                  '&.Mui-checked': {
-                                    color: theme.palette.grey[100],
-                                  },
-                                  padding: 0,
-                                  '& .MuiSvgIcon-root': {
-                                    fontSize: 20
-                                  }
-                                }}
-                              />
-                              <Box>
-                              <Typography variant="h6" sx={{ fontSize: '16px', fontWeight: 600, color: 'rgba(17, 17, 17, 0.92)',textTransform: 'capitalize'}}>
-                                  {candidate.personal_info.firstname} {candidate.personal_info.lastname}
-                                </Typography>
-                             
-                              </Box>
-                            </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, sm: 2.5 } }}>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M6.66662 18.3333H13.3333C16.6833 18.3333 17.2833 16.9917 17.4583 15.3583L18.0833 8.69167C18.3083 6.65833 17.725 5 14.1666 5H5.83329C2.27496 5 1.69162 6.65833 1.91662 8.69167L2.54162 15.3583C2.71662 16.9917 3.31662 18.3333 6.66662 18.3333Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                  <path d="M6.66667 5.00008V4.33341C6.66667 2.85841 6.66667 1.66675 9.33333 1.66675H10.6667C13.3333 1.66675 13.3333 2.85841 13.3333 4.33341V5.00008" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                  <path d="M11.6667 10.8333V11.6667C11.6667 11.675 11.6667 11.675 11.6667 11.6833C11.6667 12.5917 11.6583 13.3333 10 13.3333C8.35 13.3333 8.33333 12.6 8.33333 11.6917V10.8333C8.33333 10 8.33333 10 9.16667 10H10.8333C11.6667 10 11.6667 10 11.6667 10.8333Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                  <path d="M18.0417 9.16675C16.1167 10.5667 13.9167 11.4001 11.6667 11.6834" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                  <path d="M2.18333 9.3916C4.05833 10.6749 6.175 11.4499 8.33333 11.6916" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <Typography
-                                  variant="body2"
-                                  sx={{
-                                    color: 'rgba(17, 17, 17, 0.48)',
-                                    fontSize: '14px',
-                                  }}
-                                >
-                                  {candidate.professional_info.experience} experience
-                                </Typography>
-                              </Box>
-
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M18.3333 10.0001C18.3333 14.6001 14.6 18.3334 9.99999 18.3334C5.39999 18.3334 1.66666 14.6001 1.66666 10.0001C1.66666 5.40008 5.39999 1.66675 9.99999 1.66675C14.6 1.66675 18.3333 5.40008 18.3333 10.0001Z" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                  <path d="M13.0917 12.65L10.5083 11.1083C10.0583 10.8416 9.69168 10.2 9.69168 9.67497V6.2583" stroke="#111111" stroke-opacity="0.62" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <Typography
-                                  variant="body2"
-                                  sx={{
-                                    color: 'rgba(17, 17, 17, 0.48)',
-                                    fontSize: '14px',
-                                  }}
-                                >
-                                  Available {candidate.professional_info.start_date.toLowerCase()}
-                                </Typography>
-                            </Box>
-                              </Box>
-                            </Box>
-
-                            <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {candidate.professional_info.skills?.split(',').map((skill, index) => (
-                                <Chip
-                                  key={index}
-                                  label={skill.trim()}
-                                  size="small"
-                                  sx={{
-                                    bgcolor: getSkillChipColor(skill).bg,
-                                    color: getSkillChipColor(skill).color,
-                                    height: '28px',
-                                    '& .MuiChip-label': {
-                                      px: 1.5,
-                                      fontSize: '13px',
-                                      fontWeight: 500,
-                                    },
-                                  }}
-                                />
-                              ))}
-                            </Box>
-
-                            <Link href={candidate.attachments?.cv || ''} target="_blank">
-                              <Stack
-                                direction="row"
-                                alignItems="center"
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: "row",
-                                  alignItems: "center",
-                                  gap: 0.5,
-                                  fontSize: '14px',
-                                  lineHeight: "16px",
-                                  textDecoration: "underline",
-                                  textDecorationColor: theme.palette.grey[100],
-                                  mt: 1
-                                }}
-                              >
-                                <Typography sx={{ color: "grey.100" }}>Resume</Typography> <OpenInNewIcon sx={{ fontSize: 16, color: theme.palette.grey[100] }} />
-                              </Stack>
-                            </Link>
-
-                            <Box sx={{
-                              mt: 2,
-                              display: 'flex',
-                              flexDirection: {
-                                xs: 'column',
-                                // sm: PHASE_OPTIONS[getStageValue(subTabValue)]?.length === 2 ? 'row' : 'column' 
-                              },
-                              gap: 1
-                            }}>
-                              {PHASE_OPTIONS[getStageValue(subTabValue)]?.map((option) => (
-                                <Button
-                                  key={option.action}
-                                  variant="outlined"
-                                  startIcon={isMovingStage === option.action ? <CircularProgress size={20} /> : <option.icon />}
-                              onClick={() => handleUpdateStagesWrapper(option.action, selectedEntries)}
-                                  disabled={isMovingStage.length > 0}
-                                  fullWidth
-                                  sx={{
-                                    color: 'rgba(17, 17, 17, 0.84)',
-                                    borderColor: 'rgba(17, 17, 17, 0.12)',
-                                    '&:hover': {
-                                      borderColor: 'rgba(17, 17, 17, 0.24)',
-                                    },
-                                    '&.Mui-disabled': {
-                                      backgroundColor: 'rgba(0, 0, 0, 0.12)',
-                                      color: 'rgba(0, 0, 0, 0.26)'
-                                    },
-                                    height: { xs: '36px', sm: '40px' },
-                                    '& .MuiButton-startIcon': {
-                                      marginRight: { xs: '4px', sm: '8px' }
-                                    }
-                                  }}
-                                >
-                                  {isMovingStage ? 'Moving...' : option.label}
-                                </Button>
-                              ))}
-                            </Box>
-                          </Paper>
-                        </Grid>
-                      ))}
+                          ))}
+                        </Box>
+                      </Paper>
                     </Grid>
-                  </Box>
+                  ))}
+                </Grid>
+              </Box>
 
               {/* List View */}
-                  <Box sx={{ 
+              <Box sx={{
                 display: { xs: 'none', md: viewMode === 'list' ? 'block' : 'none' },
-                    width: '100%',
-                    height: '100%',
-                    overflow: 'auto'
-                  }}>
+                width: '100%',
+                height: '100%',
+                overflow: 'auto'
+              }}>
                 {filteredCandidates?.applications?.map((candidate) => (
                                       <Box
                                       key={candidate.id}
@@ -1589,13 +1589,14 @@ export default function Home() {
                       setNotificationSeverity(severity);
                       setIsOpen(true);
                     }}
+                    phaseOptions={PHASE_OPTIONS}
                   />
                   </Box>
                 ))}
-                  </Box>
-                </Paper>
               </Box>
-            </Stack>
+            </Paper>
+          </Box>
+        </Stack>
       </Container>
 
       {/* Add Snackbar for notifications */}

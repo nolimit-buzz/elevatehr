@@ -1807,6 +1807,25 @@ const ProfilePage = () => {
             maxWidth: '400px',
             width: '100%',
             p: 2,
+            '& .MuiDialogContent-root': {
+              '&::-webkit-scrollbar': {
+                width: '6px',
+                backgroundColor: 'transparent',
+              },
+              '&::-webkit-scrollbar-track': {
+                backgroundColor: 'transparent',
+                background: 'transparent',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: 'rgba(17, 17, 17, 0.2)',
+                borderRadius: '3px',
+                border: '2px solid transparent',
+                backgroundClip: 'padding-box',
+                '&:hover': {
+                  backgroundColor: 'rgba(17, 17, 17, 0.3)',
+                },
+              },
+            },
           }
         }}
       >

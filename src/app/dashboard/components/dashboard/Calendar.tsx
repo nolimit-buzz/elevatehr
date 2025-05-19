@@ -54,7 +54,7 @@ const Calendar: React.FC<CalendarProps> = ({ events, loading, error, customStyle
             {new Date(event.start_time).toLocaleString()} - {new Date(event.end_time).toLocaleString()}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Location: {event.location.location}
+            Location: {event.location?.location || 'No location specified'}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Status: {event.status}

@@ -6,83 +6,17 @@ import { format } from 'date-fns';
 import DashboardCard from '@/app/dashboard/components/shared/DashboardCard';
 import { useTheme } from "@mui/material/styles";
 import ArrowForwardOutlined from "@mui/icons-material/ArrowForwardOutlined";
-interface CalendlyEvent {
-  uri: string;
-  name: string;
-  status: string;
-  start_time: string;
-  end_time: string;
-  event_type: string;
-  location: {
-    type: string;
-    location: string;
-  };
-  invitees_counter: {
-    total: number;
-    active: number;
-    limit: number;
-  };
-}
+import { CalendlyEvent } from '@/types/calendly';
 
 interface CalendarProps {
   customStyle?: React.CSSProperties;
+  events: CalendlyEvent[];
+  loading: boolean;
+  error: string | null;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ customStyle }) => {
-  const [events, setEvents] = useState<CalendlyEvent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const Calendar: React.FC<CalendarProps> = ({ customStyle, events, loading, error }) => {
   const theme = useTheme();
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setLoading(true);
-        const personalAccessToken = process.env.NEXT_PUBLIC_PERSONAL_ACCESS_TOKEN;
-
-        if (!personalAccessToken) {
-          throw new Error('Personal access token is not configured');
-        }
-
-        // First get the user profile
-        const userResponse = await fetch('https://api.calendly.com/users/me', {
-          headers: {
-            'Authorization': `Bearer ${personalAccessToken}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!userResponse.ok) {
-          throw new Error('Failed to fetch user profile');
-        }
-
-        const userData = await userResponse.json();
-        const userUri = userData.resource.uri;
-        const userUuid = userUri.split('/').pop(); // Extract UUID from URI
-
-        // Then fetch events using the user's UUID
-        const eventsResponse = await fetch(`https://api.calendly.com/scheduled_events?user=${userUri}`, {
-          headers: {
-            'Authorization': `Bearer ${personalAccessToken}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!eventsResponse.ok) {
-          throw new Error('Failed to fetch events');
-        }
-
-        const eventsData = await eventsResponse.json();
-        setEvents(eventsData.collection || []);
-      } catch (error) {
-        console.error('Error fetching Calendly events:', error);
-        setError('Failed to fetch events. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-  }, []);
 
   return (
     <DashboardCard customStyle={{ padding: '0px', ...customStyle }}>

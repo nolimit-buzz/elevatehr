@@ -155,6 +155,10 @@ export default function Typeform({
     resolver: zodResolver(formSchema),
   });
 
+  const isFile = (value: unknown): value is File => {
+    return value instanceof File;
+  };
+
   if (isLoading) {
     return (
       <Box sx={{ 
@@ -238,20 +242,33 @@ export default function Typeform({
     if (currentStep === allFields.length - 1) {
       try {
         const formData = new FormData();
+        const formValues = form.getValues() as any;
         
-        // Add all form values
-        Object.entries(form.getValues()).forEach(([key, value]) => {
+        Object.entries(formValues).forEach(([key, value]) => {
           if (value !== undefined && value !== null) {
-            formData.append(key, value);
+            if (value instanceof File) {
+              formData.append(key, value);
+            } else if (Array.isArray(value)) {
+              formData.append(key, JSON.stringify(value));
+            } else {
+              formData.append(key, String(value));
+            }
           }
         });
 
-        // Add files
+        // Add files from fileInputs
         Object.entries(fileInputs).forEach(([key, file]) => {
           if (file) {
             formData.append(key, file);
           }
         });
+
+        // Add start date
+        formData.append("start_date", new Date().toISOString().split('T')[0]);
+
+        // Log the form data for debugging
+        console.log('Form values:', formValues);
+        console.log('Assessment IDs:', formValues.assessment_ids);
 
         const response = await fetch(
           `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${params.job_id}/applications`,
@@ -497,6 +514,7 @@ export default function Typeform({
                       {currentField.type === 'select' ? (
                         <Select
                           {...field}
+                          value={field.value || ''}
                           displayEmpty
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
@@ -519,14 +537,14 @@ export default function Typeform({
                           }}
                         >
                           <MenuItem value="" disabled>
-                            {currentField.placeholder || "Select an option..."}
+                            {currentField.placeholder || "Select options..."}
                           </MenuItem>
                           {currentField.options && typeof currentField.options === 'object' && !Array.isArray(currentField.options) && 
                             Object.entries(currentField.options as Record<string, string>).map(([value, label]) => (
                               <MenuItem key={value} value={value}>
                                 {label}
-                            </MenuItem>
-                          ))}
+                              </MenuItem>
+                            ))}
                         </Select>
                       ) : currentField.type === 'radio' ? (
                         <RadioGroup

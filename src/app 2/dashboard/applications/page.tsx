@@ -1589,6 +1589,7 @@ export default function Home() {
                       setNotificationSeverity(severity);
                       setIsOpen(true);
                     }}
+                    phaseOptions={PHASE_OPTIONS}
                   />
                   </Box>
                 ))}

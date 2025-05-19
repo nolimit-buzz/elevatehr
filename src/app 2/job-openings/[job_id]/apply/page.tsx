@@ -240,9 +240,15 @@ export default function Typeform({
         const formData = new FormData();
         
         // Add all form values
-        Object.entries(form.getValues()).forEach(([key, value]) => {
+        Object.entries(form.getValues()).forEach(([key, value]: [string, any]) => {
           if (value !== undefined && value !== null) {
-            formData.append(key, value);
+            if (value instanceof File) {
+              formData.append(key, value);
+            } else if (Array.isArray(value)) {
+              formData.append(key, JSON.stringify(value));
+            } else {
+              formData.append(key, String(value));
+            }
           }
         });
 

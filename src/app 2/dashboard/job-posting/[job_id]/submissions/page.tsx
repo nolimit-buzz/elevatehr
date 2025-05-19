@@ -1214,6 +1214,10 @@ export default function Home() {
     }
   };
 
+  const handleUpdateStagesWrapper = (stage: string, entries: number[]) => {
+    handleUpdateStages({ stage: stage as StageType, entries });
+  };
+
   return (
     <Box
       sx={{
@@ -2526,11 +2530,16 @@ export default function Home() {
                         candidate={candidate}
                         isSelected={selectedEntries?.includes(candidate.id)}
                         onSelectCandidate={handleSelectCandidate}
-                        onUpdateStages={(stage: string, entries: number[]) => handleUpdateStages({ stage: stage as StageType, entries })}
-                            disableSelection={subTabValue === 3 || filteredCandidates?.applications?.length === 1}
+                        onUpdateStages={handleUpdateStagesWrapper}
+                        disableSelection={false}
                         currentStage={getStageValue(subTabValue)}
                         selectedEntries={selectedEntries}
-                        onNotification={handleNotification}
+                        onNotification={(message, severity) => {
+                          setNotificationMessage(message);
+                          setNotificationSeverity(severity);
+                          setIsOpen(true);
+                        }}
+                        phaseOptions={PHASE_OPTIONS}
                       />
                     </Box>
                   ))}

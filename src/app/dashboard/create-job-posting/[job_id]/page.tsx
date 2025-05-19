@@ -282,10 +282,15 @@ interface FormBuilderFieldProps {
 }
 
 interface Assessment {
-  id: string;
+  id: number;
   title: string;
+  type: string;
   description: string;
-  // Add other assessment properties as needed
+  level: string;
+  skills: string;
+  questions: any[];
+  completed_count: string;
+  job_ids: string;
 }
 
 interface AssessmentStepProps {
@@ -726,6 +731,13 @@ const AssessmentStep: React.FC<AssessmentStepProps> = ({
                 border: 'none'
               }
             }}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxWidth: 500
+                }
+              }
+            }}
           >
             <MenuItem value="" disabled>
               <Typography sx={{ color: 'rgba(17, 17, 17, 0.5)' }}>
@@ -733,10 +745,12 @@ const AssessmentStep: React.FC<AssessmentStepProps> = ({
               </Typography>
             </MenuItem>
             {assessments.map((assessment) => (
-              <MenuItem 
-                key={assessment.id} 
+              <MenuItem
+                key={assessment.id}
                 value={assessment.id}
                 sx={{
+                  py: 1.5,
+                  px: 2,
                   '&:hover': {
                     backgroundColor: 'rgba(68, 68, 226, 0.04)'
                   },
@@ -748,7 +762,44 @@ const AssessmentStep: React.FC<AssessmentStepProps> = ({
                   }
                 }}
               >
-                {assessment.title}
+                <Stack spacing={0.5} width="100%">
+                  <Typography sx={{ fontWeight: 500 }}>
+                    {assessment.level} {assessment.title}
+                  </Typography>
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Typography variant="caption" sx={{ color: 'rgba(17, 17, 17, 0.68)' }}>
+                      {assessment.type ? assessment.type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : ''}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+                    {assessment.skills ? assessment.skills.split(',').slice(0, 2).map((skill, index) => (
+                      <Chip
+                        key={index}
+                        label={skill.trim()}
+                        size="small"
+                        sx={{
+                          height: '20px',
+                          fontSize: '0.75rem',
+                          backgroundColor: 'rgba(68, 68, 226, 0.08)',
+                          color: '#4444E2',
+                          '& .MuiChip-label': {
+                            px: 1
+                          }
+                        }}
+                      />
+                    )) : null}
+                  </Stack>
+                  <Typography variant="caption" sx={{ 
+                    color: 'rgba(17, 17, 17, 0.68)',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}>
+                    {assessment.description}
+                  </Typography>
+                </Stack>
               </MenuItem>
             ))}
           </Select>
@@ -818,11 +869,7 @@ const AboutTheJob = () => {
   const [technicalSkills, setTechnicalSkills] = useState<string[]>([]);
   const [softSkills, setSoftSkills] = useState<string[]>([]);
   const [customSkills, setCustomSkills] = useState<string[]>([]);
-  const assessments: Assessment[] = [
-    { id: 'Assessment 1', title: 'Assessment 1', description: 'Description for Assessment 1' },
-    { id: 'Assessment 2', title: 'Assessment 2', description: 'Description for Assessment 2' },
-    { id: 'Assessment 3', title: 'Assessment 3', description: 'Description for Assessment 3' }
-  ];
+  const [assessments, setAssessments] = useState<Assessment[]>([]);
 
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -895,6 +942,33 @@ const AboutTheJob = () => {
 
     fetchJobDetails();
   }, [jobId]);
+
+  useEffect(() => {
+    const fetchAssessments = async () => {
+      try {
+        const token = localStorage.getItem("jwt");
+        const response = await axios.get(
+          'https://app.elevatehr.ai/wp-json/elevatehr/v1/quiz-assessments',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        if (response.data.status === 'success') {
+          setAssessments(response.data.assessments);
+        } else {
+          console.error('Error fetching assessments:', response.data.message);
+          setAssessments([]);
+        }
+      } catch (error) {
+        console.error('Error fetching assessments:', error);
+        setAssessments([]);
+      }
+    };
+
+    fetchAssessments();
+  }, []);
 
   const handleChange = (field: string, value: string) => {
     setFormData(prevData => ({
@@ -1071,7 +1145,7 @@ const AboutTheJob = () => {
         value: field.value,
         options: field.options
       })),
-      selectedAssessment: selectedAssessment?.id,
+      assessment_ids: selectedAssessment ? [selectedAssessment.id] : [],
       expectations: formData.expectations.join('|||'),
       salary_min: parseInt(formData.salary_min.replace(/,/g, '')) || 0,
       salary_max: parseInt(formData.salary_max.replace(/,/g, '')) || 0

@@ -147,7 +147,7 @@ const Register: React.FC<RegisterProps> = ({ title, subtitle, subtext }) => {
       });
 
       console.log("Registration successful:", response.data);
-      router.push("/authentication/login"); // Redirect to login after successful registration
+      router.push("/"); // Redirect to login after successful registration
 
     } catch (error) {
       setErrorMessage((error as any).response?.data?.message || "Registration failed. Please try again.");

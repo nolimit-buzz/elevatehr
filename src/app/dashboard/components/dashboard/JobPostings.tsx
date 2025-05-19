@@ -28,6 +28,7 @@ interface JobPosting {
   job_type: string;
   work_model: string;
   location: string;
+  level: string;
   stage_counts: {
     new: number;
     skill_assessment: number;
@@ -35,6 +36,7 @@ interface JobPosting {
     acceptance: number;
     rejection: number;
   };
+  status: string;
 }
 
 interface JobPostingsProps {
@@ -43,6 +45,8 @@ interface JobPostingsProps {
   jobPostings: JobPosting[];
   customStyle?: React.CSSProperties;
   isLoading?: boolean;
+  handleOpen: () => void;
+  // isSubmitting: boolean;
 }
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -164,7 +168,7 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 const StyledTableHeaderRow = styled(TableRow)(({ theme }) => ({
   'th': {
     borderBottom: '1px solid rgba(17,17,17,0.082)',
-    
+
   }
 }));
 
@@ -181,10 +185,10 @@ const StyledTableBodyRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle = {}, isLoading = false }: JobPostingsProps) => {
+const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, handleOpen, customStyle = {}, isLoading = false }: JobPostingsProps) => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  
+
   const handleStatusChange = (_event: React.SyntheticEvent, newValue: 'all' | 'active' | 'close') => {
     setStatusFilter(newValue);
   };
@@ -250,14 +254,14 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
     }
 
     return jobPostings?.map((job) => (
-      <StyledTableBodyRow 
-        key={job.id} 
+      <StyledTableBodyRow
+        key={job.id}
         onClick={() => router.push(`/dashboard/job-posting/${job.id}/submissions`)}
       >
         <StyledTableCell>
           <Stack>
             <StyledTypography textTransform={'capitalize'} mb={3}>
-              {job.title}
+            {job.level}  {job.title}
             </StyledTypography>
             <Stack direction='row' gap={1}>
               <StyledSubtitleTypography>
@@ -324,11 +328,11 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
   return (
     <DashboardCard customStyle={{ padding: '0px', ...customStyle }}>
       <Box>
-        <Box sx={{ 
-          display: 'flex', 
+        <Box sx={{
+          display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
+          justifyContent: 'space-between',
+          alignItems: 'center',
           gap: 2,
           padding: '16px',
           position: 'sticky',
@@ -336,30 +340,30 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
           backgroundColor: 'white',
         }}>
           <Stack direction={'row'} alignItems={'center'} gap={1} >
-            <Typography 
-              variant="h2" 
-              fontWeight={'semibold'} 
-              fontSize={{ xs: '18px', sm: '24px' }} 
-              color={'rgba(17,17,17,0.92)'} 
+            <Typography
+              variant="h2"
+              fontWeight={'semibold'}
+              fontSize={{ xs: '18px', sm: '24px' }}
+              color={'rgba(17,17,17,0.92)'}
               letterSpacing={'0.12px'}
             >
               Job Listings
             </Typography>
-            <Typography 
-              variant="h2" 
-              fontWeight={'semibold'} 
-              fontSize={{ xs: '18px', sm: '24px' }} 
-              color={'rgba(17,17,17,0.52)'} 
+            <Typography
+              variant="h2"
+              fontWeight={'semibold'}
+              fontSize={{ xs: '18px', sm: '24px' }}
+              color={'rgba(17,17,17,0.52)'}
               letterSpacing={'0.12px'}
             >
               {`(${jobPostings.length})`}
             </Typography>
           </Stack>
-          
+
           <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
-            <Stack 
-              direction="row" 
-              alignItems="center" 
+            <Stack
+              direction="row"
+              alignItems="center"
               gap={1}
               sx={{
                 border: '1px solid rgba(17,17,17,0.12)',
@@ -371,9 +375,9 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
               <Typography color="rgba(17,17,17,0.62)" fontSize="14px">
                 {statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1)}
               </Typography>
-              <IconButton 
+              <IconButton
                 onClick={handleMenuClick}
-                sx={{ 
+                sx={{
                   padding: '4px',
                   '&:hover': {
                     backgroundColor: 'transparent'
@@ -388,19 +392,19 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem 
+              <MenuItem
                 onClick={() => handleMenuItemClick('all')}
                 selected={statusFilter === 'all'}
               >
                 All
               </MenuItem>
-              <MenuItem 
+              <MenuItem
                 onClick={() => handleMenuItemClick('active')}
                 selected={statusFilter === 'active'}
               >
                 Active
               </MenuItem>
-              <MenuItem 
+              <MenuItem
                 onClick={() => handleMenuItemClick('close')}
                 selected={statusFilter === 'close'}
               >
@@ -417,8 +421,8 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
             </StyledTabs>
           </Box>
         </Box>
-        <Box sx={{ 
-          overflow: "auto", 
+        <Box sx={{
+          overflow: "auto",
           height: 'calc(600px - 100px)',
           // height: '600px',
           scrollbarWidth: 'thin',
@@ -431,17 +435,17 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
           },
           '&::-webkit-scrollbar-thumb': {
             background: '#032B44',
-            width: '4px', 
+            width: '4px',
             borderRadius: '4px',
             '&:hover': {
               background: 'rgba(68, 68, 226, 0.3)',
             },
           },
         }}>
-          <Box sx={{ 
-            width: "100%", 
-            display: "table", 
-            tableLayout: "fixed", 
+          <Box sx={{
+            width: "100%",
+            display: "table",
+            tableLayout: "fixed",
             height: 'max-content',
             // overflowX: 'scroll'
           }}>
@@ -469,7 +473,16 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, customStyle =
                 </StyledTableHeaderRow>
               </TableHead>
               <TableBody>
-                {renderTableContent()}
+                {jobPostings.length > 0 ? renderTableContent() : (
+                  <StyledTableBodyRow>
+                    <StyledTableCell colSpan={7} sx={{ textAlign: 'center' }}>
+                      <Box>
+                        <Typography>No job postings found. <Typography onClick={handleOpen} sx={{ color: 'primary.main', fontWeight: 500, textDecoration: 'underline', cursor: 'pointer' }}>Create a new job posting</Typography></Typography>
+
+                      </Box>
+                    </StyledTableCell>
+                  </StyledTableBodyRow>
+                )}
               </TableBody>
             </Table>
           </Box>

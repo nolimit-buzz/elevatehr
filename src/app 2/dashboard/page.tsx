@@ -35,6 +35,33 @@ import Notifications from './components/dashboard/Notifications';
 import EmailTemplates from './components/dashboard/EmailTemplates';
 import { useRouter } from 'next/navigation';
 import Calendar from '@/components/Calendar';
+
+interface ProfileData {
+  personal: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    location: string;
+    bio: string;
+  };
+  company: {
+    name: string;
+    website: string;
+    industry: string;
+    size: string;
+    founded: string;
+    description: string;
+    logo: string;
+  };
+  social: {
+    linkedin: string;
+    twitter: string;
+    facebook: string;
+    instagram: string;
+  };
+}
+
 const statCards = [
   {
     icon: (
@@ -355,16 +382,24 @@ const Dashboard = () => {
       lastName: '',
       email: '',
       phone: '',
-      jobTitle: '',
+      location: '',
+      bio: '',
     },
     company: {
       name: '',
-      logo: '',
-      size: '',
-      about: '',
-      bookingLink: '',
       website: '',
-    }
+      industry: '',
+      size: '',
+      founded: '',
+      description: '',
+      logo: '',
+    },
+    social: {
+      linkedin: '',
+      twitter: '',
+      facebook: '',
+      instagram: '',
+    },
   });
   useEffect(() => {
     // Get profile data from localStorage
@@ -379,16 +414,24 @@ const Dashboard = () => {
           lastName: profile.personalInfo.last_name || '',
           email: profile.personalInfo.email || '',
           phone: profile.personalInfo.phone_number || '',
-          jobTitle: profile.companyInfo.job_title || '',
+          location: profile.personalInfo.location || '',
+          bio: profile.personalInfo.bio || '',
         },
         company: {
           name: profile.companyInfo.company_name || '',
-          logo: profile.companyInfo.company_logo || '',
-          size: profile.companyInfo.number_of_employees || '0',
-          about: profile.companyInfo.about_company || '',
-          bookingLink: profile.companyInfo.booking_link || '',
           website: profile.companyInfo.company_website || '',
-        }
+          industry: profile.companyInfo.industry || '',
+          size: profile.companyInfo.number_of_employees || '0',
+          founded: profile.companyInfo.founded || '',
+          description: profile.companyInfo.about_company || '',
+          logo: profile.companyInfo.logo || '',
+        },
+        social: {
+          linkedin: profile.socialInfo.linkedin || '',
+          twitter: profile.socialInfo.twitter || '',
+          facebook: profile.socialInfo.facebook || '',
+          instagram: profile.socialInfo.instagram || '',
+        },
       });
     }
     setLoading(false);
@@ -714,13 +757,18 @@ const Dashboard = () => {
                   statusFilter={statusFilter}
                   setStatusFilter={setStatusFilter}
                   isLoading={isTabLoading}
+                  handleOpen={handleOpen}
                 />
               )}
             </Grid>
             <Grid container item spacing={'12px'} xs={12} lg={4} minHeight={'600px'} maxHeight={'700px'} direction={{ xs: 'column', md: 'row' }}>
               <Grid item xs={12} md={6} lg={12} flex={1} maxHeight={'50%'} overflow={'scroll'}>
-
-                <Calendar customStyle={{ height: '100%', overflow: 'scroll' }} />
+                <Calendar 
+                  customStyle={{ height: '100%', overflow: 'scroll' }} 
+                  events={[]}
+                  loading={false}
+                  error={null}
+                />
               </Grid>
               <Grid item xs={12} md={6} lg={12} flex={1} maxHeight={'50%'} overflow={'scroll'}>
                 <EmailTemplates customStyle={{ height: '100%', overflow: 'scroll' }} />

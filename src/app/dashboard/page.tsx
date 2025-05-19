@@ -25,6 +25,7 @@ import {
   Skeleton
 } from '@mui/material';
 import { Avatar } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import DashboardSkeleton from './components/DashboardSkeleton';
 import CloseIcon from "@mui/icons-material/Close";
 import PageContainer from '@/app/dashboard/components/container/PageContainer';
@@ -716,11 +717,13 @@ const Dashboard = () => {
           <Box sx={{
             display: 'flex',
             alignItems: 'flex-start',
+            // justifyContent: 'space-between',
             gap: 3,
             width: '100%',
             height: '50px',
           }}>
             {/* Logo */}
+            {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1,  }}> */}
             <Avatar
               src={profileData.company.logo || '/images/logos/logo.svg'}
               alt={profileData.company.name}
@@ -776,6 +779,29 @@ const Dashboard = () => {
                 </Box>
               </Typography>
             </Box>
+            {/* </Box> */}
+            <Button
+              variant="contained"
+              onClick={handleOpen}
+              startIcon={<AddIcon />}
+              sx={{
+                position: 'absolute',
+                right: '40px',
+                backgroundColor: 'primary.main',
+                color: '#fff',
+                borderRadius: '12px',
+                px: 3,
+                py: 1.5,
+                textTransform: 'none',
+                fontSize: '16px',
+                fontWeight: 500,
+                '&:hover': {
+                  backgroundColor: 'primary.main',
+                }
+              }}
+            >
+              Create Job Posting    
+            </Button>
           </Box>
         </Box>
       </Paper>
@@ -835,6 +861,8 @@ const Dashboard = () => {
                 statusFilter={statusFilter}
                 setStatusFilter={setStatusFilter}
                 isLoading={false}
+                handleOpen={handleOpen}
+                // isSubmitting={isSubmitting}
               />
             </Grid>
             <Grid container item spacing={2.5} xs={12} lg={4} height={'612px'} direction={{ xs: 'column', md: 'row' }}>
@@ -961,6 +989,8 @@ const Dashboard = () => {
                 bgcolor: "primary.main",
                 borderRadius: 2,
                 textTransform: "none",
+                fontSize: '16px',
+                fontWeight: 500,
                 "&:hover": {
                   bgcolor: "primary.main",
                 },
@@ -968,7 +998,7 @@ const Dashboard = () => {
               onClick={handleSubmit}
               disabled={isSubmitting}
             >
-              {isSubmitting ? <CircularProgress size={24} color="inherit" /> : 'Create Job'}
+              {isSubmitting ? <CircularProgress size={24} color="inherit" /> : 'Create Job Posting'}
             </Button>
           </Stack>
         </DialogContent>
