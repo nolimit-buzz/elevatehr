@@ -215,7 +215,7 @@ const Header = () => {
               alt="elevatehr"
               width={120}
               height={56}
-              style={{ cursor: 'pointer', width: 'auto', height: '32px' }}
+              style={{ cursor: 'pointer', width: 'auto', height: '60px' }}
             />
           </Box>
 

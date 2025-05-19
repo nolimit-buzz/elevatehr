@@ -5,18 +5,13 @@ import {
   Typography,
   Stack,
   CircularProgress,
-  Button,
-  Avatar,
-  Divider,
   List,
   ListItem,
-  Paper,
+  Divider,
+  Avatar,
 } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { useTheme } from '@mui/material/styles';
 import DashboardCard from '../shared/DashboardCard';
-import ArrowForwardOutlined from "@mui/icons-material/ArrowForwardOutlined";
-import NotificationsOutlined from "@mui/icons-material/NotificationsOutlined";
-import { useTheme } from "@mui/material/styles";
 
 interface NotificationData {
   id: string | number;
@@ -27,21 +22,13 @@ interface NotificationData {
   type: string;
 }
 
-interface NotificationItemProps {
-  title: string;
-  content: string;
-  date: string;
-  type: string;
-}
-
-interface NotificationsProps {
+interface FullNotificationsProps {
   notifications: NotificationData[];
   loading: boolean;
   error: string | null;
-  customStyle?: React.CSSProperties;
 }
 
-const NotificationItem: React.FC<NotificationItemProps> = ({ title, content, date, type }) => {
+const NotificationItem: React.FC<{ notification: NotificationData }> = ({ notification }) => {
   const theme = useTheme();
   return (
     <>
@@ -76,7 +63,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ title, content, dat
                 mb: 0.5
               }}
             >
-              {title}
+              {notification.title}
             </Typography>
             <Typography
               variant="body2"
@@ -89,7 +76,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ title, content, dat
                   fontWeight: 600
                 }
               }}
-              dangerouslySetInnerHTML={{ __html: content }}
+              dangerouslySetInnerHTML={{ __html: notification.content }}
             />
             <Typography
               variant="caption"
@@ -102,7 +89,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ title, content, dat
                 display: "block"
               }}
             >
-              {date ? new Date(date).toLocaleDateString('en-US', {
+              {notification.date ? new Date(notification.date).toLocaleDateString('en-US', {
                 month: 'short',
                 day: 'numeric',
                 hour: '2-digit',
@@ -117,93 +104,30 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ title, content, dat
   );
 };
 
-const Frame: React.FC<NotificationsProps> = ({ notifications, loading, error, customStyle = {} }) => {
-  const theme = useTheme();
-  const router = useRouter();
-
-  const handleSeeAll = () => {
-    router.push('/dashboard/notifications');
-  };
-
+const FullNotifications: React.FC<FullNotificationsProps> = ({ notifications, loading, error }) => {
   return (
-    <DashboardCard customStyle={{ padding: '0px', paddingTop: '0px', height: '300px', ...customStyle }}>
-      <Box>
-        <Box
-          sx={{
-            p: 2.5,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: 600,
-              color: "rgba(17, 17, 17, 0.92)",
-              fontSize: 24,
-              lineHeight: "24px",
-              letterSpacing: "0.36px",
-            }}
-          >
-            Notifications
-          </Typography>
-
-          {notifications.length > 0 && (
-            <Box 
-              sx={{ 
-                display: "flex", 
-                alignItems: "center",
-                cursor: 'pointer',
-                '&:hover': {
-                  opacity: 0.8
-                }
-              }}
-              onClick={handleSeeAll}
-            >
-              <Typography
-                variant="body2"
-                sx={{
-                  color: theme.palette.secondary.main,
-                  fontSize: 14,
-                  lineHeight: "14px",
-                  letterSpacing: "0.14px",
-                  mr: 0.5,
-                }}
-              >
-                See all
-              </Typography>
-              <ArrowForwardOutlined
-                sx={{ color: "secondary.main", width: 20, height: 20 }}
-              />
-            </Box>
-          )}
+    <DashboardCard>
+      {loading ? (
+        <Box display="flex" justifyContent="center" p={3}>
+          <CircularProgress />
         </Box>
-
-        <List disablePadding sx={{ height: 'calc(300px - 70px)', overflow: 'auto' }}>
-          { error ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-              <Typography color="error">{error}</Typography>
-            </Box>
-          ) : notifications.length === 0 ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-              <Typography color="grey.200">You don&apos;t have any notifications</Typography>
-            </Box>
-          ) : (
-            notifications.map((notification) => (
-              <NotificationItem 
-                key={notification.id}
-                title={notification.title}
-                content={notification.content}
-                date={notification.date}
-                type={notification.type}
-              />
-            ))
-          )}
+      ) : error ? (
+        <Typography color="error" p={2}>
+          {error}
+        </Typography>
+      ) : notifications.length === 0 ? (
+        <Typography color="text.secondary" p={2}>
+          No notifications
+        </Typography>
+      ) : (
+        <List disablePadding>
+          {notifications.map((notification) => (
+            <NotificationItem key={notification.id} notification={notification} />
+          ))}
         </List>
-      </Box>
+      )}
     </DashboardCard>
   );
 };
 
-export default Frame;
+export default FullNotifications; 
