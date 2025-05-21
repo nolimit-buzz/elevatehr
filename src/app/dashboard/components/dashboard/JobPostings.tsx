@@ -261,7 +261,7 @@ const JobPostings = ({ statusFilter, setStatusFilter, jobPostings, handleOpen, c
         <StyledTableCell>
           <Stack>
             <StyledTypography textTransform={'capitalize'} mb={3}>
-            {job.level}  {job.title}
+           {job.title}
             </StyledTypography>
             <Stack direction='row' gap={1}>
               <StyledSubtitleTypography>

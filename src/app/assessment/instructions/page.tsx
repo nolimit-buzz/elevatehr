@@ -156,7 +156,7 @@ export default function AssessmentInstructionsPage() {
                   textTransform: "capitalize",
                 }}
               >
-                {assessment?.level} {assessment?.title} Technical Assessment Instructions
+                {assessment?.title} Technical Assessment Instructions
               </Typography>
               
               {loading && (
@@ -205,14 +205,11 @@ export default function AssessmentInstructionsPage() {
                         color: "rgba(17, 17, 17, 0.92)",
                       }}
                     >
-                      Assessment Details
+                      Assessment Guidelines
                     </Typography>
                     <Box 
                       sx={{ 
                         color: "rgba(17, 17, 17, 0.84)",
-                        bgcolor: '#f6f6f6',
-                        p: 3,
-                        borderRadius: 2,
                         '& h3': {
                           fontSize: '16px',
                           fontWeight: 600,
@@ -238,7 +235,100 @@ export default function AssessmentInstructionsPage() {
                         }
                       }}
                     >
-                      <div dangerouslySetInnerHTML={{ __html: assessment.content }} />
+                      <Typography sx={{ mb: 2 }}>
+                        You are required to complete only one of the two options provided — Option A or Option B.
+                        Please choose the one that best aligns with your strengths.
+                      </Typography>
+
+                      <Typography variant="h3" sx={{ fontSize: '16px', fontWeight: 600, mb: 1, mt: 3 }}>
+                        Your final submission must be in one of the following formats:
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • PowerPoint (PPT or PDF)
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • Word Document (DOC or PDF)
+                      </Typography>
+
+                      <Typography variant="h3" sx={{ fontSize: '16px', fontWeight: 600, mb: 1, mt: 3 }}>
+                        Ensure that Page One of your document includes:
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • The title of the assessment
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • The option you selected (Option A or Option B)
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • Your full name and email address
+                      </Typography>
+
+                      <Typography variant="h3" sx={{ fontSize: '16px', fontWeight: 600, mb: 1, mt: 3 }}>
+                        📂 Submission Format
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • Upload your completed work to Google Drive.
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • Set the document permissions to: "Anyone with the link can view"
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • Submit the shareable link via the designated field on the submission page.
+                      </Typography>
+
+                      <Typography variant="h3" sx={{ fontSize: '16px', fontWeight: 600, mb: 1, mt: 3 }}>
+                        ⏱ Timing
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • You are expected to spend a maximum of 3 hours on this assessment.
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • While the submission page will remain accessible beyond the 3-hour mark, your completion time will be reviewed as part of your overall performance.
+                      </Typography>
+
+                      <Typography variant="h3" sx={{ fontSize: '16px', fontWeight: 600, mb: 1, mt: 3 }}>
+                        ⚠️ Important Notes
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • Carefully read all instructions and requirements before you begin.
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • Evaluation will focus on:
+                      </Typography>
+                      <Typography sx={{ pl: 2, mb: 1 }}>
+                        - Clarity of thought
+                      </Typography>
+                      <Typography sx={{ pl: 2, mb: 1 }}>
+                        - Analytical reasoning
+                      </Typography>
+                      <Typography sx={{ pl: 2, mb: 1 }}>
+                        - Presentation style
+                      </Typography>
+                      <Typography sx={{ pl: 2, mb: 2 }}>
+                        - Practical problem-solving approach
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        • Only one option should be submitted. Submitting both may result in disqualification.
+                      </Typography>
+
+                      <Typography variant="h3" sx={{ fontSize: '16px', fontWeight: 600, mb: 1, mt: 3 }}>
+                        📌 Final Checklist
+                      </Typography>
+                      <Typography sx={{ mb: 2 }}>
+                        Before you submit, make sure to:
+                      </Typography>
+                      <Typography sx={{ pl: 2, mb: 1 }}>
+                        ✅ Double-check your work
+                      </Typography>
+                      <Typography sx={{ pl: 2, mb: 1 }}>
+                        ✅ Upload it to Google Drive
+                      </Typography>
+                      <Typography sx={{ pl: 2, mb: 1 }}>
+                        ✅ Set sharing to "Anyone with the link can view"
+                      </Typography>
+                      <Typography sx={{ pl: 2, mb: 1 }}>
+                        ✅ Submit your shareable link via the submission form
+                      </Typography>
                     </Box>
                   </Box>
                 </Stack>
@@ -267,7 +357,7 @@ export default function AssessmentInstructionsPage() {
                     fontSize: "18px"
                   }}
                 >
-                  Submit Your Assessment
+                  Ready to Submit?
                 </Typography>
                 <Stack spacing={2}>
                   <Typography sx={{ color: "rgba(17, 17, 17, 0.84)" }}>
@@ -287,77 +377,24 @@ export default function AssessmentInstructionsPage() {
                 </Stack>
 
                 <Box sx={{ mt: 2 }}>
-                  <Stack spacing={2}>
-                    {assessment?.options && (
-                      <FormControl fullWidth>
-                        <Typography sx={{ mb: 1, color: 'rgba(17, 17, 17, 0.84)', fontWeight: 600 }}>
-                          Select Assessment Option
-                        </Typography>
-                        <Select
-                          value={selectedOption}
-                          onChange={(e) => setSelectedOption(e.target.value)}
-                          displayEmpty
-                          renderValue={(value) => value ? `Option ${value}` : 'Select an option'}
-                          sx={{ 
-                            '& .MuiOutlinedInput-root': {
-                              borderRadius: '10px',
-                              '& fieldset': {
-                                borderRadius: '10px',
-                              },
-                            },
-                            '& .MuiSelect-select': {
-                              color: selectedOption ? 'rgba(17, 17, 17, 0.84)' : 'rgba(17, 17, 17, 0.48)',
-                              borderRadius: '10px',
-                            },
-                            '& .MuiOutlinedInput-notchedOutline': {
-                              borderRadius: '10px',
-                            }
-                          }}
-                        >
-                          {Array.from({ length: assessment.options }, (_, i) => (
-                            <MenuItem key={i + 1} value={String(i + 1)}>
-                              Option {i + 1}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    )}
-                    <TextField
-                      fullWidth
-                      label="Submission URL"
-                      variant="outlined"
-                      value={submissionUrl}
-                      onChange={(e) => setSubmissionUrl(e.target.value)}
-                      placeholder="Enter the URL where your assessment can be found"
-                      error={!!error}
-                      helperText={error}
-                      disabled={submitting}
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: 2,
-                        },
-                        '& label': { 
-                          color: 'grey.200' 
-                        }
-                      }}
-                    />
-                    <Button
-                      variant="contained"
-                      onClick={handleSubmit}
-                      disabled={submitting || !submissionUrl.trim() || (assessment?.options && !selectedOption)}
-                      sx={{
-                        width: '100%',
-                        height: 56,
-                        bgcolor: 'primary.main',
-                        color: 'white',
-                        '&:hover': {
-                          bgcolor: 'primary.dark',
-                        },
-                      }}
-                    >
-                      {submitting ? <CircularProgress size={24} color="inherit" /> : 'Submit'}
-                    </Button>
-                  </Stack>
+                  <Button
+                    variant="contained"
+                    onClick={handleBack}
+                    fullWidth
+                    sx={{
+                      height: 56,
+                      bgcolor: 'primary.main',
+                      color: 'white',
+                      borderRadius: '8px',
+                      fontSize: '16px',
+                      fontWeight: 500,
+                      '&:hover': {
+                        bgcolor: 'primary.dark',
+                      },
+                    }}
+                  >
+                    Go to Assessment Page
+                  </Button>
                 </Box>
               </Stack>
             </Box>

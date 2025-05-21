@@ -809,7 +809,7 @@ export default function Home() {
                 color: "rgba(17, 17, 17, 0.84)",
               }}
             >
-              {jobDetails?.level && (
+              {/* {jobDetails?.level && (
                 <Typography
                   component="span"
                   sx={{
@@ -822,7 +822,7 @@ export default function Home() {
                 >
                   {jobDetails.level}
                 </Typography>
-              )}
+              )} */}
               {jobDetails?.title}
             </Typography>
           </Box>
