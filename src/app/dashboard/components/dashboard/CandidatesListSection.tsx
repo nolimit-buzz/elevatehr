@@ -329,24 +329,68 @@ export default function CandidateListSection({
           />
           {/* Add assessment status chips */}
           {candidate?.assessments_results && Object.entries(candidate.assessments_results).map(([type, result]: [string, any]) => {
-            if (result && result.assessment_submission_status) {
-              return (
-                <Chip
-                  key={type}
-                  size="small"
-                  label={`${type.split('_').map(word => 
-                    word.charAt(0).toUpperCase() + word.slice(1)
-                  ).join(' ')} ${result.assessment_submission_status === 'submitted' ? '(Submitted)' : ''}`}
-                  sx={{
-                    backgroundColor: result.assessment_submission_status === 'submitted' ? '#E8F5E9' : '#E3F2FD',
-                    color: result.assessment_submission_status === 'submitted' ? '#2E7D32' : '#1976D2',
-                    fontWeight: 500,
-                    '& .MuiChip-label': {
-                      px: 1,
-                    }
-                  }}
-                />
-              );
+            if (result) {
+              const status = result.assessment_submission_status || result.assessment_status;
+              if (status) {
+                let label = `${type.split('_').map(word => 
+                  word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' ')}`;
+                
+                // Add score if available
+                if (result.assessment_score) {
+                  label += ` (${result.assessment_score}%)`;
+                } else if (status === 'submitted') {
+                  label += ' (Submitted)';
+                } else if (status === 'sent') {
+                  label += ' (Sent)';
+                }
+
+                // Determine colors based on assessment type and status
+                let bgColor, textColor;
+                if (type === 'technical_assessment') {
+                  if (result.assessment_submission_link) {
+                    bgColor = '#E3F2FD'; // Light blue for technical assessment submitted
+                    textColor = '#1976D2'; // Dark blue text
+                  } else if (status === 'sent') {
+                    bgColor = '#FFF3E0'; // Light orange for sent
+                    textColor = '#E65100'; // Dark orange text
+                  } else {
+                    bgColor = '#FFF3E0';
+                    textColor = '#E65100';
+                  }
+                } else {
+                  // For other assessment types (like online assessment)
+                  if (result.assessment_score) {
+                    bgColor = '#E8F5E9'; // Light green for scored
+                    textColor = '#2E7D32'; // Dark green text
+                  } else if (status === 'submitted') {
+                    bgColor = '#E8F5E9';
+                    textColor = '#2E7D32';
+                  } else if (status === 'sent') {
+                    bgColor = '#E3F2FD';
+                    textColor = '#1976D2';
+                  } else {
+                    bgColor = '#FFF3E0';
+                    textColor = '#E65100';
+                  }
+                }
+
+                return (
+                  <Chip
+                    key={type}
+                    size="small"
+                    label={label}
+                    sx={{
+                      backgroundColor: bgColor,
+                      color: textColor,
+                      fontWeight: 500,
+                      '& .MuiChip-label': {
+                        px: 1,
+                      }
+                    }}
+                  />
+                );
+              }
             }
             return null;
           })}

@@ -95,12 +95,13 @@ interface Applicant {
   application_info: ApplicationInfo;
   attachments?: {
     cv?: string;
-    };
+    external_cv_link?: string;
+  };
   cv_analysis?: CVAnalysis;
   custom_fields?: {
     [key: string]: {
       value: string;
-  };
+    };
   };
   job_title?: string;
   assessments_results?: {
@@ -1052,7 +1053,7 @@ export default function ApplicantDetails() {
                 {/* Resume section */}
                 <Box>
                   {/* CV Preview */}
-                  {applicant?.attachments?.cv ? (
+                  {applicant?.attachments?.cv || applicant?.attachments?.external_cv_link ? (
                     <Box
                       sx={{
                         mb: 4,
@@ -1076,7 +1077,7 @@ export default function ApplicantDetails() {
                             textDecoration: "underline",
                             textDecorationColor: "rgba(17, 17, 17, 0.68)",
                           }}
-                          href={applicant.attachments?.cv || "#"}
+                          href={applicant.attachments?.cv || applicant.attachments?.external_cv_link || "#"}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -1087,20 +1088,20 @@ export default function ApplicantDetails() {
                               gap: 0.5,
                             }}
                           >
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 600,
+                            <Typography
+                              variant="h6"
+                              sx={{
+                                fontWeight: 600,
                                 color: "rgba(17, 17, 17, 0.92)",
                                 cursor: "pointer",
                                 "&:hover": {
                                   color: "primary.main",
                                   textDecoration: "underline",
                                 },
-                      }}
-                    >
-                      Resume
-                    </Typography>
+                              }}
+                            >
+                              Resume
+                            </Typography>
                             <LaunchIcon
                               sx={{
                                 fontSize: 16,
@@ -1111,38 +1112,38 @@ export default function ApplicantDetails() {
                         </Link>
                       </Box>
 
-                  <iframe
-                    allowFullScreen
+                      <iframe
+                        allowFullScreen
                         unselectable="on"
-                        src={applicant.attachments?.cv || "#"}
-                    style={{
+                        src={applicant.attachments?.cv || applicant.attachments?.external_cv_link || "#"}
+                        style={{
                           width: "100%",
                           height: "100%",
                           border: "none",
-                    }}
-                    title="CV Preview"
-                  />
-                </Box>
-              ) : (
-                <Box 
-                  sx={{ 
-                    mb: 4,
-                    p: 3,
+                        }}
+                        title="CV Preview"
+                      />
+                    </Box>
+                  ) : (
+                    <Box 
+                      sx={{ 
+                        mb: 4,
+                        p: 3,
                         bgcolor: "rgba(17, 17, 17, 0.04)",
-                    borderRadius: 2,
+                        borderRadius: 2,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                       }}
                     >
                       <Typography color="text.grey[100]">
-                    No CV available
-                  </Typography>
+                        No CV available
+                      </Typography>
+                    </Box>
+                  )}
                 </Box>
-              )}
-            </Box>
 
-            {/* Action Buttons */}
+                {/* Action Buttons */}
                 <Box
                   sx={{
                     display: "flex",
