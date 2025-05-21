@@ -33,8 +33,6 @@ const pastelColors = [
   { bg: '#E8F9F0', text: '#2C8F5E' },  // Mint
 ];
 
-const assessmentColor = 'rgb(37, 107, 143)';
-
 export default function AssessmentPage() {
   const theme = useTheme();
   const searchParams = useSearchParams();
@@ -232,12 +230,12 @@ export default function AssessmentPage() {
                 fontWeight={700} 
                 mb={2}
                 sx={{
-                  color: assessmentColor,
+                  color: "rgba(17, 17, 17, 0.92)",
                   fontSize: "32px",
                   textTransform: "capitalize",
                 }}
               >
-                Credicorp {assessment?.title} Technical Assessment
+                CREDICORP {assessment?.title} Technical Assessment
               </Typography>
               
               {loading && (
@@ -265,7 +263,7 @@ export default function AssessmentPage() {
                       {assessment.title} assessment covering the following skills: {assessment.skills}
                     </Typography>
                     <Box mb={2} sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {assessment.skills && assessment.skills.split(',').map((skill: string, idx: number) => (
+            {assessment.skills && assessment.skills.split(',').map((skill: string, idx: number) => (
                         <Chip 
                           key={idx} 
                           label={skill.trim()} 
@@ -275,8 +273,8 @@ export default function AssessmentPage() {
                             color: pastelColors[idx % pastelColors.length].text,
                           }} 
                         />
-                      ))}
-                    </Box>
+            ))}
+          </Box>
                   </Box>
 
                   <Box>
@@ -296,6 +294,16 @@ export default function AssessmentPage() {
                         bgcolor: '#F5F5F5',
                         p: 3,
                         borderRadius: 2,
+                        '& h2': {
+                          fontSize: '20px',
+                          fontWeight: 600,
+                          mb: 2,
+                          mt: 3,
+                          
+                          '&:first-child': {
+                            color: 'rgb(37, 107, 143) !important',
+                          }
+                        },
                         '& h3': {
                           fontSize: '16px',
                           fontWeight: 600,
