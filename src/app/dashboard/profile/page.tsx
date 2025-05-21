@@ -1664,7 +1664,7 @@ const ProfilePage = () => {
                 >
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
-                      Upcoming Events
+                      Upcoming Interviews
                     </Typography>
                           <Button
                             variant="outlined"

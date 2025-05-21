@@ -20,7 +20,7 @@
     "@mui/icons-material": "5.14.3",
     "@mui/lab": "5.0.0-alpha.138",
     "@mui/material": "5.14.3",
-    "@mui/x-date-pickers": "^6.19.3",
+    "@mui/x-date-pickers": "^6.20.2",
     "@radix-ui/react-label": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.2",
     "@tabler/icons-react": "2.30.0",

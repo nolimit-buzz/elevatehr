@@ -163,13 +163,13 @@ export default function Home() {
     fetchJobDetails();
   }, [getJobId]);
 
-  const fetchCandidates = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const token = localStorage.getItem("jwt");
-      const jobId = getJobId();
-      const stage = subTabValue === 0 ? "new" : getStageValue(subTabValue);
+    const fetchCandidates = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const token = localStorage.getItem("jwt");
+        const jobId = getJobId();
+        const stage = subTabValue === 0 ? "new" : getStageValue(subTabValue);
       const url = new URL(`https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications`);
       url.searchParams.append('stage', stage);
       url.searchParams.append('page', page.toString());
@@ -190,32 +190,32 @@ export default function Home() {
 
       console.log('Final URL:', url.toString());
       const response = await fetch(url.toString(), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
         cache: "no-store",
       });
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch candidates: ${response.status}`);
-      }
+        if (!response.ok) {
+          throw new Error(`Failed to fetch candidates: ${response.status}`);
+        }
 
-      const data = await response.json();
-      setCandidates(data);
-      setFilteredCandidates(data);
+        const data = await response.json();
+        setCandidates(data);
+        setFilteredCandidates(data);
       setTotalPages(data.total_pages);
       setTotalItems(data.total);
-      setLoading(false);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
+        setLoading(false);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
         setError("Failed to fetch candidates");
+        }
+        setLoading(false);
       }
-      setLoading(false);
-    }
-  };
+    };
 
   const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -569,7 +569,7 @@ export default function Home() {
 
       const jobId = getJobId();
       const newStatus = jobDetails?.status === "close" ? "active" : "close";
-      
+
       const response = await fetch(
         `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}`,
         {
@@ -806,7 +806,7 @@ export default function Home() {
               variant="h5"
               sx={{
                 fontSize: { xs: "18px", sm: "24px" },
-              fontWeight: 600,
+                fontWeight: 600,
                 color: "rgba(17, 17, 17, 0.84)",
                 // mb: 1
               }}
@@ -892,7 +892,7 @@ export default function Home() {
                 hasActiveFilters={hasActiveFilters}
                 sx={{ bgcolor: '#FFFFFF', borderRadius: 2, p: 2 }}
               />
-            </Box>
+                </Box>
 
             {/* Mobile Filter Dialog */}
             <FilterSection
@@ -921,185 +921,185 @@ export default function Home() {
               >
                 {/* Tabs for large screens */}
                 <Box sx={{ display: { xs: "none", lg: "block" } }}>
-                <Tabs
-                  value={subTabValue}
+                  <Tabs
+                    value={subTabValue}
                     onChange={(
                       _event: React.SyntheticEvent,
                       newValue: number
                     ) => {
                       handleSubTabChange(_event, newValue);
                     }}
-                  indicatorColor="secondary"
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  aria-label="submission tabs"
-                  sx={{ 
-                    width: "100%", 
-                    alignItems: "center",
+                    indicatorColor="secondary"
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="submission tabs"
+                    sx={{
+                      width: "100%",
+                      alignItems: "center",
                       "& .MuiTab-root": {
                         transition: "all 0.2s ease-in-out",
                         "&:hover": {
-                        color: theme.palette.secondary.main,
+                          color: theme.palette.secondary.main,
                         },
                       },
-                  }}
-                >
-                  <Tab
-                    label={
+                    }}
+                  >
+                    <Tab
+                      label={
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 1 }}
                         >
-                        <span>Application Review</span>
-                        <Chip
-                          label={stageTotals.new}
-                          size="small"
-                          sx={{
-                            bgcolor: theme.palette.secondary.main,
+                          <span>Application Review</span>
+                          <Chip
+                            label={stageTotals.new}
+                            size="small"
+                            sx={{
+                              bgcolor: theme.palette.secondary.main,
                               color: "white",
                               height: "20px",
                               "& .MuiChip-label": {
-                              px: 1,
+                                px: 1,
                                 fontSize: "12px",
                                 fontWeight: 500,
                               },
-                          }}
-                        />
-                      </Box>
-                    }
-                    sx={{
-                      textTransform: "none",
-                      color:
-                        subTabValue === 0
-                          ? theme.palette.grey[100]
-                          : theme.palette.grey[200],
-                      flex: 1,
-                    }}
-                  />
-                  <Tab
-                    label={
+                            }}
+                          />
+                        </Box>
+                      }
+                      sx={{
+                        textTransform: "none",
+                        color:
+                          subTabValue === 0
+                            ? theme.palette.grey[100]
+                            : theme.palette.grey[200],
+                        flex: 1,
+                      }}
+                    />
+                    <Tab
+                      label={
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 1 }}
                         >
-                        <span>Skill assessment</span>
-                        <Chip
-                          label={stageTotals.skill_assessment}
-                          size="small"
-                          sx={{
-                            bgcolor: theme.palette.secondary.main,
+                          <span>Skill assessment</span>
+                          <Chip
+                            label={stageTotals.skill_assessment}
+                            size="small"
+                            sx={{
+                              bgcolor: theme.palette.secondary.main,
                               color: "white",
                               height: "20px",
                               "& .MuiChip-label": {
-                              px: 1,
+                                px: 1,
                                 fontSize: "12px",
                                 fontWeight: 500,
                               },
-                          }}
-                        />
-                      </Box>
-                    }
-                    sx={{
-                      textTransform: "none",
-                      color:
-                        subTabValue === 1
-                          ? theme.palette.grey[100]
-                          : theme.palette.grey[200],
-                      flex: 1,
-                    }}
-                  />
-                  <Tab
-                    label={
+                            }}
+                          />
+                        </Box>
+                      }
+                      sx={{
+                        textTransform: "none",
+                        color:
+                          subTabValue === 1
+                            ? theme.palette.grey[100]
+                            : theme.palette.grey[200],
+                        flex: 1,
+                      }}
+                    />
+                    <Tab
+                      label={
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 1 }}
                         >
-                        <span>Interviews</span>
-                        <Chip
-                          label={stageTotals.interviews}
-                          size="small"
-                          sx={{
-                            bgcolor: theme.palette.secondary.main,
+                          <span>Interviews</span>
+                          <Chip
+                            label={stageTotals.interviews}
+                            size="small"
+                            sx={{
+                              bgcolor: theme.palette.secondary.main,
                               color: "white",
                               height: "20px",
                               "& .MuiChip-label": {
-                              px: 1,
+                                px: 1,
                                 fontSize: "12px",
                                 fontWeight: 500,
                               },
-                          }}
-                        />
-                      </Box>
-                    }
-                    sx={{
-                      textTransform: "none",
-                      color:
-                        subTabValue === 2
-                          ? theme.palette.grey[100]
-                          : theme.palette.grey[200],
-                      flex: 1,
-                    }}
-                  />
-                  <Tab
-                    label={
+                            }}
+                          />
+                        </Box>
+                      }
+                      sx={{
+                        textTransform: "none",
+                        color:
+                          subTabValue === 2
+                            ? theme.palette.grey[100]
+                            : theme.palette.grey[200],
+                        flex: 1,
+                      }}
+                    />
+                    <Tab
+                      label={
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 1 }}
                         >
-                        <span>Acceptance</span>
-                        <Chip
-                          label={stageTotals.acceptance}
-                          size="small"
-                          sx={{
-                            bgcolor: theme.palette.secondary.main,
+                          <span>Acceptance</span>
+                          <Chip
+                            label={stageTotals.acceptance}
+                            size="small"
+                            sx={{
+                              bgcolor: theme.palette.secondary.main,
                               color: "white",
                               height: "20px",
                               "& .MuiChip-label": {
-                              px: 1,
+                                px: 1,
                                 fontSize: "12px",
                                 fontWeight: 500,
                               },
-                          }}
-                        />
-                      </Box>
-                    }
-                    sx={{
-                      textTransform: "none",
-                      color:
-                        subTabValue === 3
-                          ? theme.palette.grey[100]
-                          : theme.palette.grey[200],
-                      flex: 1,
-                    }}
-                  />
-                  <Tab
-                    label={
+                            }}
+                          />
+                        </Box>
+                      }
+                      sx={{
+                        textTransform: "none",
+                        color:
+                          subTabValue === 3
+                            ? theme.palette.grey[100]
+                            : theme.palette.grey[200],
+                        flex: 1,
+                      }}
+                    />
+                    <Tab
+                      label={
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 1 }}
                         >
-                        <span>Archived</span>
-                        <Chip
-                          label={stageTotals.archived}
-                          size="small"
-                          sx={{
-                            bgcolor: theme.palette.secondary.main,
+                          <span>Archived</span>
+                          <Chip
+                            label={stageTotals.archived}
+                            size="small"
+                            sx={{
+                              bgcolor: theme.palette.secondary.main,
                               color: "white",
                               height: "20px",
                               "& .MuiChip-label": {
-                              px: 1,
+                                px: 1,
                                 fontSize: "12px",
                                 fontWeight: 500,
                               },
-                          }}
-                        />
-                      </Box>
-                    }
-                    sx={{
-                      textTransform: "none",
-                      color:
-                        subTabValue === 4
-                          ? theme.palette.grey[100]
-                          : theme.palette.grey[200],
-                      flex: 1,
-                    }}
-                  />
-                </Tabs>
+                            }}
+                          />
+                        </Box>
+                      }
+                      sx={{
+                        textTransform: "none",
+                        color:
+                          subTabValue === 4
+                            ? theme.palette.grey[100]
+                            : theme.palette.grey[200],
+                        flex: 1,
+                      }}
+                    />
+                  </Tabs>
                 </Box>
 
                 {/* Mobile Dropdown */}
@@ -1113,14 +1113,11 @@ export default function Home() {
               <Paper
                 elevation={0}
                 sx={{
-                  height: "100vh",
-                  overflow: "hidden",
-                  width: "100%",
                   bgcolor: "transparent",
                   borderRadius: 2,
-                  overflow: "hidden",
                   position: "relative",
                   minHeight: "700px",
+                  overflow: "hidden"
                 }}
               >
                 {/* Actions bar inside Paper, before candidates list */}
@@ -1166,9 +1163,9 @@ export default function Home() {
                           (option) => {
                             console.log('Rendering option:', option);
                             return (
-                              <Button
-                                key={option.action}
-                                variant="outlined"
+                            <Button
+                              key={option.action}
+                              variant="outlined"
                                 startIcon={
                                   isMovingStage === option.action ? (
                                     <CircularProgress size={20} />
@@ -1185,8 +1182,8 @@ export default function Home() {
                                       : undefined
                                   });
                                 }}
-                                disabled={isMovingStage.length > 0}
-                                sx={{
+                              disabled={isMovingStage.length > 0}
+                              sx={{
                                   color: "rgba(17, 17, 17, 0.84)",
                                   borderColor: "rgba(17, 17, 17, 0.12)",
                                   "&:hover": {
@@ -1199,7 +1196,7 @@ export default function Home() {
                                 }}
                               >
                                 {isMovingStage === option.action ? "Moving..." : option.label}
-                              </Button>
+                            </Button>
                             );
                           }
                         )}
@@ -1229,7 +1226,7 @@ export default function Home() {
                     >
                       <Tab
                         label="All"
-                        sx={{
+                          sx={{
                           textTransform: 'none',
                           color: theme.palette.grey[100],
                           '&.Mui-selected': {
@@ -1249,11 +1246,11 @@ export default function Home() {
                             '&.Mui-selected': {
                               color: theme.palette.secondary.main,
                             },
-                          }}
-                        />
-                      ))}
+                              }}
+                            />
+                          ))}
                     </Tabs>
-                  </Box>
+                        </Box>
                 )}
 
                 {/* Candidates list */}
@@ -1276,21 +1273,21 @@ export default function Home() {
                         display: { xs: "none", lg: "block" },
                       }}
                     >
-                      {filteredCandidates?.applications?.map((candidate) => (
-                    <Box
-                      key={candidate.id}
-                      sx={{
+                        {filteredCandidates?.applications?.map((candidate) => (
+                          <Box
+                            key={candidate.id}
+                            sx={{
                             backgroundColor: "white",
-                        borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-                        "&:last-child": {
-                          borderBottom: "none",
-                        },
-                      }}
-                    >
-                      <CandidateListSection
-                        candidate={candidate}
-                        isSelected={selectedEntries?.includes(candidate.id)}
-                        onSelectCandidate={handleSelectCandidate}
+                              borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+                              "&:last-child": {
+                                borderBottom: "none",
+                              },
+                            }}
+                          >
+                            <CandidateListSection
+                              candidate={candidate}
+                              isSelected={selectedEntries?.includes(candidate.id)}
+                              onSelectCandidate={handleSelectCandidate}
                         onUpdateStages={(
                           stage: string,
                           entries: number[]
@@ -1304,13 +1301,13 @@ export default function Home() {
                           subTabValue === 3 ||
                           filteredCandidates?.applications?.length === 1
                         }
-                        currentStage={getStageValue(subTabValue)}
-                        selectedEntries={selectedEntries}
-                        onNotification={handleNotification}
+                              currentStage={getStageValue(subTabValue)}
+                              selectedEntries={selectedEntries}
+                              onNotification={handleNotification}
                         phaseOptions={dynamicPhaseOptions}
-                      />
-                    </Box>
-                  ))}
+                            />
+                          </Box>
+                        ))}
                       </Box>
 
                     {/* Mobile View - componentized */}
@@ -1352,13 +1349,13 @@ export default function Home() {
             size="large"
             showFirstButton
             showLastButton
-            sx={{
+        sx={{
               '& .MuiPaginationItem-root': {
                 fontSize: '16px',
                 fontWeight: 500,
               },
               '& .Mui-selected': {
-                backgroundColor: 'primary.main',
+            backgroundColor: 'primary.main',
                 color: 'white',
                 '&:hover': {
                   backgroundColor: 'primary.dark',
@@ -1366,7 +1363,7 @@ export default function Home() {
               },
             }}
           />
-        </Box>
+              </Box>
         <Typography 
           variant="body2" 
           color="grey.200" 
@@ -1374,7 +1371,7 @@ export default function Home() {
           sx={{ mb: 3 }}
         >
           Showing <span style={{ fontWeight: 600 }}>{((page - 1) * perPage) + 1}</span> to <span style={{ fontWeight: 600 }}>{Math.min(page * perPage, totalItems)}</span> of <span style={{ fontWeight: 600 }}>{totalItems}</span> entries
-        </Typography>
+                </Typography>
       </Container>
     </Box>
   );

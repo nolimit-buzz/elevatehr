@@ -7,6 +7,7 @@ import DashboardCard from '@/app/dashboard/components/shared/DashboardCard';
 import { useTheme } from "@mui/material/styles";
 import ArrowForwardOutlined from "@mui/icons-material/ArrowForwardOutlined";
 import { CalendlyEvent } from '@/types/calendly';
+import { useRouter } from 'next/navigation';
 
 interface CalendarProps {
   customStyle?: React.CSSProperties;
@@ -17,6 +18,11 @@ interface CalendarProps {
 
 const Calendar: React.FC<CalendarProps> = ({ customStyle, events, loading, error }) => {
   const theme = useTheme();
+  const router = useRouter();
+
+  const handleSeeAll = () => {
+    router.push('/dashboard/upcoming-interviews');
+  };
 
   return (
     <DashboardCard customStyle={{ padding: '0px', ...customStyle }}>
@@ -39,10 +45,20 @@ const Calendar: React.FC<CalendarProps> = ({ customStyle, events, loading, error
               letterSpacing: "0.36px",
             }}
           >
-            Upcoming Events
+            Upcoming Interviews
           </Typography>
 
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box 
+            sx={{ 
+              display: "flex", 
+              alignItems: "center",
+              cursor: 'pointer',
+              '&:hover': {
+                opacity: 0.8
+              }
+            }}
+            onClick={handleSeeAll}
+          >
             <Typography
               variant="body2"
               sx={{
