@@ -72,16 +72,20 @@ export default function AssessmentInstructionsPage() {
 
   const handleSubmit = () => {
     setSubmitting(true);
-    // Implement submission logic here
-    const formData = new FormData();
-    formData.append('submission_url', submissionUrl);
-    formData.append('assessment_option', selectedOption);
-    formData.append('selected_assessment_option', selectedOption);
-    formData.append('start_date', new Date().toISOString().split('T')[0]);
+    const submissionData = {
+      application_id: parseInt(applicationId || '0'),
+      job_id: parseInt(jobId || '0'),
+      assessment_id: parseInt(assessmentId || '0'),
+      assessment_submission_link: submissionUrl,
+      select_assessment_option: parseInt(selectedOption)
+    };
 
-    fetch(`https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications`, {
+    fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/submit-technical-assessment', {
       method: 'POST',
-      body: formData
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(submissionData)
     })
     .then(response => {
       if (!response.ok) {
