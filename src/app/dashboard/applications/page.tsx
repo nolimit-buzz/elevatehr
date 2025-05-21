@@ -34,6 +34,7 @@ import {
   TableHead,
   TableCell,
   TableRow,
+  Pagination,
 } from "@mui/material";
 import Link from "next/link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -318,6 +319,10 @@ export default function Home() {
   const [notificationSeverity, setNotificationSeverity] = useState<'success' | 'error'>('success');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [viewMode, setViewMode] = useState('list');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [perPage] = useState(10);
 
   const router = useRouter();
   const params = useParams();
@@ -335,46 +340,51 @@ export default function Home() {
     return skillColors[colorIndex];
   };
 
-  useEffect(() => {
-    const fetchCandidates = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const token = localStorage.getItem("jwt");
-        const response = await fetch(
-          `https://app.elevatehr.ai/wp-json/elevatehr/v1/all-job-applications?stage=${getStageValue(primaryTabValue)}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            cache: 'no-store'
-          },
-        );
+  const fetchCandidates = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem("jwt");
+      const url = new URL(`https://app.elevatehr.ai/wp-json/elevatehr/v1/all-job-applications`);
+      url.searchParams.append('stage', getStageValue(primaryTabValue));
+      url.searchParams.append('page', page.toString());
+      url.searchParams.append('per_page', perPage.toString());
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch candidates: ${response.status}`);
-        }
+      const response = await fetch(url.toString(), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        cache: 'no-store'
+      });
 
-        const data = await response.json();
-        setCandidates(data);
-        setFilteredCandidates(data);
-        setLoading(false);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('Failed to fetch candidates');
-        }
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch candidates: ${response.status}`);
       }
-    };
 
-    // if (primaryTabValue === 0) {
-      fetchCandidates();
-    // }
-  }, [primaryTabValue]);
+      const data = await response.json();
+      setCandidates(data);
+      setFilteredCandidates(data);
+      setTotalPages(data.total_pages);
+      setTotalItems(data.total);
+      setLoading(false);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Failed to fetch candidates');
+      }
+      setLoading(false);
+    }
+  };
 
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+
+  useEffect(() => {
+    fetchCandidates();
+  }, [primaryTabValue, page]);
 
   const getStageValue = (tabValue: number): StageType => {
     switch (tabValue) {
@@ -1597,6 +1607,40 @@ export default function Home() {
             </Paper>
           </Box>
         </Stack>
+
+        {/* Add pagination controls */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 2 }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            size="large"
+            showFirstButton
+            showLastButton
+            sx={{
+              '& .MuiPaginationItem-root': {
+                fontSize: '16px',
+                fontWeight: 500,
+              },
+              '& .Mui-selected': {
+                backgroundColor: 'primary.main',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: 'primary.dark',
+                },
+              },
+            }}
+          />
+        </Box>
+        <Typography 
+          variant="body2" 
+          color="text.secondary" 
+          align="center" 
+          sx={{ mb: 3 }}
+        >
+          Showing {((page - 1) * perPage) + 1} to {Math.min(page * perPage, totalItems)} of {totalItems} entries
+        </Typography>
       </Container>
 
       {/* Add Snackbar for notifications */}
