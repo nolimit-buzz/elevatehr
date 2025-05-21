@@ -168,7 +168,7 @@ export default function AssessmentInstructionsPage() {
                     <Skeleton variant="rounded" width={100} height={32} />
                     <Skeleton variant="rounded" width={120} height={32} />
                     <Skeleton variant="rounded" width={90} height={32} />
-                </Box>
+                  </Box>
                   <Skeleton variant="text" width="40%" height={36} />
                   <Stack spacing={2}>
                     <Skeleton variant="text" width="100%" height={24} />
@@ -394,21 +394,21 @@ export default function AssessmentInstructionsPage() {
                 <Box sx={{ mt: 2 }}>
                     <Button
                       variant="contained"
-                    onClick={handleBack}
-                    fullWidth
+                      onClick={handleBack}
+                      fullWidth
                       sx={{
                         height: 56,
                         bgcolor: 'primary.main',
                         color: 'white',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      fontWeight: 500,
+                        borderRadius: '8px',
+                        fontSize: '16px',
+                        fontWeight: 500,
                         '&:hover': {
                           bgcolor: 'primary.dark',
                         },
                       }}
                     >
-                    Go to Assessment Page
+                      Go to Assessment Page
                     </Button>
                 </Box>
               </Stack>
