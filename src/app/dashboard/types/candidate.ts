@@ -4,6 +4,7 @@ export interface JobDetails {
   job_type: string;
   work_model: string;
   location: string;
+  level?: string;
   responsibilities?: string;
   expectations?: string;
   stage_counts: {

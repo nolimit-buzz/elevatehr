@@ -764,7 +764,7 @@ export default function Home() {
             sx={{
               mr: 1,
               padding: 0,
-              // display: { xs: 'none', sm: 'flex' }
+              display: { xs: 'flex', sm: 'none' }
             }}
             aria-label="back"
             onClick={() => router.back()}
@@ -775,9 +775,8 @@ export default function Home() {
             variant="h5"
             sx={{
               fontSize: { xs: "15px", sm: "18px" },
-              // fontWeight: 600,
               color: "grey.200",
-              // mb: 1
+              display: { xs: 'block', sm: 'none' }
             }}
           >
             Back
@@ -808,9 +807,22 @@ export default function Home() {
                 fontSize: { xs: "18px", sm: "24px" },
                 fontWeight: 600,
                 color: "rgba(17, 17, 17, 0.84)",
-                // mb: 1
               }}
             >
+              {jobDetails?.level && (
+                <Typography
+                  component="span"
+                  sx={{
+                    mr: 1,
+                    fontSize: { xs: "18px", sm: "24px" },
+                    fontWeight: 600,
+                    color: "rgba(17, 17, 17, 0.84)",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {jobDetails.level}
+                </Typography>
+              )}
               {jobDetails?.title}
             </Typography>
           </Box>

@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 
-const skillOptions = ['Agile methodologies', 'React', 'Communication', 'Leadership', 'Testing', 'Financial statement analysis', 'CAMELS framework application', 'Financial ratio calculation', 'Banking regulation knowledge', 'Credit risk assessment', 'Market risk evaluation'];
+const skillOptions = ['Analytical Reasoning','Clarity of Thought','Presentation Style','Creativity','Agile methodologies', 'React', 'Communication', 'Leadership', 'Testing', 'Financial statement analysis', 'CAMELS framework application', 'Financial ratio calculation', 'Banking regulation knowledge', 'Credit risk assessment', 'Market risk evaluation'];
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function CreateAssessmentPage() {
@@ -18,7 +18,7 @@ export default function CreateAssessmentPage() {
   const [open, setOpen] = React.useState(true);
   const [jobTitle, setJobTitle] = React.useState('');
   const [level, setLevel] = React.useState('');
-  const [skills, setSkills] = React.useState<string[]>(['Agile methodologies']);
+  const [skills, setSkills] = React.useState<string[]>(['Analytical Reasoning','Clarity of Thought','Presentation Style','Creativity','Agile methodologies', 'React', 'Communication', 'Leadership', 'Testing', 'Financial statement analysis', 'CAMELS framework application', 'Financial ratio calculation', 'Banking regulation knowledge', 'Credit risk assessment', 'Market risk evaluation']);
   const [numberOfOpenTextQuestions, setNumberOfOpenTextQuestions] = React.useState('');
   const [numberOfMultiChoiceQuestions, setNumberOfMultiChoiceQuestions] = React.useState('');
   const [loading, setLoading] = React.useState(false);
@@ -36,6 +36,7 @@ export default function CreateAssessmentPage() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [assessmentOptions, setAssessmentOptions] = useState('2');
   const modules = useMemo(() => ({
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -159,6 +160,7 @@ export default function CreateAssessmentPage() {
         assessment_title: jobTitle,
         assessment_description: description,
         technical_assessment_content: value,
+        assessment_options: parseInt(assessmentOptions),
       };
       const response = await fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/save-quiz-questions', {
         method: 'POST',
@@ -355,6 +357,19 @@ export default function CreateAssessmentPage() {
                   />
                 ))}
               </Box>
+            </Box>
+            <Box sx={{ mb: 2 }}>
+              <Typography sx={{ fontWeight: 600, fontSize: 18, color: 'rgba(17, 17, 17, 0.92)', mb: 1 }}>
+                Number of Assessment Options
+              </Typography>
+              <TextField
+                fullWidth
+                type="number"
+                value={assessmentOptions}
+                onChange={(e) => setAssessmentOptions(e.target.value)}
+                inputProps={{ min: 1, max: 10 }}
+                helperText="Enter the number of assessment options (1-10)"
+              />
             </Box>
             <Button
               fullWidth
