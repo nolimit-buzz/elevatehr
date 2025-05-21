@@ -837,84 +837,70 @@ export default function ApplicantDetails() {
                     {applicant?.personal_info?.email}
                   </Typography>
                 </Box>
-                      {cvAnalysis?.match_score && (
-                        <Box
-                      sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1,
-                            bgcolor:
-                              cvAnalysis?.match_score >= 90
-                                ? "rgba(28, 196, 126, 0.1)"
-                                : cvAnalysis?.match_score >= 75
-                                ? "rgba(76, 175, 80, 0.1)"
-                                : cvAnalysis?.match_score >= 60
-                                ? "rgba(255, 160, 0, 0.1)"
-                                : cvAnalysis?.match_score >= 40
-                                ? "rgba(255, 107, 107, 0.1)"
-                                : "rgba(244, 67, 54, 0.1)",
-                            px: 2,
-                            py: 1,
-                            borderRadius: '16px',
-                          }}
-                        >
-                          <Typography 
-                            variant="body2" 
-                            sx={{ 
-                              color:
-                                cvAnalysis?.match_score >= 90
-                                  ? "#1CC47E"
-                                  : cvAnalysis?.match_score >= 75
-                                  ? "#4CAF50"
-                                  : cvAnalysis?.match_score >= 60
-                                  ? "#FFA000"
-                                  : cvAnalysis?.match_score >= 40
-                                  ? "#FF6B6B"
-                                  : "#F44336",
-                              fontWeight: 600,
-                            }}
-                          >
-                              {cvAnalysis?.match_score}% Match
-                          </Typography>
-                        </Box>
-                      )}
-                      {applicant?.assessments_results && Object.entries(applicant.assessments_results).map(([type, result]) => (
-                        <Box key={type} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Chip 
-                            label={`${type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} (${result.assessment_submission_status === 'submitted' ? 'Submitted' : 'Pending'})`}
-                            sx={{
-                              backgroundColor: result.assessment_submission_status === 'submitted' ? '#E8F5E9' : '#E3F2FD',
-                              color: result.assessment_submission_status === 'submitted' ? '#2E7D32' : '#1976D2',
-                              fontWeight: 500,
-                              borderRadius: '16px',
-                              '& .MuiChip-label': {
-                                px: 2,
-                                py: 0.5,
-                              },
-                            }}
-                          />
-                          {result.assessment_submission_link && (
-                            <Link
-                              href={result.assessment_submission_link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              sx={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: 0.5,
-                                color: 'primary.main',
-                                textDecoration: 'none',
-                                fontSize: '14px',
-                                '&:hover': {
-                                  textDecoration: 'underline',
-                                },
-                              }}
-                            >
-                              View <LaunchIcon sx={{ fontSize: 16 }} />
-                            </Link>
-                          )}
-                        </Box>
-                      ))}
+                      {/* Assessment Status Chips */}
+                      {applicant?.assessments_results && Object.entries(applicant.assessments_results).map(([type, result]: [string, any]) => {
+                        if (result) {
+                          const status = result.assessment_submission_status || result.assessment_status;
+                          if (status) {
+                            let label = `${type.split('_').map(word => 
+                              word.charAt(0).toUpperCase() + word.slice(1)
+                            ).join(' ')}`;
+                            
+                            // Add status to label
+                            if (status === 'submitted') {
+                              label += ' (Submitted)';
+                            } else if (status === 'sent') {
+                              label += ' (Sent)';
+                            } else if (status === 'Passed') {
+                              label += ` (${result.assessment_score}%)`;
+                            }
+
+                            // Determine colors based on assessment type and status
+                            let bgColor, textColor;
+                            if (type === 'technical_assessment') {
+                              if (status === 'submitted') {
+                                bgColor = '#E3F2FD'; // Light blue for submitted
+                                textColor = '#1976D2'; // Dark blue text
+                              } else if (status === 'sent') {
+                                bgColor = '#FFF3E0'; // Light orange for sent
+                                textColor = '#E65100'; // Dark orange text
+                              } else {
+                                bgColor = '#FFF3E0'; // Light orange for other states
+                                textColor = '#E65100'; // Dark orange text
+                              }
+                            } else {
+                              // For online assessment
+                              if (status === 'Passed') {
+                                bgColor = '#E8F5E9'; // Light green for passed
+                                textColor = '#2E7D32'; // Dark green text
+                              } else if (status === 'sent') {
+                                bgColor = '#FFF3E0'; // Light orange for sent
+                                textColor = '#E65100'; // Dark orange text
+                              } else {
+                                bgColor = '#FFF3E0'; // Light orange for other states
+                                textColor = '#E65100'; // Dark orange text
+                              }
+                            }
+
+                            return (
+                              <Chip
+                                key={type}
+                                size="small"
+                                label={label}
+                                sx={{
+                                  backgroundColor: bgColor,
+                                  color: textColor,
+                                  fontWeight: 500,
+                                  '& .MuiChip-label': {
+                                    px: 1,
+                                  }
+                                }}
+                              />
+                            );
+                          }
+                        }
+                        return null;
+                      })}
                     </Stack>
               </Stack>
 
