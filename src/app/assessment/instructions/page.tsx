@@ -17,6 +17,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  Skeleton,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useTheme } from "@mui/material/styles";
@@ -160,9 +161,23 @@ export default function AssessmentInstructionsPage() {
               </Typography>
               
               {loading && (
-                <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-                  <CircularProgress />
-                </Box>
+                <Stack spacing={3}>
+                  <Skeleton variant="text" width="60%" height={48} />
+                  <Skeleton variant="text" width="90%" height={24} />
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    <Skeleton variant="rounded" width={100} height={32} />
+                    <Skeleton variant="rounded" width={120} height={32} />
+                    <Skeleton variant="rounded" width={90} height={32} />
+                  </Box>
+                  <Skeleton variant="text" width="40%" height={36} />
+                  <Stack spacing={2}>
+                    <Skeleton variant="text" width="100%" height={24} />
+                    <Skeleton variant="text" width="90%" height={24} />
+                    <Skeleton variant="text" width="95%" height={24} />
+                    <Skeleton variant="text" width="85%" height={24} />
+                    <Skeleton variant="text" width="92%" height={24} />
+                  </Stack>
+                </Stack>
               )}
 
               {error && (

@@ -1,5 +1,5 @@
 'use client'
-import { Box, Typography, CircularProgress, Alert, Chip, TextField, Button, Snackbar, useTheme, Container, Grid, Stack, styled, FormControl, Select, MenuItem, Link } from '@mui/material';
+import { Box, Typography, CircularProgress, Alert, Chip, TextField, Button, Snackbar, useTheme, Container, Grid, Stack, styled, FormControl, Select, MenuItem, Link, Skeleton } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
@@ -23,6 +23,17 @@ const StyledButton = styled(Button)(({ theme }) => ({
     boxShadow: "0 4px 12px rgba(68, 68, 226, 0.15)",
   },
 }));
+
+const pastelColors = [
+  { bg: '#F9E8F3', text: '#76325F' },  // Pink
+  { bg: '#E8F4F9', text: '#256B8F' },  // Blue
+  { bg: '#F0F9E8', text: '#4B7F2C' },  // Green
+  { bg: '#F9F0E8', text: '#8F5E2C' },  // Orange
+  { bg: '#F0E8F9', text: '#5E2C8F' },  // Purple
+  { bg: '#E8F9F0', text: '#2C8F5E' },  // Mint
+];
+
+const assessmentColor = 'rgb(37, 107, 143)';
 
 export default function AssessmentPage() {
   const theme = useTheme();
@@ -218,21 +229,29 @@ export default function AssessmentPage() {
             }}>
               <Typography 
                 variant="h5" 
-                fontWeight={600} 
+                fontWeight={700} 
                 mb={2}
                 sx={{
-                  color: "rgba(17, 17, 17, 0.92)",
-                  fontSize: "24px",
+                  color: assessmentColor,
+                  fontSize: "32px",
                   textTransform: "capitalize",
                 }}
               >
-                {assessment?.title} Technical Assessment
+                Credicorp {assessment?.title} Technical Assessment
               </Typography>
               
               {loading && (
-                <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-                  <CircularProgress />
-                </Box>
+                <Stack spacing={3}>
+                  <Skeleton variant="text" width="60%" height={48} />
+                  <Skeleton variant="text" width="90%" height={24} />
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    <Skeleton variant="rounded" width={100} height={32} />
+                    <Skeleton variant="rounded" width={120} height={32} />
+                    <Skeleton variant="rounded" width={90} height={32} />
+                  </Box>
+                  <Skeleton variant="text" width="40%" height={36} />
+                  <Skeleton variant="rounded" width="100%" height={200} />
+                </Stack>
               )}
 
       {assessment && (
@@ -243,21 +262,21 @@ export default function AssessmentPage() {
                       color="grey.200" 
                       mb={2}
                     >
-                      {assessment.description}
+                      {assessment.title} assessment covering the following skills: {assessment.skills}
                     </Typography>
                     <Box mb={2} sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {assessment.skills && assessment.skills.split(',').map((skill: string, idx: number) => (
+                      {assessment.skills && assessment.skills.split(',').map((skill: string, idx: number) => (
                         <Chip 
                           key={idx} 
                           label={skill.trim()} 
                           sx={{ 
                             fontWeight: 500,
-                            bgcolor: '#F9E8F3',
-                            color: '#76325F',
+                            bgcolor: pastelColors[idx % pastelColors.length].bg,
+                            color: pastelColors[idx % pastelColors.length].text,
                           }} 
                         />
-            ))}
-          </Box>
+                      ))}
+                    </Box>
                   </Box>
 
                   <Box>
@@ -347,7 +366,7 @@ export default function AssessmentPage() {
                       href={`/assessment/instructions?job_id=${jobId}&assessment_id=${assessmentId}`} 
                       target="_blank"
                       rel="noopener noreferrer"
-                      sx={{ color: 'primary.main', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+                      sx={{ color: 'rgb(37, 107, 143)', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
                     >assessment instructions</Link> before submitting
                   </Typography>
                   {assessment?.review_time && (
