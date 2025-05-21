@@ -298,8 +298,7 @@ export default function AssessmentPage() {
                           fontSize: '20px',
                           fontWeight: 600,
                           mb: 2,
-                          mt: 3,
-                          
+                          mt: 3
                           '&:first-child': {
                             color: 'rgb(37, 107, 143) !important',
                           }
