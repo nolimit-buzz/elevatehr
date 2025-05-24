@@ -160,7 +160,8 @@ export default function AssessmentPage() {
           application_id: parseInt(applicationId),
           job_id: parseInt(jobId || '0'),
           assessment_id: parseInt(assessmentId || '0'),
-          assessment_submission_link: submissionUrl.trim()
+          assessment_submission_link: submissionUrl.trim(),
+          selected_assessment_option: parseInt(selectedOption)
         })
       });
 
@@ -398,6 +399,15 @@ export default function AssessmentPage() {
                         bgcolor: '#F5F5F5',
                         p: 3,
                         borderRadius: 2,
+                        '& h2': {
+                          fontSize: '20px',
+                          fontWeight: 600,
+                          mb: 2,
+                          mt: 3,
+                          '&:first-child': {
+                            color: 'rgb(37, 107, 143) !important',
+                          }
+                        },
                         '& h3': {
                           fontSize: '16px',
                           fontWeight: 600,
@@ -489,7 +499,7 @@ export default function AssessmentPage() {
                           value={selectedOption}
                           onChange={(e) => setSelectedOption(e.target.value)}
                           displayEmpty
-                          renderValue={(value) => value ? `Option ${value}` : 'Select an option'}
+                          renderValue={(value) => value ? `Option ${String.fromCharCode(64 + parseInt(value))}` : 'Select an option'}
                           sx={{ 
                             '& .MuiOutlinedInput-root': {
                               borderRadius: '10px',
@@ -508,7 +518,7 @@ export default function AssessmentPage() {
                         >
                           {Array.from({ length: assessment.options }, (_, i) => (
                             <MenuItem key={i + 1} value={String(i + 1)}>
-                              Option {i + 1}
+                              Option {String.fromCharCode(65 + i)}
                             </MenuItem>
                           ))}
                         </Select>
