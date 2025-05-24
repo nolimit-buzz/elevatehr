@@ -1331,38 +1331,42 @@ export default function Home() {
         )}
 
         {/* Add pagination controls */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 2 }}>
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-            size="large"
-            showFirstButton
-            showLastButton
-        sx={{
-              '& .MuiPaginationItem-root': {
-                fontSize: '16px',
-                fontWeight: 500,
-              },
-              '& .Mui-selected': {
-            backgroundColor: 'primary.main',
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: 'primary.dark',
-                },
-              },
-            }}
-          />
-              </Box>
-        <Typography 
-          variant="body2" 
-          color="grey.200" 
-          align="center" 
-          sx={{ mb: 3 }}
-        >
-          Showing <span style={{ fontWeight: 600 }}>{((page - 1) * perPage) + 1}</span> to <span style={{ fontWeight: 600 }}>{Math.min(page * perPage, totalItems)}</span> of <span style={{ fontWeight: 600 }}>{totalItems}</span> entries
-                </Typography>
+        {primaryTabValue === 0 && (
+          <>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 2 }}>
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+                size="large"
+                showFirstButton
+                showLastButton
+                sx={{
+                  '& .MuiPaginationItem-root': {
+                    fontSize: '16px',
+                    fontWeight: 500,
+                  },
+                  '& .Mui-selected': {
+                    backgroundColor: 'primary.main',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: 'primary.dark',
+                    },
+                  },
+                }}
+              />
+            </Box>
+            <Typography 
+              variant="body2" 
+              color="grey.200" 
+              align="center" 
+              sx={{ mb: 3 }}
+            >
+              Showing <span style={{ fontWeight: 600 }}>{((page - 1) * perPage) + 1}</span> to <span style={{ fontWeight: 600 }}>{Math.min(page * perPage, totalItems)}</span> of <span style={{ fontWeight: 600 }}>{totalItems}</span> entries
+            </Typography>
+          </>
+        )}
       </Container>
     </Box>
   );
