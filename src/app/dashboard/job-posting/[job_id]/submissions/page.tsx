@@ -419,112 +419,91 @@ export default function Home() {
 
   const handleUpdateStages = async ({
     stage,
-    entries = [],
-    assessmentType,
+    entries = selectedEntries,
+    assessmentType
   }: {
     stage: StageType;
     entries?: number[];
     assessmentType?: string;
   }) => {
-    setIsMovingStage(assessmentType ? `assessment_${assessmentType}` : stage);
+    if (!entries?.length) return;
+
+    setIsMovingStage(stage);
     try {
-      const jwt = localStorage.getItem("jwt");
-      if (!jwt) throw new Error("Authentication token not found");
+      const token = localStorage.getItem("jwt");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
 
-      const entriesToUpdate = entries.length ? entries : selectedEntries;
-      const jobId = getJobId();
+      if (stage.startsWith('assessment_')) {
+        // Handle assessment sending
+        const assessmentId = dynamicPhaseOptions[getStageValue(subTabValue)]
+          .find(option => option.action === stage)?.id;
 
-      console.log("Updating application stage:", stage, entriesToUpdate, jwt);
-      const response = await fetch(
-        `https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/move-stage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-          cache: "no-store",
-          body: JSON.stringify({
-            stage,
-            entries: entriesToUpdate,
-            assessment_type: assessmentType,
-          }),
+        if (!assessmentId) {
+          throw new Error('Assessment ID not found');
         }
-      );
-      console.log("Response:", response);
 
-      if (!response.ok) {
-        throw new Error("Failed to update stages");
-      }
+        const response = await fetch(
+          'https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/send-job-assessment',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              application_ids: entries,
+              assessment_id: assessmentId
+            })
+          }
+        );
 
-      // Refetch job details to update stage counts
-      const jobDetailsResponse = await fetch(
-        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            "Content-Type": "application/json",
-          },
-          cache: "no-store",
+        if (!response.ok) {
+          throw new Error('Failed to send assessment');
         }
-      );
 
-      if (!jobDetailsResponse.ok) {
-        throw new Error("Failed to fetch updated job details");
-      }
-
-      const jobDetailsData = await jobDetailsResponse.json();
-      if (jobDetailsData.stage_counts) {
-        setStageTotals(jobDetailsData.stage_counts);
-      }
-
-      // Refetch candidates for the current stage
-      const currentStage = getStageValue(subTabValue);
-      const candidatesResponse = await fetch(
-        `https://app.elevatehr.ai/wp-json/elevatehr/v1/jobs/${jobId}/applications?stage=${currentStage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-          cache: "no-store",
-        }
-      );
-
-      if (!candidatesResponse.ok) {
-        throw new Error("Failed to fetch updated candidates");
-      }
-
-      const candidatesData = await candidatesResponse.json();
-      setCandidates(candidatesData);
-      setFilteredCandidates(candidatesData);
-      setSelectedEntries([]);
-
-      // Show success notification
-      setNotification({
-        open: true,
-        message: `Successfully moved ${entriesToUpdate.length} candidate${
-          entriesToUpdate.length > 1 ? "s" : ""
-        } to ${stage.replace("_", " ")}`,
-        severity: "success",
-      });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-        setNotification({
-          open: true,
-          message: error.message,
-          severity: "error",
-        });
+        handleNotification('Assessment sent successfully', 'success');
       } else {
-        setError("An unexpected error occurred while updating stages");
-        setNotification({
-          open: true,
-          message: "An unexpected error occurred while updating stages",
-          severity: "error",
-        });
+        // Handle regular stage update
+        const response = await fetch(
+          "https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/move-stage",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              entries: entries,
+              stage: stage,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to update stage");
+        }
+
+        handleNotification(
+          `Successfully moved ${entries.length} candidate${
+            entries.length > 1 ? "s" : ""
+          } to ${stage.replace("_", " ")}`,
+          "success"
+        );
       }
+
+      // Refresh the candidates list
+      fetchCandidates();
+    } catch (error) {
+      console.error("Error updating stage:", error);
+      handleNotification(
+        error instanceof Error ? error.message : "Failed to update stage",
+        "error"
+      );
     } finally {
       setIsMovingStage("");
+      setSelectedEntries([]);
     }
   };
 

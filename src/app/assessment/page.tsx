@@ -48,11 +48,60 @@ export default function AssessmentPage() {
   const [submissionUrl, setSubmissionUrl] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
+  const [isJobClosed, setIsJobClosed] = useState(false);
 
   const handleCloseAlert = () => {
     setError(null);
     setSuccess(null);
   };
+
+  useEffect(() => {
+    if (!jobId) return;
+    
+    fetch(`https://app.elevatehr.ai/wp-json/elevatehr/v1/active-jobs/${jobId}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch job details');
+        return res.json();
+      })
+      .then(data => {
+        if (data.success && data.jobs && data.jobs.status === "close") {
+          setIsJobClosed(true);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching job status:', error);
+      });
+  }, [jobId]);
+
+  useEffect(() => {
+    if (!jobId || !assessmentId || !applicationId) return;
+
+    // Format current date to "YYYY-MM-DD HH:MMam/pm"
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${formattedHours}:${formattedMinutes}${ampm}`;
+
+    // Make the POST request
+    fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/submit-technical-assessment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        application_id: parseInt(applicationId),
+        job_id: parseInt(jobId),
+        assessment_id: parseInt(assessmentId),
+        is_assessment_clicked_date: formattedDate,
+        is_assessment_clicked: "yes"
+      })
+    }).catch(error => {
+      console.error('Error submitting assessment click:', error);
+    });
+  }, [jobId, assessmentId, applicationId]);
 
   useEffect(() => {
     // Check if already submitted
@@ -136,6 +185,61 @@ export default function AssessmentPage() {
       setSubmitting(false);
     }
   };
+
+  if (isJobClosed) {
+    return (
+      <Box sx={{ backgroundColor: "#fff", minHeight: "100vh" }}>
+        <Banner
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: theme.palette.primary.main,
+            backgroundImage: "url(/images/backgrounds/banner-bg-img.png)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            position: "relative",
+          }}
+          height={"304px"}
+        />
+        <Container sx={{ maxWidth: "1200px !important", mt: 8, p: 4 }}>
+          <Box sx={{ 
+            maxWidth: 800, 
+            mx: 'auto', 
+            textAlign: 'center',
+            bgcolor: '#fff',
+            borderRadius: 2,
+            boxShadow: 1,
+            p: 4
+          }}>
+            <Typography 
+              variant="h4" 
+              fontWeight={700}
+              sx={{
+                color: "rgba(17, 17, 17, 0.92)",
+                mb: 2
+              }}
+            >
+              Job Posting Closed
+            </Typography>
+            <Typography 
+              variant="body1" 
+              color="grey.600" 
+              sx={{ 
+                maxWidth: 600, 
+                mx: 'auto',
+                fontSize: '17px'
+              }}
+            >
+              We're sorry, but this job posting has been closed and is no longer accepting submissions.
+            </Typography>
+          </Box>
+        </Container>
+      </Box>
+    );
+  }
 
   if (isSubmitted) {
     return (
@@ -235,7 +339,7 @@ export default function AssessmentPage() {
                   textTransform: "capitalize",
                 }}
               >
-                CREDICORP {assessment?.title} Technical Assessment
+                Credicorp {assessment?.title} Technical Assessment
               </Typography>
               
               {loading && (
@@ -294,15 +398,6 @@ export default function AssessmentPage() {
                         bgcolor: '#F5F5F5',
                         p: 3,
                         borderRadius: 2,
-                        '& h2': {
-                          fontSize: '20px',
-                          fontWeight: 600,
-                          mb: 2,
-                          mt: 3
-                          '&:first-child': {
-                            color: 'rgb(37, 107, 143) !important',
-                          }
-                        },
                         '& h3': {
                           fontSize: '16px',
                           fontWeight: 600,
