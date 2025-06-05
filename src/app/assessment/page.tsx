@@ -73,35 +73,35 @@ export default function AssessmentPage() {
       });
   }, [jobId]);
 
-  useEffect(() => {
-    if (!jobId || !assessmentId || !applicationId) return;
+  // useEffect(() => {
+  //   if (!jobId || !assessmentId || !applicationId) return;
 
-    // Format current date to "YYYY-MM-DD HH:MMam/pm"
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    const formattedHours = hours % 12 || 12;
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${formattedHours}:${formattedMinutes}${ampm}`;
+  //   // Format current date to "YYYY-MM-DD HH:MMam/pm"
+  //   const now = new Date();
+  //   const hours = now.getHours();
+  //   const minutes = now.getMinutes();
+  //   const ampm = hours >= 12 ? 'pm' : 'am';
+  //   const formattedHours = hours % 12 || 12;
+  //   const formattedMinutes = minutes.toString().padStart(2, '0');
+  //   const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${formattedHours}:${formattedMinutes}${ampm}`;
 
-    // Make the POST request
-    fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/submit-technical-assessment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        application_id: parseInt(applicationId),
-        job_id: parseInt(jobId),
-        assessment_id: parseInt(assessmentId),
-        is_assessment_clicked_date: formattedDate,
-        is_assessment_clicked: "yes"
-      })
-    }).catch(error => {
-      console.error('Error submitting assessment click:', error);
-    });
-  }, [jobId, assessmentId, applicationId]);
+  //   // Make the POST request
+  //   fetch('https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/submit-technical-assessment', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //       application_id: parseInt(applicationId),
+  //       job_id: parseInt(jobId),
+  //       assessment_id: parseInt(assessmentId),
+  //       is_assessment_clicked_date: formattedDate,
+  //       is_assessment_clicked: "yes"
+  //     })
+  //   }).catch(error => {
+  //     console.error('Error submitting assessment click:', error);
+  //   });
+  // }, [jobId, assessmentId, applicationId]);
 
   useEffect(() => {
     // Check if already submitted

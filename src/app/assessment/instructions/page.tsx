@@ -168,7 +168,7 @@ export default function AssessmentInstructionsPage() {
                     <Skeleton variant="rounded" width={100} height={32} />
                     <Skeleton variant="rounded" width={120} height={32} />
                     <Skeleton variant="rounded" width={90} height={32} />
-                  </Box>
+                </Box>
                   <Skeleton variant="text" width="40%" height={36} />
                   <Stack spacing={2}>
                     <Skeleton variant="text" width="100%" height={24} />

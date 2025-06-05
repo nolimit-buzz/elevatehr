@@ -117,23 +117,21 @@ export default function AssessmentsPage() {
         </Typography>
         <Stack direction="row" spacing={2} alignItems="center" sx={{ mt: { xs: 2, md: 0 } }}>
           <TextField
-            variant="outlined"
             placeholder="Search"
             size="small"
             sx={{
-              bgcolor: 'transparent',
-              borderRadius: '8px',
-              minWidth: { xs: 120, md: 200 },
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-                fontSize: 16,
-                height: 40,
+              '& fieldset': {
+                border:'none !important',
+              },
+              '& .MuiInputBase-input::placeholder': {
+                color: 'rgba(255, 255, 255)',
+                opacity: 0.84,
               },
             }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: '#A0A0C0' }} />
+                  <SearchIcon sx={{ color: 'rgba(255, 255, 255, 0.84)' }} />
                 </InputAdornment>
               ),
             }}
