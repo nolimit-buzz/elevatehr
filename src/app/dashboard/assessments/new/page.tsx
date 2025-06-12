@@ -369,6 +369,14 @@ export default function CreateAssessmentPage() {
     generateSkills();
   }, [jobTitle]);
 
+  // Add effect to set default description
+  useEffect(() => {
+    if (jobTitle && skills.length > 0) {
+      const defaultDescription = `${jobTitle} assessment covering the following skills: ${skills.join(", ")}. This assessment is designed to evaluate candidates' knowledge and expertise in these areas.`;
+      setAssessmentDescription(defaultDescription);
+    }
+  }, [jobTitle, skills]);
+
   return (
     <>
       <Dialog
@@ -395,7 +403,7 @@ export default function CreateAssessmentPage() {
           }}
         >
           <IconButton
-            onClick={() => setOpen(false)}
+            onClick={() => router.push("/dashboard/assessments")}
             sx={{ position: "absolute", top: 24, right: 24, zIndex: 1 }}
           >
             <CloseIcon sx={{ fontSize: 28, color: "rgba(17, 17, 17, 0.32)" }} />
@@ -916,6 +924,30 @@ export default function CreateAssessmentPage() {
       {showFormBuilder && (
         <Box sx={{ maxWidth: 900, mx: "auto", mt: 4, mb: 4 }}>
           {/* Header Section */}
+          <Button
+            component="a"
+            href="/dashboard/assessments"
+            startIcon={
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.56994 18.82C9.37994 18.82 9.18994 18.75 9.03994 18.6L2.96994 12.53C2.67994 12.24 2.67994 11.76 2.96994 11.47L9.03994 5.4C9.32994 5.11 9.80994 5.11 10.0999 5.4C10.3899 5.69 10.3899 6.17 10.0999 6.46L4.55994 12L10.0999 17.54C10.3899 17.83 10.3899 18.31 10.0999 18.6C9.95994 18.75 9.75994 18.82 9.56994 18.82Z" fill="#292D32" />
+                <path d="M20.4999 12.75H3.66992C3.25992 12.75 2.91992 12.41 2.91992 12C2.91992 11.59 3.25992 11.25 3.66992 11.25H20.4999C20.9099 11.25 21.2499 11.59 21.2499 12C21.2499 12.41 20.9099 12.75 20.4999 12.75Z" fill="#292D32" />
+              </svg>
+            }
+            sx={{
+              bgcolor: "rgba(17, 17, 17, 0.04)",
+              borderRadius: "18px",
+              color: "rgba(17, 17, 17, 0.68)",
+              fontWeight: 600,
+              fontSize: 14,
+              textTransform: "none",
+              mb: 2,
+              "&:hover": {
+                backgroundColor: "rgba(68, 68, 226, 0.04)",
+              },
+            }}
+          >
+            Back to Assessments
+          </Button>
           <Box
             sx={{
               bgcolor: "#fff",
@@ -925,19 +957,6 @@ export default function CreateAssessmentPage() {
             }}
           >
             <Stack direction="row" alignItems="center" spacing={2} mb={2}>
-              {type === "technical_assessment" && (
-                <Chip
-                  label={level}
-                  sx={{
-                    bgcolor: "#F9E0FA",
-                    color: "rgba(79, 27, 85, 0.84)",
-                    fontWeight: 600,
-                    fontSize: 16,
-                    borderRadius: "20px",
-                    height: 32,
-                  }}
-                />
-              )}
               <Typography
                 variant="h5"
                 sx={{ fontWeight: 700, color: "rgba(17, 17, 17, 0.92)" }}
@@ -1280,7 +1299,7 @@ export default function CreateAssessmentPage() {
             <Typography
               sx={{
                 fontWeight: 700,
-                fontSize: 32,
+                fontSize: 24,
                 color: "rgba(17, 17, 17, 0.92)",
                 mb: 2,
               }}
