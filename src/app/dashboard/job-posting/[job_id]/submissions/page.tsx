@@ -444,22 +444,22 @@ export default function Home() {
           throw new Error('Assessment ID not found');
         }
 
-        const response = await fetch(
+      const response = await fetch(
           'https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/send-job-assessment',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
+          },
+          body: JSON.stringify({
               application_ids: entries,
               assessment_id: assessmentId
             })
           }
         );
 
-        if (!response.ok) {
+      if (!response.ok) {
           throw new Error('Failed to send assessment');
         }
 
@@ -470,8 +470,8 @@ export default function Home() {
           "https://app.elevatehr.ai/wp-json/elevatehr/v1/applications/move-stage",
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          headers: {
+            "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
@@ -1342,13 +1342,13 @@ export default function Home() {
                 size="large"
                 showFirstButton
                 showLastButton
-                sx={{
+        sx={{
                   '& .MuiPaginationItem-root': {
                     fontSize: '16px',
                     fontWeight: 500,
                   },
                   '& .Mui-selected': {
-                    backgroundColor: 'primary.main',
+            backgroundColor: 'primary.main',
                     color: 'white',
                     '&:hover': {
                       backgroundColor: 'primary.dark',
@@ -1356,7 +1356,7 @@ export default function Home() {
                   },
                 }}
               />
-            </Box>
+              </Box>
             <Typography 
               variant="body2" 
               color="grey.200" 
@@ -1364,7 +1364,7 @@ export default function Home() {
               sx={{ mb: 3 }}
             >
               Showing <span style={{ fontWeight: 600 }}>{((page - 1) * perPage) + 1}</span> to <span style={{ fontWeight: 600 }}>{Math.min(page * perPage, totalItems)}</span> of <span style={{ fontWeight: 600 }}>{totalItems}</span> entries
-            </Typography>
+                </Typography>
           </>
         )}
       </Container>

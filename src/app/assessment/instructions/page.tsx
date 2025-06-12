@@ -45,7 +45,7 @@ export default function AssessmentInstructionsPage() {
     if (!jobId || !assessmentId) return;
     setLoading(true);
     setError(null);
-    fetch(`https://app.elevatehr.ai/wp-json/elevatehr/v1/get-job-assessment-public?job_id=${jobId}&assessment_id=${assessmentId}`)
+    fetch(`https://app.elevatehr.ai/wp-json/elevatehr/v1/get-assessment-public?assessment_id=${assessmentId}`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch assessment details');
         return res.json();

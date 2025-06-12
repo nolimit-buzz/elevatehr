@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, Grid, Card, Stack, TextField, InputAdornment } from '@mui/material';
+import { Box, Typography, Button, Grid, Card, Stack, TextField, InputAdornment, Container, Divider } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useTheme } from '@mui/material/styles';
@@ -20,12 +20,14 @@ import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import Skeleton from '@mui/material/Skeleton';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const ELEVATE_BASE_URL = 'https://app.elevatehr.ai/';
 
 export interface Assessment {
   id: string;
   level: string;
+  type: string;
   color?: string;
   textColor?: string;
   title: string;
@@ -51,6 +53,13 @@ export default function AssessmentsPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectTypeOpen, setSelectTypeOpen] = useState(false);
   const [selectedType, setSelectedType] = useState('technical_assessment');
+
+  const formatType = (type: string) => {
+    return type
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
   const handleAddSkill = (event: any) => {
     const value = event.target.value;
@@ -96,7 +105,8 @@ export default function AssessmentsPage() {
   }, []);
 
   return (
-    <Box sx={{ bgcolor: '#F6F7FB', minHeight: '100vh', p: { xs: 1, md: 4 } }}>
+    <Box sx={{ bgcolor: '#F6F7FB', minHeight: '100vh' }}>
+      <Container maxWidth={false} sx={{ maxWidth: '1440px', py: 4 }}>
       {/* Banner */}
       <Box
         sx={{
@@ -189,7 +199,8 @@ export default function AssessmentsPage() {
             <Grid item xs={12} sm={6} md={3} key={a.id || idx}>
               <Card
                 sx={{
-                  p: 3,
+                    height: '100%',
+                    // p: 3,
                   borderRadius: '12px',
                   boxShadow: 'none',
                   bgcolor: '#fff',
@@ -201,7 +212,7 @@ export default function AssessmentsPage() {
                   transition: 'box-shadow 0.2s',
                 }}
               >
-                {/* Custom Badge */}
+                <Box sx={{ p: 3 }}>
                 <Box
                   sx={{
                     display: 'inline-flex',
@@ -209,7 +220,7 @@ export default function AssessmentsPage() {
                     gap: '6px',
                     bgcolor: a.color,
                     borderRadius: '20px',
-                    px: '12px',
+                      // px: '12px',
                     py: '6px',
                     mb: 1.5,
                     height: 32,
@@ -225,8 +236,8 @@ export default function AssessmentsPage() {
                       <path d="M16.6666 1.66675H15.3333C14.875 1.66675 14.5 2.04175 14.5 2.50008V15.0001C14.5 15.4584 14.875 15.8334 15.3333 15.8334H16.6666C17.125 15.8334 17.5 15.4584 17.5 15.0001V2.50008C17.5 2.04175 17.125 1.66675 16.6666 1.66675Z" stroke={a.level === 'Senior' ? 'rgba(79, 27, 85, 0.72)' : a.level === 'Junior' ? 'rgba(125, 88, 15, 0.72)' : a.level === 'Mid-level' ? 'rgba(36, 115, 127, 0.72)' : '#4F1B55'} strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </Box>
-                  <Typography sx={{ color: a.level === 'Junior' ? 'rgba(125, 88, 15, 0.84)' : a.level === 'Mid-level' ? 'rgba(36, 115, 127, 0.72)' : a.textColor, fontWeight: 600, fontSize: 16, ml: 0.5, mr: 0.5, lineHeight: 1 }}>
-                    {a.level}
+                    <Typography sx={{ color: a.textColor, fontWeight: 600, fontSize: 16, ml: 0.5, mr: 0.5, lineHeight: 1 }}>
+                      {formatType(a.type)}
                   </Typography>
                 </Box>
                 <Typography 
@@ -255,59 +266,91 @@ export default function AssessmentsPage() {
                     fontWeight: 400,
                     lineHeight: '138%',
                     letterSpacing: '0.14px',
-                    mb: 1,
+                      mb: 2,
                   }}
                 >
                   {a.description}
                 </Typography>
-                <Typography 
-                  variant="caption" 
-                  sx={{
-                    color: 'rgba(17, 17, 17, 0.68)',
-                    fontSize: '12px',
-                    fontStyle: 'normal',
-                    fontWeight: 600,
-                    lineHeight: '100%', // 12px
-                    letterSpacing: '0.12px',
-                    mb: 1,
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  {a.responses} RESPONSES
-                </Typography>
-                {/* Duration pill */}
+                </Box>
+                  {/* Custom Badge */}
+             
+                  {/* Card Footer */}
                 <Box
                   sx={{
                     display: 'flex',
+                      justifyContent: 'flex-start',
                     alignItems: 'center',
-                    bgcolor: '#EEEFF2',
-                    borderRadius: '20px',
-                    px: '16px',
-                    py: '6px',
-                    width: 'max-content',
-                    gap: '8px',
+                      gap: 3,
+                      borderTop: '1px solid #EEEFF2',
+                      borderBottomLeftRadius: '12px',
+                      borderBottomRightRadius: '12px',
+                      bgcolor: '#fff',
                     mt: 'auto',
-                    mb: 0.5,
-                  }}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center', height: 20 }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M18.3337 10.0001C18.3337 14.6001 14.6003 18.3334 10.0003 18.3334C5.40033 18.3334 1.66699 14.6001 1.66699 10.0001C1.66699 5.40008 5.40033 1.66675 10.0003 1.66675C14.6003 1.66675 18.3337 5.40008 18.3337 10.0001Z" stroke="#111111" stroke-opacity="0.84" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M13.0914 12.65L10.5081 11.1083C10.0581 10.8416 9.69141 10.2 9.69141 9.67497V6.2583" stroke="#111111" stroke-opacity="0.84" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                      px: 2,
+                      // py: 1.5,
+                    }}
+                  >
+                    <Button
+                      // variant="outlined"
+                      size="small"
+                      sx={{
+                        borderColor: '#D0D5DD',
+                        color: '#111',
+                        fontWeight: 500,
+                        fontSize: '14px',
+                        borderRadius: '8px',
+                        px: 1,
+                        py: 0.5,
+                        my: 1.2,
+                        textTransform: 'none',
+                        boxShadow: 'none',
+                        bgcolor: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                        '&:hover': {
+                          borderColor: '#B0B5C0',
+                          bgcolor: '#F9F9FB',
+                        },
+                      }}
+                      onClick={() => router.push(`/dashboard/assessments/new?type=${a.type}&id=${a.id}`)}
+                    >
+                      <Box component="span" sx={{ display: 'flex', alignItems: 'center', mr: 0.5 }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5.53999 19.5201C4.92999 19.5201 4.35999 19.31 3.94999 18.92C3.42999 18.43 3.17999 17.69 3.26999 16.89L3.63999 13.65C3.70999 13.04 4.07999 12.23 4.50999 11.79L12.72 3.10005C14.77 0.930049 16.91 0.870049 19.08 2.92005C21.25 4.97005 21.31 7.11005 19.26 9.28005L11.05 17.97C10.63 18.42 9.84999 18.84 9.23999 18.9401L6.01999 19.49C5.84999 19.5 5.69999 19.5201 5.53999 19.5201ZM15.93 2.91005C15.16 2.91005 14.49 3.39005 13.81 4.11005L5.59999 12.8101C5.39999 13.0201 5.16999 13.5201 5.12999 13.8101L4.75999 17.05C4.71999 17.38 4.79999 17.65 4.97999 17.82C5.15999 17.99 5.42999 18.05 5.75999 18L8.97999 17.4501C9.26999 17.4001 9.74999 17.14 9.94999 16.93L18.16 8.24005C19.4 6.92005 19.85 5.70005 18.04 4.00005C17.24 3.23005 16.55 2.91005 15.93 2.91005Z" fill="#292D32"/>
+                          <path d="M17.3399 10.95C17.3199 10.95 17.2899 10.95 17.2699 10.95C14.1499 10.64 11.6399 8.26997 11.1599 5.16997C11.0999 4.75997 11.3799 4.37997 11.7899 4.30997C12.1999 4.24997 12.5799 4.52997 12.6499 4.93997C13.0299 7.35997 14.9899 9.21997 17.4299 9.45997C17.8399 9.49997 18.1399 9.86997 18.0999 10.28C18.0499 10.66 17.7199 10.95 17.3399 10.95Z" fill="#292D32"/>
+                          <path d="M21 22.75H3C2.59 22.75 2.25 22.41 2.25 22C2.25 21.59 2.59 21.25 3 21.25H21C21.41 21.25 21.75 21.59 21.75 22C21.75 22.41 21.41 22.75 21 22.75Z" fill="#292D32"/>
                     </svg>
                   </Box>
-                  <Typography sx={{
-                    color: 'rgba(17, 17, 17, 0.84)',
-                  //   fontFamily: 'Outfit',
+                      Edit
+                    </Button>
+                    <Divider orientation="vertical" flexItem />
+                    <Typography
+                      component="a"
+                      target="_blank"
+                      href={`/assessment?assessment_id=${a.id}`}
+                      sx={{
+                        color: '#757575',
                     fontSize: '14px',
-                    fontStyle: 'normal',
-                    fontWeight: 400,
-                    lineHeight: '100%', // 14px
-                    letterSpacing: '0.14px',
-                    leadingTrim: 'both',
-                    textEdge: 'cap',
-                  }}>
-                    {a.duration}
+                        fontWeight: 500,
+                        textDecoration: 'none',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                        '&:hover': {
+                          textDecoration: 'underline',
+                          color: '#757575',
+                        },
+                      }}
+                    >
+                      <Box component="span" sx={{ display: 'flex', alignItems: 'center', mr: 0.5 }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M11.9999 16.3299C9.60992 16.3299 7.66992 14.3899 7.66992 11.9999C7.66992 9.60992 9.60992 7.66992 11.9999 7.66992C14.3899 7.66992 16.3299 9.60992 16.3299 11.9999C16.3299 14.3899 14.3899 16.3299 11.9999 16.3299ZM11.9999 9.16992C10.4399 9.16992 9.16992 10.4399 9.16992 11.9999C9.16992 13.5599 10.4399 14.8299 11.9999 14.8299C13.5599 14.8299 14.8299 13.5599 14.8299 11.9999C14.8299 10.4399 13.5599 9.16992 11.9999 9.16992Z" fill="#292D32"/>
+                          <path d="M12.0001 21.02C8.24008 21.02 4.69008 18.82 2.25008 15C1.19008 13.35 1.19008 10.66 2.25008 8.99998C4.70008 5.17998 8.25008 2.97998 12.0001 2.97998C15.7501 2.97998 19.3001 5.17998 21.7401 8.99998C22.8001 10.65 22.8001 13.34 21.7401 15C19.3001 18.82 15.7501 21.02 12.0001 21.02ZM12.0001 4.47998C8.77008 4.47998 5.68008 6.41998 3.52008 9.80998C2.77008 10.98 2.77008 13.02 3.52008 14.19C5.68008 17.58 8.77008 19.52 12.0001 19.52C15.2301 19.52 18.3201 17.58 20.4801 14.19C21.2301 13.02 21.2301 10.98 20.4801 9.80998C18.3201 6.41998 15.2301 4.47998 12.0001 4.47998Z" fill="#292D32"/>
+                        </svg>
+                      </Box>
+                      View Assessment
                   </Typography>
                 </Box>
               </Card>
@@ -315,6 +358,7 @@ export default function AssessmentsPage() {
           ))}
         </Grid>
       )}
+      </Container>
       {/* New Assessment Modal */}
       <Dialog open={selectTypeOpen} onClose={() => setSelectTypeOpen(false)} maxWidth="xs" PaperProps={{ sx: { borderRadius: '20px', p: 0, bgcolor: '#fff' } }}>
         <DialogContent sx={{ p: { xs: 3, md: 4 }, position: 'relative', bgcolor: '#fff', minWidth: { xs: 320, md: 400 } }}>
