@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "git submodule update --init --recursive",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
