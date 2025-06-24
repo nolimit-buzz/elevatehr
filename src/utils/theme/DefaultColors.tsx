@@ -57,7 +57,7 @@ const baselightTheme = createTheme({
     },
     text: {
       primary: "rgba(17, 17, 17, 0.72)",
-      secondary: "rgba(205, 247, 235, 0.92)",
+      secondary: "rgba(17, 17, 17, 0.68)",
       
     },
     action: {
