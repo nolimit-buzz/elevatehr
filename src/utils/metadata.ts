@@ -1,5 +1,6 @@
 export default {
   host:"ElevateHR",
+  website:"https://elevatehr.ng",
   logo:"/images/logos/logo-light.svg",
   favicon:"/images/logos/favicon.svg",
   title:"ElevateHR.ng",
